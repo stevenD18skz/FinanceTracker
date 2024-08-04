@@ -1,5 +1,5 @@
 export const test_data = {
-  cuentas: [
+  ACOUNTS: [
     {
       title: "💳Bancolombia",
       amount: 2500.5,
@@ -14,11 +14,19 @@ export const test_data = {
     },
   ],
 
-  goals: [
+  GOALS: [
     {
       title: "🎥RTX 4060",
       amount: 240_000,
       goal: 1_340_000,
+      get overView() {
+        return (this.amount / this.goal).toFixed(2) * 100 + " %";
+      },
+    },
+    {
+      title: "🎥BUDS 5",
+      amount: 50_000,
+      goal: 340_000,
       get overView() {
         return (this.amount / this.goal).toFixed(2) * 100 + " %";
       },
@@ -67,14 +75,6 @@ export const test_data = {
         return (this.amount / this.goal).toFixed(2) * 100 + " %";
       },
     },
-    {
-      title: "🏡Prestamo",
-      amount: 120000,
-      goal: 150000,
-      get overView() {
-        return (this.amount / this.goal).toFixed(2) * 100 + " %";
-      },
-    },
   ],
 
   INCOME: [
@@ -101,6 +101,33 @@ export const test_data = {
       date: "2024-08-15",
       tags: ["Proyecto", "Ingresos"],
       note: "Trabajo adicional",
+    },
+  ],
+
+  EXPENSES: [
+    {
+      title: "Renta",
+      amount: 1200,
+      payment: "Mensual",
+      date: "2024-08-01",
+      tags: ["Vivienda", "Gastos Fijos"],
+      note: "Pago mensual de renta",
+    },
+    {
+      title: "Supermercado",
+      amount: 400,
+      payment: "Quincenal",
+      date: "2024-08-02",
+      tags: ["Alimentos", "Gastos Variables"],
+      note: "Compra de despensa",
+    },
+    {
+      title: "Servicios",
+      amount: 150,
+      payment: "Mensual",
+      date: "2024-08-10",
+      tags: ["Servicios Públicos", "Gastos Fijos"],
+      note: "Pago de luz, agua e internet",
     },
   ],
 };
