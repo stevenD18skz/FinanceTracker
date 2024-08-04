@@ -6,6 +6,11 @@ export default function Table({ data_list }) {
   const [orderby, setOrderby] = useState("");
   const [order, setOrder] = useState(true); //true ascendetemente <====> false descendentemene
 
+  // Actualizar el estado interno cuando data_list cambie
+  useEffect(() => {
+    setIncome(data_list);
+  }, [data_list]);
+
   const orderProp = (prop) => {
     prop === orderby ? setOrder(!order) : setOrder(true);
 
@@ -47,7 +52,7 @@ export default function Table({ data_list }) {
         <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             {Object.keys(income[0]).map((key) => (
-              <th key={key} scope="col" className="px-6 py-3">
+              <th key={key} scope="col" className="px-6 py-3 text-3xl">
                 <div className="flex items-center">
                   {key}
                   <button onClick={() => orderProp(key)}>
@@ -74,7 +79,7 @@ export default function Table({ data_list }) {
           {income.map((current) => (
             <tr
               key={current.title}
-              className="border-b bg-white dark:border-gray-700 dark:bg-gray-800"
+              className="border-b bg-white text-2xl dark:border-gray-700 dark:bg-gray-800"
             >
               <th
                 scope="row"

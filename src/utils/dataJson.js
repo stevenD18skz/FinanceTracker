@@ -14,11 +14,24 @@ export const test_data = {
     },
   ],
 
+  TRANSACTIONS: [
+    {
+      title: "guardar en la cuenta de ahorros",
+      amount: 32_000,
+      from_acount: "nequi",
+      income_acount: "Nu",
+      date: "23/04/2024",
+    },
+  ],
+
   GOALS: [
     {
       title: "🎥RTX 4060",
       amount: 240_000,
       goal: 1_340_000,
+      get remaining() {
+        return this.goal - this.amount + "";
+      },
       get overView() {
         return (this.amount / this.goal).toFixed(2) * 100 + " %";
       },
@@ -27,6 +40,9 @@ export const test_data = {
       title: "🎥BUDS 5",
       amount: 50_000,
       goal: 340_000,
+      get remaining() {
+        return this.goal - this.amount + "";
+      },
       get overView() {
         return (this.amount / this.goal).toFixed(2) * 100 + " %";
       },
@@ -36,43 +52,58 @@ export const test_data = {
   MONTHLY_ESSENTIALS: [
     {
       title: "🏡HOUSING",
-      amount: 650_000,
-      goal: 850_000,
+      monthly_budget: 650_000,
+      spending: 550_000,
+      get remaining() {
+        return (this.monthly_budget - this.spending).toFixed(2) + "";
+      },
       get overView() {
-        return (this.amount / this.goal).toFixed(2) * 100 + " %";
+        return (this.monthly_budget / this.spending).toFixed(2) * 100 + " %";
       },
     },
     {
       title: "🏡Transporte",
-      amount: 120000,
-      goal: 150000,
+      monthly_budget: 120000,
+      spending: 100000,
+      get remaining() {
+        return (this.monthly_budget - this.spending).toFixed(2) + "";
+      },
       get overView() {
-        return (this.amount / this.goal).toFixed(2) * 100 + " %";
+        return (this.monthly_budget / this.spending).toFixed(2) * 100 + " %";
       },
     },
 
     {
       title: "🏡Alimentación",
-      amount: 120000,
-      goal: 150000,
+      monthly_budget: 120000,
+      spending: 50000,
+      get remaining() {
+        return (this.monthly_budget - this.spending).toFixed(2) + "";
+      },
       get overView() {
-        return (this.amount / this.goal).toFixed(2) * 100 + " %";
+        return (this.monthly_budget / this.spending).toFixed(2) * 100 + " %";
       },
     },
     {
       title: "🏡Entretenimiento",
-      amount: 120000,
-      goal: 150000,
+      monthly_budget: 120000,
+      spending: 80000,
+      get remaining() {
+        return (this.monthly_budget - this.spending).toFixed(2) + "";
+      },
       get overView() {
-        return (this.amount / this.goal).toFixed(2) * 100 + " %";
+        return (this.monthly_budget / this.spending).toFixed(2) * 100 + " %";
       },
     },
     {
       title: "🏡Universidad",
-      amount: 120000,
-      goal: 150000,
+      monthly_budget: 120000,
+      spending: 60000,
+      get remaining() {
+        return (this.monthly_budget - this.spending).toFixed(2) + "";
+      },
       get overView() {
-        return (this.amount / this.goal).toFixed(2) * 100 + " %";
+        return (this.monthly_budget / this.spending).toFixed(2) * 100 + " %";
       },
     },
   ],
@@ -81,7 +112,7 @@ export const test_data = {
     {
       title: "Salario",
       amount: 3500,
-      payment: "Quincenal",
+      payment: "wallet",
       date: "2024-08-03",
       tags: ["Trabajo", "Ingresos"],
       note: "Pago regular",
@@ -89,7 +120,7 @@ export const test_data = {
     {
       title: "Dividendos",
       amount: 150,
-      payment: "Anual",
+      payment: "bancolombia",
       date: "2024-12-31",
       tags: ["Inversiones", "Ingresos"],
       note: "Ingresos pasivos",
@@ -97,7 +128,7 @@ export const test_data = {
     {
       title: "Freelance",
       amount: 800,
-      payment: "Mensual",
+      payment: "Nequi",
       date: "2024-08-15",
       tags: ["Proyecto", "Ingresos"],
       note: "Trabajo adicional",
@@ -108,7 +139,7 @@ export const test_data = {
     {
       title: "Renta",
       amount: 1200,
-      payment: "Mensual",
+      payment: "Nequi",
       date: "2024-08-01",
       tags: ["Vivienda", "Gastos Fijos"],
       note: "Pago mensual de renta",
@@ -116,7 +147,7 @@ export const test_data = {
     {
       title: "Supermercado",
       amount: 400,
-      payment: "Quincenal",
+      payment: "wallet",
       date: "2024-08-02",
       tags: ["Alimentos", "Gastos Variables"],
       note: "Compra de despensa",
@@ -124,10 +155,23 @@ export const test_data = {
     {
       title: "Servicios",
       amount: 150,
-      payment: "Mensual",
+      payment: "Nequi",
       date: "2024-08-10",
       tags: ["Servicios Públicos", "Gastos Fijos"],
       note: "Pago de luz, agua e internet",
+    },
+  ],
+
+  MONTHLY_SUMMARY: [
+    {
+      title: "enero",
+      total_income: 450_000,
+      total_expenses: 375_000,
+      get overView() {
+        return (
+          (this.total_income / this.total_expenses).toFixed(2) * 100 + " %"
+        );
+      },
     },
   ],
 };
