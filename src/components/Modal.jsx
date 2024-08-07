@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import StandarInput from "./StandarInput";
+
 const Modal = ({ isOpen, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     title: "",
@@ -61,64 +63,41 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-              Title
-            </label>
-
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Type product name"
-              required
-              className="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Amount</label>
-            <input
-              type="number"
-              name="amount"
-              value={formData.amount}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border border-gray-300 p-2"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Payment Method</label>
-            <input
-              type="text"
-              name="payment"
-              value={formData.payment}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border border-gray-300 p-2"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border border-gray-300 p-2"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">
-              Tags (comma separated)
-            </label>
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-2 gap-4 gap-x-7"
+        >
+          <StandarInput
+            titulo="title"
+            dato={formData.title}
+            handleChange={handleChange}
+            type={"text"}
+          ></StandarInput>
+          <StandarInput
+            titulo="amount"
+            dato={formData.amount}
+            handleChange={handleChange}
+            type={"number"}
+          ></StandarInput>
+          <StandarInput
+            titulo="payment"
+            dato={formData.payment}
+            handleChange={handleChange}
+            type={"text"}
+          ></StandarInput>
+          <StandarInput
+            titulo="date"
+            dato={formData.date}
+            handleChange={handleChange}
+            type={"date"}
+          ></StandarInput>
+          <div>
+            <label className="block text-gray-200">Tags</label>
             <select
               name="tags"
               value={formData.tags}
               onChange={handleChange}
-              className="mt-1 w-full rounded border border-gray-300 p-2"
+              className="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
               required
             >
               <option value="">Select category</option>
@@ -128,16 +107,13 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
               <option value="Ingresos">Ingresos</option>
             </select>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Note</label>
-            <input
-              type="text"
-              name="note"
-              value={formData.note}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border border-gray-300 p-2"
-            />
-          </div>
+          <StandarInput
+            titulo="note"
+            dato={formData.note}
+            handleChange={handleChange}
+            type={"text"}
+            isNotRequired
+          ></StandarInput>
           <div className="flex justify-end">
             <button
               type="submit"

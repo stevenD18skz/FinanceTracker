@@ -19,7 +19,7 @@ export default function Home() {
 
   const handleAddIncome = (newIncome) => {
     setIncomeList((prevList) => [...prevList, newIncome]);
-    console.log(incomeList);
+    console.log(newIncome);
   };
 
   return (
@@ -32,10 +32,7 @@ export default function Home() {
             <Card key={index} dataCard={current} />
           ))}
 
-          <button
-            onClick={openModal}
-            className="mb-8 w-full rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
-          >
+          <button className="mb-8 w-full rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white">
             new
           </button>
 
@@ -61,14 +58,31 @@ export default function Home() {
             </button>
           </div>
 
-          <h2 className="pb-6 pt-12 text-center text-5xl font-bold uppercase text-gray-400">
-            Income
-          </h2>
+          <div className="flex flex-row items-center justify-between">
+            <h2 className="pb-6 pt-12 text-center text-5xl font-bold uppercase text-gray-400">
+              Income
+            </h2>
+            <button
+              onClick={openModal}
+              className="w-2/12 rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
+            >
+              new income
+            </button>
+          </div>
+
           <Table data_list={incomeList}></Table>
 
-          <h2 className="pb-6 pt-12 text-center text-5xl font-bold uppercase text-gray-400">
-            Expenses
-          </h2>
+          <div className="flex flex-row items-center justify-between">
+            <h2 className="pb-6 pt-12 text-center text-5xl font-bold uppercase text-gray-400">
+              expense
+            </h2>
+            <button
+              onClick={openModal}
+              className="w-2/12 rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
+            >
+              new expense
+            </button>
+          </div>
           <Table data_list={test_data.EXPENSES}></Table>
         </div>
 
