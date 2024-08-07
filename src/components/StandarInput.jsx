@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 export default function StandarInput({
@@ -20,7 +21,7 @@ export default function StandarInput({
           id={titulo}
           value={dato}
           onChange={handleChange}
-          placeholder="Type product name"
+          placeholder={`Type the ${titulo}`}
           required={isRequired}
           className="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
         />

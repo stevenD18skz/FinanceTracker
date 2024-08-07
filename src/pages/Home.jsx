@@ -53,8 +53,8 @@ export default function Home() {
               <Card key={index} dataCard={current} />
             ))}
 
-            <button className="mb-8 w-full rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white">
-              new
+            <button className="mb-8 max-w-md truncate rounded-xl border-2 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white">
+              new Monthly esentials
             </button>
           </div>
 
