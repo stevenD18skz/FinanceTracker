@@ -2,15 +2,24 @@ import React, { useState } from "react";
 
 import StandarInput from "./StandarInput";
 
-const Modal = ({ isOpen, onClose, onSubmit }) => {
+export default function ModalProduct({ isOpen, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
-    payment: "",
-    date: "",
-    tags: "",
     note: "",
+    tags: [],
   });
+
+  const selectMultiple = (event) => {
+    const newSelectedValues = Array.from(event.target.options) // Convertir a array
+      .filter((option) => option.selected) // Filtrar las opciones seleccionadas
+      .map((option) => option.value); // Extraer los valores
+
+    setFormData((prevState) => ({
+      ...prevState,
+      tags: newSelectedValues, // Actualiza el estado con los nuevos valores seleccionados
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,11 +31,14 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
+
+    const parsedData = {
       ...formData,
-      amount: parseFloat(formData.amount),
-      tags: formData.tags.split(",").map((tag) => tag.trim()),
-    });
+      amount: Number(formData.amount), // Convertir a número antes de enviar
+      tags: formData.tags,
+    };
+
+    onSubmit(parsedData);
     onClose();
   };
 
@@ -73,47 +85,40 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
             handleChange={handleChange}
             type={"text"}
           ></StandarInput>
+
           <StandarInput
             titulo="amount"
             dato={formData.amount}
             handleChange={handleChange}
             type={"number"}
           ></StandarInput>
-          <StandarInput
-            titulo="payment"
-            dato={formData.payment}
-            handleChange={handleChange}
-            type={"text"}
-          ></StandarInput>
-          <StandarInput
-            titulo="date"
-            dato={formData.date}
-            handleChange={handleChange}
-            type={"date"}
-          ></StandarInput>
+
           <div>
             <label className="block text-gray-200">Tags</label>
             <select
               name="tags"
               value={formData.tags}
-              onChange={handleChange}
+              onChange={selectMultiple}
               className="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
               required
+              multiple
             >
-              <option value="">Select category</option>
-              <option value="Trabajo">Trabajo</option>
-              <option value="Inversiones">Inversiones</option>
-              <option value="Proyecto">Proyecto</option>
-              <option value="Ingresos">Ingresos</option>
+              <option value="Electrónica">Electrónica</option>
+              <option value="Portátil">Portátil</option>
+              <option value="Móvil">Móvil</option>
+              <option value="Periférico">Periférico</option>
+              <option value="Accesorio">Accesorio</option>
+              <option value="Pantalla">Pantalla</option>
             </select>
           </div>
+
           <StandarInput
             titulo="note"
             dato={formData.note}
             handleChange={handleChange}
             type={"text"}
-            isRequired={false}
           ></StandarInput>
+
           <div className="flex justify-end">
             <button
               type="submit"
@@ -126,6 +131,4 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
       </div>
     </div>
   );
-};
-
-export default Modal;
+}

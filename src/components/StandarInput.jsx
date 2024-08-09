@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 
 export default function StandarInput({
   titulo,
@@ -29,11 +28,3 @@ export default function StandarInput({
     </>
   );
 }
-
-StandarInput.propTypes = {
-  titulo: PropTypes.string.isRequired,
-  dato: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
-  isRequired: PropTypes.bool,
-};

@@ -6,6 +6,7 @@ import NavBar from "../components/NavBar";
 import Card from "../components/Card";
 import Table from "../components/Table";
 import Modal from "../components/Modal";
+import WishList from "./WishList";
 
 //IMPORTACION DE HOOKS O UTILIDADES
 import { test_data } from "../utils/dataJson";
@@ -84,6 +85,8 @@ export default function Home() {
             </button>
           </div>
           <Table data_list={test_data.EXPENSES}></Table>
+
+          <WishList></WishList>
         </div>
 
         <aside className="col-span-2 w-full rounded-2xl border border-blue-700 p-3 shadow-lg">

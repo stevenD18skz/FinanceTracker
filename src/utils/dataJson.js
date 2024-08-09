@@ -110,6 +110,7 @@ export const test_data = {
 
   INCOME: [
     {
+      id: 1,
       title: "Salario",
       amount: 3500,
       payment: "wallet",
@@ -118,6 +119,7 @@ export const test_data = {
       note: "Pago regular",
     },
     {
+      id: 2,
       title: "Dividendos",
       amount: 150,
       payment: "bancolombia",
@@ -126,6 +128,7 @@ export const test_data = {
       note: "Ingresos pasivos",
     },
     {
+      id: 3,
       title: "Freelance",
       amount: 800,
       payment: "Nequi",
@@ -137,6 +140,7 @@ export const test_data = {
 
   EXPENSES: [
     {
+      id: 1,
       title: "Renta",
       amount: 1200,
       payment: "Nequi",
@@ -145,6 +149,7 @@ export const test_data = {
       note: "Pago mensual de renta",
     },
     {
+      id: 2,
       title: "Supermercado",
       amount: 400,
       payment: "wallet",
@@ -153,6 +158,7 @@ export const test_data = {
       note: "Compra de despensa",
     },
     {
+      id: 3,
       title: "Servicios",
       amount: 150,
       payment: "Nequi",
