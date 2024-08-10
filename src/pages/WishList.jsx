@@ -33,16 +33,54 @@ export default function WishList() {
     fetchProducts();
   }, []);
 
-  const postProduct = (newIncome) => {
-    console.log(newIncome);
-    const postData = async (url = "", data = {}) => {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+
+  const toastCreate = (createObject) => {
+    console.log(createObject);
+    Swal.fire({
+      title: `Do you want to add ${createObject.title} to the wishlist?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "yes, add",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        createProduct(createObject);
+        Toast.fire({
+          icon: "success",
+          title: "The product has been added successfully",
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: "The product was not added successfully",
+        });
+      }
+    });
+  };
+
+  const createProduct = (dataProductCreate) => {
+    console.log(dataProductCreate);
+
+    const postData = async (body = {}) => {
       try {
-        const response = await fetch(url, {
+        const response = await fetch("http://localhost:3000/wishlist", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(body),
         });
 
         const jsonResponse = await response.json();
@@ -66,14 +104,11 @@ export default function WishList() {
       }
     };
 
-    // Ejemplo de uso
-    postData("http://localhost:3000/wishlist", newIncome)
+    postData(dataProductCreate)
       .then((data) => {
         if (data.error) {
-          // Maneja el error de validación en el frontend
           console.log("Validation errors:", data.error);
-          // Puedes mostrar los errores en la UI, por ejemplo:
-          // setErrors(data.error);
+          //setErrors(data.error);
         } else {
           console.log("Success:", data);
         }
@@ -81,33 +116,22 @@ export default function WishList() {
       .catch((error) => console.log("Error:", error));
   };
 
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
-
-  const toastDisable = (disableObject) => {
-    console.log(disableObject);
+  const toastUpdate = (updateObject) => {
+    console.log(updateObject);
     Swal.fire({
-      title: `¿Estás seguro que quieres eliminar el producto?`,
+      title: `¿OLAAAAAAAAAAAAAAAA?`,
       text: "No podrá acceder a la plataforma",
       icon: "warning",
+      cancelButtonText: "لا",
       showCancelButton: true,
-      cancelButtonText: "No, cancelar",
+      cancelButtonText: "No",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, inhabilitar",
+      confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
         //funcion que elimina el producto
-        deleteProduct(disableObject.id);
+        updateProduct(updateObject);
         Toast.fire({
           icon: "success",
           title: "Usuario inhabilitado con éxito",
@@ -121,8 +145,59 @@ export default function WishList() {
     });
   };
 
-  const deleteProduct = async (id = "") => {
-    console.log(id);
+  const updateProduct = async (dataUpdateProduct) => {
+    console.log(dataUpdateProduct);
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/wishlist/${dataUpdateProduct.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json", // Tipo de contenido
+          },
+          body: JSON.stringify(dataUpdateProduct),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      fetchProducts();
+    } catch (error) {
+      console.log("Error in PATCH request:", error);
+    }
+  };
+
+  const toastDelete = (deleteObject) => {
+    console.log(deleteObject);
+    Swal.fire({
+      title: `¿Estás seguro que quieres eliminar el producto?`,
+      icon: "question",
+      showCancelButton: true,
+      cancelButtonText: "No",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //funcion que elimina el producto
+        deleteProduct(deleteObject.id);
+        Toast.fire({
+          icon: "success",
+          title: "El producto se elimino",
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: "El producto no fue eliminado",
+        });
+      }
+    });
+  };
+
+  const deleteProduct = async (id) => {
     try {
       const response = await fetch(`http://localhost:3000/wishlist/${id}`, {
         method: "DELETE", // Método POST
@@ -131,49 +206,14 @@ export default function WishList() {
         },
       });
 
-      // Si la respuesta no es exitosa, lanzar un error
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
       fetchProducts();
-      const jsonResponse = await response.json(); // Convertir respuesta a JSON
-      return jsonResponse;
     } catch (error) {
       console.log("Error in DELETE request:", error);
-      throw error;
     }
-  };
-
-  const toastUpdate = (disableObject) => {
-    console.log(disableObject);
-    Swal.fire({
-      title: `¿Estás seguro que quieres eliminar el producto?`,
-      text: "No podrá acceder a la plataforma",
-      icon: "warning",
-      showCancelButton: true,
-      cancelButtonText: "No, cancelar",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, inhabilitar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        //funcion que elimina el producto
-        updateProduct(disableObject);
-        Toast.fire({
-          icon: "success",
-          title: "Usuario inhabilitado con éxito",
-        });
-      } else {
-        Toast.fire({
-          icon: "error",
-          title: "No fue posible inhabilitar al usuario",
-        });
-      }
-    });
-  };
-
-  const updateProduct = (newIncome) => {
-    console.log(newIncome);
   };
 
   if (isLoading) {
@@ -191,48 +231,59 @@ export default function WishList() {
     );
   }
 
-  const productImages = [
-    "https://i.pinimg.com/564x/40/dc/2c/40dc2c3ce34f91560623913b43d5c5cb.jpg",
-    "https://i.pinimg.com/564x/d0/70/07/d070075c1d5b8d094d43a36ea431d44c.jpg",
-    "https://i.pinimg.com/564x/ac/d9/32/acd932b4ee60de4d9cc087e729abb4a7.jpg",
-    "https://i.pinimg.com/736x/50/76/e4/5076e42a03985dd1629988f9b69d72f0.jpg",
-    "https://i.pinimg.com/564x/70/e7/63/70e763b166fc8017167b643a39ff219a.jpg",
-  ];
+  const productImages = {
+    televisor:
+      "https://i.pinimg.com/564x/40/dc/2c/40dc2c3ce34f91560623913b43d5c5cb.jpg",
+    laptop:
+      "https://i.pinimg.com/564x/d0/70/07/d070075c1d5b8d094d43a36ea431d44c.jpg",
+    tablet:
+      "https://i.pinimg.com/564x/ac/d9/32/acd932b4ee60de4d9cc087e729abb4a7.jpg",
+    monitor:
+      "https://i.pinimg.com/736x/50/76/e4/5076e42a03985dd1629988f9b69d72f0.jpg",
+    teclado:
+      "https://i.pinimg.com/564x/70/e7/63/70e763b166fc8017167b643a39ff219a.jpg",
+    audifonos:
+      "https://i.pinimg.com/564x/71/ce/51/71ce51c79cf330d7887b3922219e7376.jpg",
+    "alarm clock":
+      "https://i.pinimg.com/564x/29/c0/e9/29c0e940a918a3ac54c634688d3043f9.jpg",
+  };
 
   return (
-    <>
-      <header className="flex flex-row items-center justify-between">
-        <h2 className="pb-6 pt-12 text-center text-5xl font-bold uppercase text-gray-400">
-          Wish List
-        </h2>
-      </header>
+    <div className="bg-slate-800 p-12">
+      <div className="mx-auto w-10/12 rounded-xl bg-slate-600">
+        <header className="">
+          <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
+            Wish List
+          </h2>
+        </header>
 
-      <div className="grid grid-cols-3 place-items-center gap-y-8">
-        {data.map((current, index) => {
-          return (
-            <ProductCard
-              key={current.id}
-              dataCard={current}
-              cardImage={productImages[index]}
-              deleteCard={toastDisable}
-              editCard={toastUpdate}
-              className="col-span-1"
-            ></ProductCard>
-          );
-        })}
-        <button
-          onClick={openModal}
-          className="h-full w-8/12 max-w-md truncate rounded-xl border-4 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
-        >
-          new Monthly esentials
-        </button>
+        <div className="grid grid-cols-3 place-items-center gap-y-8">
+          {data.map((current, index) => {
+            return (
+              <ProductCard
+                key={current.id}
+                dataCard={current}
+                cardImage={productImages[current.title.toLowerCase()]}
+                deleteCard={toastDelete}
+                editCard={updateProduct}
+                className="col-span-1"
+              ></ProductCard>
+            );
+          })}
+          <button
+            onClick={openModal}
+            className="h-full w-10/12 max-w-md truncate rounded-xl border-4 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
+          >
+            new Monthly esentials
+          </button>
+        </div>
+
+        <ModalProduct
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSubmit={toastCreate}
+        />
       </div>
-
-      <ModalProduct
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={postProduct}
-      />
-    </>
+    </div>
   );
 }

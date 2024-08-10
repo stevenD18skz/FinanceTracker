@@ -45,7 +45,7 @@ export default function ModalProduct({ isOpen, onClose, onSubmit }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
-      <div className="relative m-auto flex w-full max-w-md flex-col rounded-xl border-2 border-cyan-500 bg-gray-800 p-8 shadow-lg">
+      <div className="relative m-auto flex w-full max-w-md flex-col rounded-xl border-2 border-slate-300 bg-gray-800 p-8 shadow-lg">
         <div className="flex items-center justify-between rounded-t border-b-2 border-cyan-500 py-4">
           <h3 className="text-2xl font-semibold text-cyan-400">
             Create New Product
