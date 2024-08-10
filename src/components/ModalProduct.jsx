@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import StandarInput from "./StandarInput";
 
 export default function ModalProduct({ isOpen, onClose, onSubmit }) {
@@ -46,18 +45,18 @@ export default function ModalProduct({ isOpen, onClose, onSubmit }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
-      <div className="relative m-auto flex w-full max-w-md flex-col rounded-lg bg-gray-700 p-8 shadow-lg">
-        <div className="flex items-center justify-between rounded-t border-b py-4 md:py-5 dark:border-gray-600">
-          <h3 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
+      <div className="relative m-auto flex w-full max-w-md flex-col rounded-xl border-2 border-cyan-500 bg-gray-800 p-8 shadow-lg">
+        <div className="flex items-center justify-between rounded-t border-b-2 border-cyan-500 py-4">
+          <h3 className="text-2xl font-semibold text-cyan-400">
             Create New Product
           </h3>
           <button
             type="button"
             onClick={onClose}
-            className="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-200 hover:bg-gray-700"
           >
             <svg
-              className="h-3 w-3"
+              className="h-4 w-4"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -93,13 +92,23 @@ export default function ModalProduct({ isOpen, onClose, onSubmit }) {
             type={"number"}
           ></StandarInput>
 
-          <div>
-            <label className="block text-gray-200">Tags</label>
+          <div className="col-span-2">
+            <StandarInput
+              titulo="note"
+              dato={formData.note}
+              handleChange={handleChange}
+              type={"text"}
+              isRequired={false}
+            ></StandarInput>
+          </div>
+
+          <div className="col-span-2">
+            <label className="block text-cyan-300">Tags</label>
             <select
               name="tags"
               value={formData.tags}
               onChange={selectMultiple}
-              className="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
+              className="block w-full rounded-lg border-2 border-cyan-500 bg-gray-700 p-2.5 text-sm text-gray-300"
               required
               multiple
             >
@@ -112,17 +121,10 @@ export default function ModalProduct({ isOpen, onClose, onSubmit }) {
             </select>
           </div>
 
-          <StandarInput
-            titulo="note"
-            dato={formData.note}
-            handleChange={handleChange}
-            type={"text"}
-          ></StandarInput>
-
-          <div className="flex justify-end">
+          <div className="col-span-2 flex justify-end">
             <button
               type="submit"
-              className="rounded bg-blue-500 px-4 py-2 text-white"
+              className="rounded bg-cyan-500 px-4 py-2 text-white"
             >
               Add
             </button>
