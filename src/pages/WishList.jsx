@@ -14,13 +14,25 @@ export default function WishList() {
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
+  const statusOrder = {
+    low: 1,
+    medium: 2,
+    high: 3,
+    nextToBuy: 4,
+  };
+
   const fetchProducts = () => {
     setIsLoading(true);
     fetch("http://localhost:3000/wishlist")
       .then((res) => res.json())
       .then((data) => {
-        setData(data);
+        const sortedItems = data.sort(
+          (a, b) => statusOrder[b.status] - statusOrder[a.status],
+        );
+
+        setData(sortedItems);
         setIsLoading(false);
+        console.log(sortedItems);
       })
       .catch((error) => {
         console.log("Error fetching wishlist:", error);
