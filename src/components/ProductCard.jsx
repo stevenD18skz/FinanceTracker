@@ -26,14 +26,30 @@ export default function ProductCard({
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: isDigit(value) ? Number(value) : value,
     });
+  };
+
+  function isDigit(str) {
+    return (
+      str.length > 0 &&
+      Array.from(str).every((char) => !isNaN(char) && char !== " ")
+    );
+  }
+
+  const colorStatus = {
+    low: "bg-red-600",
+    medium: "bg-yellow-600",
+    high: "bg-green-600",
+    nextToBuy: "bg-blue-600",
   };
 
   return (
     <div className="w-10/12 max-w-md truncate rounded-xl border-2 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg">
       <header className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-cyan-400">{data.title}</h2>
+        <h2 className="text-2xl font-bold capitalize text-cyan-400">
+          {data.name}
+        </h2>
 
         <div className="flex space-x-2">
           {isEditing ? (
@@ -66,7 +82,7 @@ export default function ProductCard({
           <img
             className="h-full w-full object-cover"
             src={cardImage}
-            alt={`imagen de ${data.title}`}
+            alt={`imagen de ${data.name}`}
           />
         </div>
       )}
@@ -109,6 +125,27 @@ export default function ProductCard({
           : Object.keys(data)
               .slice(1)
               .map((propiedad) => {
+                if (propiedad === "status") {
+                  console.log(data[propiedad]);
+                  return (
+                    <div
+                      key={propiedad}
+                      className="truncate rounded-md bg-gray-700 p-4"
+                    >
+                      <p className="flex text-base leading-relaxed text-gray-300">
+                        <span className="font-semibold text-cyan-300">
+                          {propiedad}:{" "}
+                        </span>
+                        <div
+                          className={`ml-3 rounded-lg ${colorStatus[data[propiedad]]} px-2 text-center text-black`}
+                        >
+                          {data[propiedad]}
+                        </div>
+                      </p>
+                    </div>
+                  );
+                }
+
                 if (Array.isArray(data[propiedad])) {
                   return (
                     <div

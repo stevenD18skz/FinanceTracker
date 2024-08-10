@@ -48,7 +48,7 @@ export default function WishList() {
   const toastCreate = (createObject) => {
     console.log(createObject);
     Swal.fire({
-      title: `Do you want to add ${createObject.title} to the wishlist?`,
+      title: `Do you want to add ${createObject.name} to the wishlist?`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -124,7 +124,6 @@ export default function WishList() {
       icon: "warning",
       cancelButtonText: "لا",
       showCancelButton: true,
-      cancelButtonText: "No",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes",
@@ -159,6 +158,14 @@ export default function WishList() {
           body: JSON.stringify(dataUpdateProduct),
         },
       );
+
+      const jsonResponse = await response.json();
+
+      // Si el código de estado es 400, significa que hay un error de validación
+      if (response.status === 400) {
+        console.log("Validation Error:", jsonResponse.error);
+        return jsonResponse; // Retorna el error para manejarlo en el frontend
+      }
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -246,6 +253,8 @@ export default function WishList() {
       "https://i.pinimg.com/564x/71/ce/51/71ce51c79cf330d7887b3922219e7376.jpg",
     "alarm clock":
       "https://i.pinimg.com/564x/29/c0/e9/29c0e940a918a3ac54c634688d3043f9.jpg",
+    smartphone:
+      "https://i.pinimg.com/564x/66/c2/3f/66c23f9566266ec63f39b2dac1a56585.jpg",
   };
 
   return (
@@ -263,7 +272,7 @@ export default function WishList() {
               <ProductCard
                 key={current.id}
                 dataCard={current}
-                cardImage={productImages[current.title.toLowerCase()]}
+                cardImage={productImages[current.name.toLowerCase()]}
                 deleteCard={toastDelete}
                 editCard={updateProduct}
                 className="col-span-1"

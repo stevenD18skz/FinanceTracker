@@ -2,7 +2,7 @@ export default function Card({ dataCard, cardImage = "" }) {
   return (
     <div className="w-8/12 max-w-md truncate rounded-xl border-2 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg">
       <h2 className="mb-4 text-2xl font-bold text-cyan-400">
-        {dataCard.title}
+        {dataCard.title} 2
       </h2>
 
       {cardImage ? (
