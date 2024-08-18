@@ -1,16 +1,40 @@
 //IMPORTACION DE LIBRERIAS
 import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
+import { data } from "autoprefixer";
+
+import SearchBar from "./searchBar";
 
 export default function Table({ deleteData, updateProduct, data_list }) {
   const [income, setIncome] = useState(data_list);
   const [orderby, setOrderby] = useState("");
   const [order, setOrder] = useState(true); //true ascendetemente <====> false descendentemene
 
+  const [characterSearch, setCharacterSearch] = useState("");
+
+  useEffect(() => {
+    try {
+      //Use useEffect to "pokemonFiltred" by the search bar
+      const personajesFiltrados = data_list.filter((poke) =>
+        poke?.title.toLowerCase().includes(characterSearch.toLowerCase()),
+      );
+      console.log(personajesFiltrados);
+      setIncome(personajesFiltrados);
+    } catch (e) {
+      console.log(e);
+      console.log(data_list);
+    }
+  }, [characterSearch, data_list]);
+
   // Actualizar el estado interno cuando data_list cambie
   useEffect(() => {
     setIncome(data_list);
   }, [data_list]);
 
+  console.log(data_list);
   const orderProp = (prop) => {
     prop === orderby ? setOrder(!order) : setOrder(true);
 
@@ -46,8 +70,14 @@ export default function Table({ deleteData, updateProduct, data_list }) {
     setIncome(sortedData);
     setOrderby(prop);
   };
+
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative overflow-x-auto bg-red-500 p-5 shadow-md sm:rounded-lg">
+      <SearchBar
+        characterSearch={characterSearch}
+        setCharacterSearch={setCharacterSearch}
+      />
+
       <table className="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
         <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -97,11 +127,10 @@ export default function Table({ deleteData, updateProduct, data_list }) {
                   const cellValue = current[valor];
 
                   if (Array.isArray(cellValue)) {
-                    // Si es un array, puedes manejarlo como quieras. Ejemplo: unir los elementos del array con comas
+                    // Si es un array
                     return (
                       <td key={index} className="px-6 py-4">
                         {cellValue.join(", ")}{" "}
-                        {/* O puedes iterar sobre el array y mostrar los elementos como una lista, etc. */}
                       </td>
                     );
                   }
@@ -111,14 +140,17 @@ export default function Table({ deleteData, updateProduct, data_list }) {
                     </td>
                   );
                 })}
-              <td className="px-6 py-4 text-right">
+              <td className="flex w-full justify-between py-4">
                 <button
                   onClick={() =>
                     deleteData("http://localhost:3000/wishlist", current.id)
                   }
                   className="font-medium text-blue-600 hover:underline dark:text-blue-500"
                 >
-                  Delete
+                  <FontAwesomeIcon
+                    icon={faDeleteLeft}
+                    style={{ color: "#cf1717" }}
+                  />
                 </button>
                 <button
                   onClick={() =>
@@ -126,7 +158,10 @@ export default function Table({ deleteData, updateProduct, data_list }) {
                   }
                   className="font-medium text-blue-600 hover:underline dark:text-blue-500"
                 >
-                  editar
+                  <FontAwesomeIcon
+                    icon={faPenToSquare}
+                    style={{ color: "#e6bd28" }}
+                  />
                 </button>
               </td>
             </tr>
