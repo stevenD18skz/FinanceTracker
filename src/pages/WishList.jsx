@@ -17,7 +17,13 @@ import {
   setDoc,
 } from "firebase/firestore";
 
-export default function WishList() {
+import { getAuth } from "firebase/auth";
+
+export default function WishList({ userUid }) {
+  //const userId = auth.currentUser.uid;
+  const auth = getAuth();
+  console.log(auth.currentUser);
+
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
