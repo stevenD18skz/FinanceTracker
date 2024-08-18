@@ -110,7 +110,7 @@ export default function WishList() {
     toast: true,
     position: "top-end",
     showConfirmButton: false,
-    timer: 5000,
+    timer: 2000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.onmouseenter = Swal.stopTimer;
@@ -241,7 +241,6 @@ export default function WishList() {
       }
     }
 
-    // Función para restaurar el producto
     async function restoreItem(itemId, itemData) {
       try {
         const queryDb = getFirestore();
@@ -268,12 +267,11 @@ export default function WishList() {
 
         deleteItem(deleteObject.id);
 
-        Toast.fire({
+        Swal.fire({
           icon: "success",
           title: "El producto se eliminó",
           showCancelButton: true,
-          cancelButtonText: "X",
-          cancelButtonColor: "#d33",
+          cancelButtonText: "Cerrar",
           confirmButtonText: "Deshacer",
           confirmButtonColor: "#3085d6",
         }).then((result) => {
