@@ -17,7 +17,6 @@ export default function ProductCard({
   const handleSaveClick = () => {
     const parsedData = {
       ...formData,
-      amount: Number(formData.amount), // Convertir a número antes de enviar
     };
     editCard(parsedData);
   };
@@ -92,6 +91,51 @@ export default function ProductCard({
           ? Object.keys(formData)
               .slice(1)
               .map((propiedad) => {
+                if (
+                  data[propiedad] instanceof Object &&
+                  data[propiedad].seconds !== undefined &&
+                  data[propiedad].nanoseconds !== undefined
+                ) {
+                  // Convertir el objeto Timestamp a una fecha legible
+                  const fecha = new Date(data[propiedad].seconds * 1000);
+                  const fechaFormateada = fecha.toLocaleDateString("es-ES");
+                  return (
+                    <div
+                      key={propiedad}
+                      className="flex items-center justify-between rounded-md bg-gray-700 p-4"
+                    >
+                      <label className="font-semibold text-cyan-300">
+                        {propiedad}:
+                      </label>
+                      <input
+                        type="date"
+                        name={propiedad}
+                        value={formData[propiedad]}
+                        onChange={handleChange}
+                        className="w-9/12 rounded-md bg-gray-600 p-2 text-gray-300"
+                      />
+                    </div>
+                  );
+                }
+
+                if (Array.isArray(formData[propiedad])) {
+                  <div
+                    key={propiedad}
+                    className="flex items-center justify-between rounded-md bg-gray-700 p-4"
+                  >
+                    <label className="font-semibold text-cyan-300">
+                      {propiedad}:
+                    </label>
+                    <input
+                      type="text"
+                      name={propiedad}
+                      value={formData[propiedad].join(", ")}
+                      onChange={handleChange}
+                      className="w-9/12 rounded-md bg-gray-600 p-2 text-gray-300"
+                    />
+                  </div>;
+                }
+
                 return (
                   <div
                     key={propiedad}
@@ -100,25 +144,15 @@ export default function ProductCard({
                     <label className="font-semibold text-cyan-300">
                       {propiedad}:
                     </label>
-                    {Array.isArray(formData[propiedad]) ? (
-                      <input
-                        type="text"
-                        name={propiedad}
-                        value={formData[propiedad].join(", ")}
-                        onChange={handleChange}
-                        className="w-9/12 rounded-md bg-gray-600 p-2 text-gray-300"
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        name={propiedad}
-                        id={propiedad}
-                        value={formData[propiedad]}
-                        placeholder="ingresa el dato"
-                        onChange={handleChange}
-                        className="w-9/12 rounded-md bg-gray-600 p-2 text-gray-300"
-                      />
-                    )}
+                    <input
+                      type="text"
+                      name={propiedad}
+                      id={propiedad}
+                      value={formData[propiedad]}
+                      placeholder="ingresa el dato"
+                      onChange={handleChange}
+                      className="w-9/12 rounded-md bg-gray-600 p-2 text-gray-300"
+                    />
                   </div>
                 );
               })
@@ -126,13 +160,12 @@ export default function ProductCard({
               .slice(1)
               .map((propiedad) => {
                 if (propiedad === "status") {
-                  console.log(data[propiedad]);
                   return (
                     <div
                       key={propiedad}
                       className="truncate rounded-md bg-gray-700 p-4"
                     >
-                      <p className="flex text-base leading-relaxed text-gray-300">
+                      <div className="flex text-base leading-relaxed text-gray-300">
                         <span className="font-semibold text-cyan-300">
                           {propiedad}:{" "}
                         </span>
@@ -141,7 +174,30 @@ export default function ProductCard({
                         >
                           {data[propiedad]}
                         </div>
-                      </p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (
+                  data[propiedad] instanceof Object &&
+                  data[propiedad].seconds !== undefined &&
+                  data[propiedad].nanoseconds !== undefined
+                ) {
+                  // Convertir el objeto Timestamp a una fecha legible
+                  const fecha = new Date(data[propiedad].seconds * 1000);
+                  const fechaFormateada = fecha.toLocaleDateString("es-ES");
+                  return (
+                    <div
+                      key={propiedad}
+                      className="truncate rounded-md bg-gray-700 p-4"
+                    >
+                      <div className="text-base leading-relaxed text-gray-300">
+                        <span className="font-semibold text-cyan-300">
+                          {propiedad}:{" "}
+                        </span>
+                        {fechaFormateada}
+                      </div>
                     </div>
                   );
                 }
@@ -161,6 +217,7 @@ export default function ProductCard({
                     </div>
                   );
                 }
+
                 return (
                   <div
                     key={propiedad}

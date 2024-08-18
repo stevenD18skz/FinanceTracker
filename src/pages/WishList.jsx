@@ -4,6 +4,17 @@ import ModalProduct from "../components/ModalProduct";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ProductCard from "../components/ProductCard";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  query,
+  where,
+  addDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
 export default function WishList() {
   const [data, setData] = useState([]);
@@ -14,36 +25,85 @@ export default function WishList() {
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
-  const statusOrder = {
-    low: 1,
-    medium: 2,
-    high: 3,
-    nextToBuy: 4,
-  };
-
-  const fetchProducts = () => {
-    setIsLoading(true);
-    fetch("http://localhost:3000/wishlist")
-      .then((res) => res.json())
-      .then((data) => {
-        const sortedItems = data.sort(
-          (a, b) => statusOrder[b.status] - statusOrder[a.status],
-        );
-
-        setData(sortedItems);
-        setIsLoading(false);
-        console.log(sortedItems);
-      })
-      .catch((error) => {
-        console.log("Error fetching wishlist:", error);
-        setIsLoading(false);
-        setError(true);
-      });
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const items = [
+    {
+      name: "Laptop",
+      description: "Laptop de alto rendimiento",
+      productValue: 1200,
+      currentMoney: 0,
+      createDate: new Date("2024-08-10T11:06:55Z"),
+      goalDate: new Date("2025-08-10T11:07:11Z"),
+      status: "high",
+      image:
+        "https://i.pinimg.com/564x/d0/70/07/d070075c1d5b8d094d43a36ea431d44c.jpg",
+    },
+    {
+      name: "Smartphone",
+      description: "Smartphone con cámara de 64MP",
+      productValue: 800,
+      currentMoney: 0,
+      createDate: new Date("2024-08-10T11:06:55Z"),
+      goalDate: new Date("2025-08-10T11:07:11Z"),
+      status: "medium",
+      image:
+        "https://i.pinimg.com/564x/66/c2/3f/66c23f9566266ec63f39b2dac1a56585.jpg",
+    },
+    {
+      name: "Tablet",
+      description: "Tablet con pantalla de 10 pulgadas",
+      productValue: 6003,
+      currentMoney: 0,
+      createDate: new Date("2024-08-10T11:06:55Z"),
+      goalDate: new Date("2025-08-10T11:07:11Z"),
+      status: "nextToBuy",
+      image:
+        "https://i.pinimg.com/564x/ac/d9/32/acd932b4ee60de4d9cc087e729abb4a7.jpg",
+    },
+    {
+      name: "Monitor",
+      description: "Monitor 4K de 27 pulgadas",
+      productValue: 300,
+      currentMoney: 0,
+      createDate: new Date("2024-08-10T11:06:55Z"),
+      goalDate: new Date("2025-08-10T11:07:11Z"),
+      status: "low",
+      image:
+        "https://i.pinimg.com/736x/50/76/e4/5076e42a03985dd1629988f9b69d72f0.jpg",
+    },
+    {
+      name: "Teclado",
+      description: "Teclado mecánico retroiluminado",
+      productValue: 50,
+      currentMoney: 0,
+      createDate: new Date("2024-08-10T11:06:55Z"),
+      goalDate: new Date("2025-08-10T11:07:11Z"),
+      status: "low",
+      image:
+        "https://i.pinimg.com/564x/70/e7/63/70e763b166fc8017167b643a39ff219a.jpg",
+    },
+    {
+      name: "Televisor",
+      description: "Televisor de alta definición",
+      productValue: 900,
+      currentMoney: 0,
+      createDate: new Date("2024-08-10T11:06:55Z"),
+      goalDate: new Date("2025-08-10T11:07:11Z"),
+      status: "medium",
+      image:
+        "https://i.pinimg.com/564x/40/dc/2c/40dc2c3ce34f91560623913b43d5c5cb.jpg", // Agrega aquí la URL de la imagen del televisor
+    },
+    {
+      name: "Audífonos",
+      description: "Audífonos inalámbricos con cancelación de ruido",
+      productValue: 150,
+      currentMoney: 0,
+      createDate: new Date("2024-08-10T11:06:55Z"),
+      goalDate: new Date("2025-08-10T11:07:11Z"),
+      status: "low",
+      image:
+        "https://i.pinimg.com/564x/71/ce/51/71ce51c79cf330d7887b3922219e7376.jpg", // Agrega aquí la URL de la imagen de los audífonos
+    },
+  ];
 
   const Toast = Swal.mixin({
     toast: true,
@@ -57,10 +117,69 @@ export default function WishList() {
     },
   });
 
+  const fetchProductsByFirebase = () => {
+    setIsLoading(true);
+    const statusOrder = {
+      low: 1,
+      medium: 2,
+      high: 3,
+      nextToBuy: 4,
+    };
+
+    try {
+      const queryDb = getFirestore();
+      const queryCollection = collection(queryDb, "productos");
+      getDocs(queryCollection)
+        .then((res) =>
+          res.docs.map((product) => ({ id: product.id, ...product.data() })),
+        )
+        .then((final) => {
+          const sortedItems = final.sort(
+            (a, b) => statusOrder[b.status] - statusOrder[a.status],
+          );
+
+          setData(sortedItems);
+          setIsLoading(false);
+        });
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+      setIsLoading(false);
+      setError(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchProductsByFirebase();
+  }, []);
+
   const toastCreate = (createObject) => {
-    console.log(createObject);
+    const foundItem = items.find(
+      (item) =>
+        item.name.toLocaleLowerCase() ===
+        createObject.title.toLocaleLowerCase(),
+    );
+
+    if (!foundItem) {
+      console.error("No se encontró ningún objeto con ese nombre.");
+      return;
+    }
+
+    const itemForzado = foundItem;
+
+    async function addItem(item) {
+      try {
+        const queryDb = getFirestore();
+        const queryCollection = collection(queryDb, "productos");
+        const docRef = await addDoc(queryCollection, item);
+
+        fetchProductsByFirebase();
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+
     Swal.fire({
-      title: `Do you want to add ${createObject.name} to the wishlist?`,
+      title: `Do you want to add ${itemForzado.name} to the wishlist?`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -68,7 +187,7 @@ export default function WishList() {
       confirmButtonText: "yes, add",
     }).then((result) => {
       if (result.isConfirmed) {
-        createProduct(createObject);
+        addItem(itemForzado);
         Toast.fire({
           icon: "success",
           title: "The product has been added successfully",
@@ -82,54 +201,7 @@ export default function WishList() {
     });
   };
 
-  const createProduct = (dataProductCreate) => {
-    console.log(dataProductCreate);
-
-    const postData = async (body = {}) => {
-      try {
-        const response = await fetch("http://localhost:3000/wishlist", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-
-        const jsonResponse = await response.json();
-
-        // Si el código de estado es 400, significa que hay un error de validación
-        if (response.status === 400) {
-          console.log("Validation Error:", jsonResponse.error);
-          return jsonResponse; // Retorna el error para manejarlo en el frontend
-        }
-
-        // Si la respuesta es exitosa, retornamos el JSON
-        if (response.ok) {
-          fetchProducts();
-          return jsonResponse;
-        } else {
-          throw new Error("Network response was not ok");
-        }
-      } catch (error) {
-        console.log("Error in POST request:", error);
-        throw error;
-      }
-    };
-
-    postData(dataProductCreate)
-      .then((data) => {
-        if (data.error) {
-          console.log("Validation errors:", data.error);
-          //setErrors(data.error);
-        } else {
-          console.log("Success:", data);
-        }
-      })
-      .catch((error) => console.log("Error:", error));
-  };
-
   const toastUpdate = (updateObject) => {
-    console.log(updateObject);
     Swal.fire({
       title: `¿OLAAAAAAAAAAAAAAAA?`,
       text: "No podrá acceder a la plataforma",
@@ -156,41 +228,18 @@ export default function WishList() {
     });
   };
 
-  const updateProduct = async (dataUpdateProduct) => {
-    console.log(dataUpdateProduct);
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/wishlist/${dataUpdateProduct.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json", // Tipo de contenido
-          },
-          body: JSON.stringify(dataUpdateProduct),
-        },
-      );
-
-      const jsonResponse = await response.json();
-
-      // Si el código de estado es 400, significa que hay un error de validación
-      if (response.status === 400) {
-        console.log("Validation Error:", jsonResponse.error);
-        return jsonResponse; // Retorna el error para manejarlo en el frontend
-      }
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      fetchProducts();
-    } catch (error) {
-      console.log("Error in PATCH request:", error);
-    }
-  };
-
   const toastDelete = (deleteObject) => {
-    console.log(deleteObject);
+    async function deleteItem(itemId) {
+      try {
+        const queryDb = getFirestore();
+        const queryDoc = doc(queryDb, "productos", itemId);
+        await deleteDoc(queryDoc);
+        fetchProductsByFirebase();
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+
     Swal.fire({
       title: `¿Estás seguro que quieres eliminar el producto?`,
       icon: "question",
@@ -202,7 +251,7 @@ export default function WishList() {
     }).then((result) => {
       if (result.isConfirmed) {
         //funcion que elimina el producto
-        deleteProduct(deleteObject.id);
+        deleteItem(deleteObject.id);
         Toast.fire({
           icon: "success",
           title: "El producto se elimino",
@@ -216,25 +265,6 @@ export default function WishList() {
     });
   };
 
-  const deleteProduct = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:3000/wishlist/${id}`, {
-        method: "DELETE", // Método POST
-        headers: {
-          "Content-Type": "application/json", // Tipo de contenido
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      fetchProducts();
-    } catch (error) {
-      console.log("Error in DELETE request:", error);
-    }
-  };
-
   if (isLoading) {
     return (
       <div>
@@ -242,6 +272,7 @@ export default function WishList() {
       </div>
     );
   }
+
   if (error) {
     return (
       <div>
@@ -249,25 +280,6 @@ export default function WishList() {
       </div>
     );
   }
-
-  const productImages = {
-    televisor:
-      "https://i.pinimg.com/564x/40/dc/2c/40dc2c3ce34f91560623913b43d5c5cb.jpg",
-    laptop:
-      "https://i.pinimg.com/564x/d0/70/07/d070075c1d5b8d094d43a36ea431d44c.jpg",
-    tablet:
-      "https://i.pinimg.com/564x/ac/d9/32/acd932b4ee60de4d9cc087e729abb4a7.jpg",
-    monitor:
-      "https://i.pinimg.com/736x/50/76/e4/5076e42a03985dd1629988f9b69d72f0.jpg",
-    teclado:
-      "https://i.pinimg.com/564x/70/e7/63/70e763b166fc8017167b643a39ff219a.jpg",
-    audifonos:
-      "https://i.pinimg.com/564x/71/ce/51/71ce51c79cf330d7887b3922219e7376.jpg",
-    "alarm clock":
-      "https://i.pinimg.com/564x/29/c0/e9/29c0e940a918a3ac54c634688d3043f9.jpg",
-    smartphone:
-      "https://i.pinimg.com/564x/66/c2/3f/66c23f9566266ec63f39b2dac1a56585.jpg",
-  };
 
   return (
     <div className="bg-slate-800 p-12">
@@ -284,9 +296,9 @@ export default function WishList() {
               <ProductCard
                 key={current.id}
                 dataCard={current}
-                cardImage={productImages[current.name.toLowerCase()]}
+                cardImage={current.image}
                 deleteCard={toastDelete}
-                editCard={updateProduct}
+                editCard={toastUpdate}
                 className="col-span-1"
               ></ProductCard>
             );

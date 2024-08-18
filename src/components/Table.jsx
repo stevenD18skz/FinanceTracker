@@ -7,15 +7,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "./searchBar";
 
-import migrateItemsToFirestore from "../firebase/addItems";
-
 export default function Table({ deleteData, updateProduct, data_list }) {
   const [income, setIncome] = useState(data_list);
   const [orderby, setOrderby] = useState("");
   const [order, setOrder] = useState(true); // true: ascendentemente, false: descendentemente
   const [characterSearch, setCharacterSearch] = useState("");
-
-  migrateItemsToFirestore();
 
   useEffect(() => {
     try {

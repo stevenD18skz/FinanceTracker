@@ -72,6 +72,20 @@ export default async function migrateItemsToFirestore() {
 //migrateItemsToFirestore();
 
 /*
+async function migrateItemsToFirestore() {
+  try {
+    const batch = db.batch();
+    items.forEach(async (item) => {
+      const docRef = doc(db, 'items', item.id); // Usa el mismo ID si lo deseas
+      await setDoc(docRef, item); // Crea o actualiza el documento en Firestore
+    });
+    console.log("Datos migrados a Firestore exitosamente");
+  } catch (e) {
+    console.error("Error migrando datos a Firestore: ", e);
+  }
+}
+
+
 import { collection, getDocs } from "firebase/firestore";
 
 async function getItems() {
@@ -98,4 +112,5 @@ import { doc, deleteDoc } from "firebase/firestore";
 async function deleteItem(itemId) {
   await deleteDoc(doc(db, "items", itemId));
 }
+
 */
