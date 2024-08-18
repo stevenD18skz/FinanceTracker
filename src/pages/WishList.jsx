@@ -14,6 +14,7 @@ import {
   where,
   addDoc,
   deleteDoc,
+  setDoc,
 } from "firebase/firestore";
 
 export default function WishList() {
@@ -109,7 +110,7 @@ export default function WishList() {
     toast: true,
     position: "top-end",
     showConfirmButton: false,
-    timer: 2000,
+    timer: 5000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.onmouseenter = Swal.stopTimer;
@@ -236,7 +237,19 @@ export default function WishList() {
         await deleteDoc(queryDoc);
         fetchProductsByFirebase();
       } catch (e) {
-        console.error("Error adding document: ", e);
+        console.error("Error deleting document: ", e);
+      }
+    }
+
+    // Función para restaurar el producto
+    async function restoreItem(itemId, itemData) {
+      try {
+        const queryDb = getFirestore();
+        const queryDoc = doc(queryDb, "productos", itemId);
+        await setDoc(queryDoc, itemData);
+        fetchProductsByFirebase();
+      } catch (e) {
+        console.error("Error restoring document: ", e);
       }
     }
 
@@ -250,11 +263,28 @@ export default function WishList() {
       confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
-        //funcion que elimina el producto
+        // Guarda los datos del producto antes de eliminarlo
+        const productData = { ...deleteObject };
+
         deleteItem(deleteObject.id);
+
         Toast.fire({
           icon: "success",
-          title: "El producto se elimino",
+          title: "El producto se eliminó",
+          showCancelButton: true,
+          cancelButtonText: "X",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Deshacer",
+          confirmButtonColor: "#3085d6",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Restaurar el producto si el usuario hace clic en "Deshacer"
+            restoreItem(deleteObject.id, productData);
+            Toast.fire({
+              icon: "info",
+              title: "Eliminación revertida",
+            });
+          }
         });
       } else {
         Toast.fire({
