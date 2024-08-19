@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-function RegisterForm() {
+export default function RegisterForm() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -98,5 +98,3 @@ function RegisterForm() {
     </div>
   );
 }
-
-export default RegisterForm;

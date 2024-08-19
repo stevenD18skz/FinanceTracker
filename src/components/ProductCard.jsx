@@ -159,6 +159,12 @@ export default function ProductCard({
           : Object.keys(data)
               .slice(1)
               .map((propiedad) => {
+                console.log(data);
+                if (propiedad === "user") {
+                  //console.info(data[propiedad]);
+                  return null;
+                }
+
                 if (propiedad === "status") {
                   return (
                     <div

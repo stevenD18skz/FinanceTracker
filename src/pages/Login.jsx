@@ -1,23 +1,30 @@
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/AuthContext";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { getFirestore, doc } from "firebase/firestore";
 
-export default function Login() {
+export default function LoginForm() {
+  const { setUser } = useUser();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate(); // Hook para redirigir
 
   function handleLogin({ email, password }) {
-    const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // El usuario ha iniciado sesión correctamente
         const user = userCredential.user;
-        console.log("Inicio de sesión exitoso:", user);
+        //console.info("Inicio de sesión exitoso:", user);
 
-        // Aquí puedes guardar el usuario en el contexto global o redirigir al usuario
-        console.log(auth.currentUser);
-        navigate("/wishlist"); // Cambia "/home" por la ruta que desees
+        const queryDb = getFirestore();
+        const userDocRef = doc(queryDb, "users", user.uid); // Obtén la referencia del documento del usuario
+
+        setUser(userDocRef);
+        navigate("/wishlist");
       })
       .catch((error) => {
         // Manejar errores de autenticación
