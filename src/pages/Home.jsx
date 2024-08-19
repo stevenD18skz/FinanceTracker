@@ -23,13 +23,13 @@ export default function Home() {
     console.log(newIncome);
   };
 
-  return (
-    <div className="i min-h-dvh bg-slate-500">
-      <div className="mx-auto w-10/12 items-center bg-slate-300">
-        <Table data_list={incomeList}></Table>
-      </div>
-    </div>
-  );
+  // return (
+  //<div className="i min-h-dvh bg-slate-500">
+  //<div className="mx-auto w-10/12 items-center bg-slate-300">
+  // <Table data_list={incomeList}></Table>
+  // </div>
+  // </div>
+  //);
 
   return (
     <main className="min-h-screen bg-slate-800 text-gray-300">

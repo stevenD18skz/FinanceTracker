@@ -58,7 +58,7 @@ export default function LoginForm() {
       const userDoc = doc(getFirestore(), "users", user.uid);
       setUser(userDoc);
       sessionStorage.setItem("user", JSON.stringify(userDoc));
-      navigate("/wishlist");
+      navigate("/home");
     } else {
       setCurrentState(4);
       console.log("no hay usuario autenticado");
@@ -71,11 +71,13 @@ export default function LoginForm() {
         // El usuario ha iniciado sesión correctamente
         const user = userCredential.user;
 
-        //caso del login ya hehco
-        const userDoc = doc(getFirestore(), "users", user.uid);
-        setUser(userDoc);
-        sessionStorage.setItem("user", JSON.stringify(userDoc));
-        navigate("/wishlist");
+        //acciones a hacer cuando el usuario ya se logueo
+        const userDoc = doc(getFirestore(), "users", user.uid); //obtiene la referencia del documento
+        console.log(userDoc);
+
+        setUser(userDoc); //guarda la usuario en el contexto gloabal
+        sessionStorage.setItem("user", JSON.stringify(userDoc)); //guardar el usuario en el almacenamiento de la sesion
+        //navigate("/home"); //mandar al usuairo a la wihsList
       })
       .catch((error) => {
         // Manejar errores de autenticación
@@ -95,7 +97,7 @@ export default function LoginForm() {
 
       setUser(userDoc);
       sessionStorage.setItem("user", JSON.stringify(userDoc));
-      navigate("/wishlist");
+      navigate("/home");
     } catch (error) {
       console.error("Error al iniciar sesión con Google", error);
       // Manejar el error si es necesario

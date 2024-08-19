@@ -22,7 +22,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="flex items-center justify-between bg-slate-800 p-4 text-white">
+    <nav className="flex items-center justify-between bg-slate-900 p-4 text-white">
       <h1 className="text-2xl font-bold">Tu App</h1>
       <button
         onClick={handleSignOut}

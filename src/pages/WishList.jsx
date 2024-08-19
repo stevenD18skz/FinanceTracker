@@ -306,57 +306,71 @@ export default function WishList() {
 
   if (isLoading) {
     return (
-      <div>
-        <p className="text-center">Loading...</p>
-      </div>
+      <>
+        <NavBar></NavBar>
+        <div className="bg-slate-800">
+          <div className="mx-auto min-h-dvh w-10/12 rounded-xl bg-slate-600">
+            <header className="">
+              <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
+                LOADING...
+              </h2>
+            </header>
+          </div>
+        </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div>
-        <p className="text-center">hubo un error</p>
-      </div>
+      <>
+        <NavBar></NavBar>
+        <div>
+          <p className="text-center">hubo un error</p>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="bg-slate-800 p-12">
+    <>
       <NavBar></NavBar>
-      <div className="mx-auto w-10/12 rounded-xl bg-slate-600">
-        <header className="">
-          <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
-            Wish List
-          </h2>
-        </header>
+      <div className="bg-slate-800">
+        <div className="mx-auto min-h-dvh w-10/12 rounded-xl bg-slate-600">
+          <header className="">
+            <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
+              Wish List
+            </h2>
+          </header>
 
-        <div className="grid grid-cols-3 place-items-center gap-y-8">
-          {data.map((current, index) => {
-            return (
-              <ProductCard
-                key={current.id}
-                dataCard={current}
-                cardImage={current.image}
-                deleteCard={toastDelete}
-                editCard={toastUpdate}
-                className="col-span-1"
-              ></ProductCard>
-            );
-          })}
-          <button
-            onClick={openModal}
-            className="h-full w-10/12 max-w-md truncate rounded-xl border-4 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
-          >
-            new Monthly esentials
-          </button>
+          <div className="grid grid-cols-3 place-items-center gap-y-8">
+            {data.map((current, index) => {
+              return (
+                <ProductCard
+                  key={current.id}
+                  dataCard={current}
+                  cardImage={current.image}
+                  deleteCard={toastDelete}
+                  editCard={toastUpdate}
+                  className="col-span-1"
+                ></ProductCard>
+              );
+            })}
+            <button
+              onClick={openModal}
+              className="h-full w-10/12 max-w-md truncate rounded-xl border-4 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
+            >
+              new Monthly esentials
+            </button>
+          </div>
+
+          <ModalProduct
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onSubmit={toastCreate}
+          />
         </div>
-
-        <ModalProduct
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onSubmit={toastCreate}
-        />
       </div>
-    </div>
+    </>
   );
 }
