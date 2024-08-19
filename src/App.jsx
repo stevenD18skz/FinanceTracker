@@ -15,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to={"/login"} />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/singup" element={<RegisterForm />} />
+          <Route path="/signup" element={<RegisterForm />} />
           <Route path="/home" element={<Home />} />
           <Route path="/wishlist" element={<WishWist />} />
         </Routes>
