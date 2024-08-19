@@ -7,7 +7,10 @@ export function useUser() {
 }
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = sessionStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

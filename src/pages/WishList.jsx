@@ -17,6 +17,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 
+import NavBar from "../components/NavBar";
 import { useUser } from "../context/AuthContext";
 
 export default function WishList() {
@@ -321,6 +322,7 @@ export default function WishList() {
 
   return (
     <div className="bg-slate-800 p-12">
+      <NavBar></NavBar>
       <div className="mx-auto w-10/12 rounded-xl bg-slate-600">
         <header className="">
           <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
