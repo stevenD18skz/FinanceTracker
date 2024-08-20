@@ -5,19 +5,33 @@ import Swal from "sweetalert2";
 //firebase
 import { auth } from "../firebase/config";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, addDoc } from "firebase/firestore";
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 //contextos y hooks
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import {
+  faPenToSquare,
+  faPlus,
+  faDeleteLeft,
+  faEye,
+  faEyeSlash
+} from "@fortawesome/free-solid-svg-icons";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); // Hook para redirigir
   const { setUser, setUserDocData } = useAuth();
+
+
+  const [loading, setLoading ] = useState(false)
+  const [error, setError ] = useState("")
+  const [showPassword, setShowPassword ] = useState(false)
 
   const Toast = Swal.mixin({
     toast: true,
@@ -31,7 +45,6 @@ export default function LoginForm() {
     },
   });
 
-  const [currentstate, setCurrentState] = useState(0);
 
   async function successLogin(loggedInUser) {
     //aqui en teoria deberia de recibir un dato tipo "UserCredential" ==> const user = userCredential.user;
@@ -46,6 +59,7 @@ export default function LoginForm() {
     setUser(loggedInUser);
 
     // Guardar el usuario en el sessionStorage
+    // ya se hace en el contexto
 
     // Obtener la referencia del documento del usuario en Firestore
     const userRef = doc(getFirestore(), "users", loggedInUser.uid);
@@ -65,25 +79,25 @@ export default function LoginForm() {
    * el login, en tal caso realiza las acciones perdinentes
    */
   useEffect(() => {
-    setCurrentState(1);
+    setLoading(true)
     onAuthStateChanged(auth, userWasLogin);
   }, []);
 
   function userWasLogin(user) {
     if (user) {
-      setCurrentState(3);
       Toast.fire({
         icon: "success",
         title: "Log in successfull " + user.displayName,
       });
       successLogin(user);
     } else {
-      setCurrentState(4);
       Toast.fire({
         icon: "error",
         title: "no hay usuario autenticado",
       });
+      setLoading(false)
     }
+    
   }
 
   function handleLogin({ email, password }) {
@@ -94,6 +108,8 @@ export default function LoginForm() {
       })
       .catch((error) => {
         console.error("Error al iniciar sesión:", error.message);
+        setLoading(false)
+        setError(error.message)
       });
   }
 
@@ -109,10 +125,11 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true)
     handleLogin({ email, password });
   };
 
-  if (currentstate === 1)
+  if (loading)
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-900">
         <div className="w-full max-w-md rounded-xl border border-cyan-500 bg-gray-800 p-8 shadow-lg">
@@ -136,12 +153,19 @@ export default function LoginForm() {
           </h2>
         </header>
 
+        {error ?
+          <div className="bg-blue-200">
+            <p>{(error === "Firebase: Error (auth/invalid-credential).") ? "CREDENDIALES INVALIDAS" : "NO SE EN QUE FALLASTE" }</p>
+          </div>
+          : null
+        }
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col">
             <label
               className="mb-2 text-sm font-semibold text-cyan-300"
               htmlFor="email"
-            >
+            >             
               Correo Electrónico
             </label>
             <input
@@ -164,7 +188,7 @@ export default function LoginForm() {
               Contraseña
             </label>
             <input
-              type="password"
+              type={showPassword ? "text": "password"}
               id="password"
               name="password"
               value={password}
@@ -173,6 +197,14 @@ export default function LoginForm() {
               placeholder="Ingresa tu contraseña"
               className="rounded-md border border-gray-700 bg-gray-700 p-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-cyan-400"
             />
+
+            <button onClick={() => setShowPassword(!showPassword)}>
+              { showPassword ?
+                  <FontAwesomeIcon icon={faEyeSlash} style={{color: "#d93030",}} />
+                :
+                  <FontAwesomeIcon icon={faEye} style={{color: "#74C0FC",}} />
+              }
+            </button>
           </div>
 
           <button
