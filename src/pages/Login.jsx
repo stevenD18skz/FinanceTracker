@@ -1,22 +1,23 @@
 //importacion de librerias
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Swal from "sweetalert2";
 
 //firebase
 import { auth } from "../firebase/config";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 //contextos y hooks
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); // Hook para redirigir
+  const { setUser, setUserDocData } = useAuth();
 
   const Toast = Swal.mixin({
     toast: true,
@@ -30,77 +31,79 @@ export default function LoginForm() {
     },
   });
 
-  const { setUser } = useUser();
-  const [currentUser, setCurrentUser] = useState(null);
-  /*
-  0: iniicializado
-  1: loading
-  2: login completo
-  3: login pero sin registro
-  4: no hay nadie logueado
-  */
   const [currentstate, setCurrentState] = useState(0);
 
+  async function successLogin(loggedInUser) {
+    //aqui en teoria deberia de recibir un dato tipo "UserCredential" ==> const user = userCredential.user;
+    /**
+     * en si hay 4 opciones
+     * -> las credenciales
+     * -> el usuario que sale de las credenciales >>>>>
+     * -> la referencia al documenot del usuario
+     * -> el documento usuario >>>>>
+     */
+    // Guardar el usuario autenticado en el contexto global
+    setUser(loggedInUser);
+
+    // Guardar el usuario en el sessionStorage
+
+    // Obtener la referencia del documento del usuario en Firestore
+    const userRef = doc(getFirestore(), "users", loggedInUser.uid);
+
+    // Obtener los datos del documento del usuario
+    const docSnapshot = await getDoc(userRef);
+    if (docSnapshot.exists()) {
+      setUserDocData({ id: userRef.id, ...docSnapshot.data() });
+    }
+
+    // Redirigir al usuario a la página deseada
+    navigate("/wishlist");
+  }
+
+  /**
+   * verifica si el usuario ya esta logueado apenas carga
+   * el login, en tal caso realiza las acciones perdinentes
+   */
   useEffect(() => {
     setCurrentState(1);
-    onAuthStateChanged(auth, handleUserStateChanged);
+    onAuthStateChanged(auth, userWasLogin);
   }, []);
 
-  function handleUserStateChanged(user) {
+  function userWasLogin(user) {
     if (user) {
       setCurrentState(3);
-      console.log(user);
       Toast.fire({
         icon: "success",
         title: "Log in successfull " + user.displayName,
       });
-      //caso del login ya hehco
-      const userDoc = doc(getFirestore(), "users", user.uid);
-      setUser(userDoc);
-      sessionStorage.setItem("user", JSON.stringify(userDoc));
-      navigate("/home");
+      successLogin(user);
     } else {
       setCurrentState(4);
-      console.log("no hay usuario autenticado");
+      Toast.fire({
+        icon: "error",
+        title: "no hay usuario autenticado",
+      });
     }
   }
 
   function handleLogin({ email, password }) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // El usuario ha iniciado sesión correctamente
         const user = userCredential.user;
-
-        //acciones a hacer cuando el usuario ya se logueo
-        const userDoc = doc(getFirestore(), "users", user.uid); //obtiene la referencia del documento
-        console.log(userDoc);
-
-        setUser(userDoc); //guarda la usuario en el contexto gloabal
-        sessionStorage.setItem("user", JSON.stringify(userDoc)); //guardar el usuario en el almacenamiento de la sesion
-        //navigate("/home"); //mandar al usuairo a la wihsList
+        successLogin(user);
       })
       .catch((error) => {
-        // Manejar errores de autenticación
         console.error("Error al iniciar sesión:", error.message);
       });
   }
 
   const handleGoogleSignIn = async () => {
     const googleProvider = new GoogleAuthProvider();
-
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      // Aquí puedes manejar el resultado de la autenticación, como guardar el usuario en el contexto global
-      console.log(result.user);
-
-      const userDoc = doc(getFirestore(), "users", result.user.uid);
-
-      setUser(userDoc);
-      sessionStorage.setItem("user", JSON.stringify(userDoc));
-      navigate("/home");
+      const credentials = await signInWithPopup(auth, googleProvider);
+      successLogin(credentials.user);
     } catch (error) {
       console.error("Error al iniciar sesión con Google", error);
-      // Manejar el error si es necesario
     }
   };
 

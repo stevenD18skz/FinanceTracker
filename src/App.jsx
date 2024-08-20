@@ -6,11 +6,11 @@ import RegisterForm from "./pages/SingUp";
 import Home from "./pages/Home";
 import WishWist from "./pages/WishList";
 
-import { UserProvider } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 function App() {
   return (
-    <UserProvider>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to={"/login"} />} />
@@ -20,7 +20,7 @@ function App() {
           <Route path="/wishlist" element={<WishWist />} />
         </Routes>
       </BrowserRouter>
-    </UserProvider>
+    </AuthProvider>
   );
 }
 

@@ -1,20 +1,43 @@
-import React, { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
-const UserContext = createContext();
+const AuthContext = createContext();
 
-export function useUser() {
-  return useContext(UserContext);
-}
-
-export function UserProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const savedUser = sessionStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
+  const [userDocData, setUserDocData] = useState(() => {
+    const savedUserDocData = sessionStorage.getItem("userDocData");
+    return savedUserDocData ? JSON.parse(savedUserDocData) : null;
+  });
+
+  // Guardar `user` en `sessionStorage` cuando cambia
+  useEffect(() => {
+    if (user) {
+      sessionStorage.setItem("user", JSON.stringify(user));
+    } else {
+      sessionStorage.removeItem("user");
+    }
+  }, [user]);
+
+  // Guardar `userDocData` en `sessionStorage` cuando cambia
+  useEffect(() => {
+    if (userDocData) {
+      sessionStorage.setItem("userDocData", JSON.stringify(userDocData));
+    } else {
+      sessionStorage.removeItem("userDocData");
+    }
+  }, [userDocData]);
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider
+      value={{ user, setUser, userDocData, setUserDocData }}
+    >
       {children}
-    </UserContext.Provider>
+    </AuthContext.Provider>
   );
-}
+};
+
+export const useAuth = () => useContext(AuthContext);

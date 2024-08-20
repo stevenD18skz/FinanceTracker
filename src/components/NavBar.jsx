@@ -3,11 +3,11 @@ import React from "react";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/config"; // Asegúrate de que este sea el path correcto a tu configuración de Firebase
-import { useUser } from "../context/AuthContext"; // Importa tu contexto de autenticación
+import { useAuth } from "../context/AuthContext"; // Importa tu contexto de autenticación
 
 export default function NavBar() {
   const navigate = useNavigate();
-  const { setUser } = useUser();
+  const { setUser } = useAuth();
 
   const handleSignOut = async () => {
     try {

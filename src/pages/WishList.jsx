@@ -18,10 +18,12 @@ import {
 } from "firebase/firestore";
 
 import NavBar from "../components/NavBar";
-import { useUser } from "../context/AuthContext";
+import { db } from "../firebase/config";
+
+import { useAuth } from "../context/AuthContext";
 
 export default function WishList() {
-  const { user } = useUser();
+  const { user, userDocData } = useAuth();
   //const user = "V7Uq0H3oRROgX4s2CuxxcOTF5Fo1";
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -131,13 +133,14 @@ export default function WishList() {
       high: 3,
       nextToBuy: 4,
     };
-    console.log(user);
 
     try {
-      const queryDb = getFirestore();
-      //const userDocRef = doc(queryDb, "users", user); // Obtén la referencia del documento del usuario
-      const queryCollection = collection(queryDb, "productos");
-      const querryFiltler = query(queryCollection, where("user", "==", user));
+      const userDocRef = doc(db, "users", user.uid); // Obtén la referencia del documento del usuario
+      const queryCollection = collection(db, "productos");
+      const querryFiltler = query(
+        queryCollection,
+        where("user", "==", userDocRef),
+      );
       getDocs(querryFiltler)
         .then((res) =>
           res.docs.map((product) => ({ id: product.id, ...product.data() })),
@@ -183,7 +186,6 @@ export default function WishList() {
           user: user,
           ...item,
         });
-        console.info("objeto agregado correctamente " + docRef);
         fetchProductsByFirebase();
       } catch (e) {
         console.error("Error adding document: ", e);
