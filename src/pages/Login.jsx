@@ -5,9 +5,11 @@ import Swal from "sweetalert2";
 //firebase
 import { auth } from "../firebase/config";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, getDoc, addDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, addDoc, setDoc } from "firebase/firestore";
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+
+
 
 //contextos y hooks
 import { useNavigate } from "react-router-dom";
@@ -17,7 +19,7 @@ import {
   faPlus,
   faDeleteLeft,
   faEye,
-  faEyeSlash
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,10 +30,9 @@ export default function LoginForm() {
   const navigate = useNavigate(); // Hook para redirigir
   const { setUser, setUserDocData } = useAuth();
 
-
-  const [loading, setLoading ] = useState(false)
-  const [error, setError ] = useState("")
-  const [showPassword, setShowPassword ] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const Toast = Swal.mixin({
     toast: true,
@@ -45,29 +46,34 @@ export default function LoginForm() {
     },
   });
 
-
   async function successLogin(loggedInUser) {
-    //aqui en teoria deberia de recibir un dato tipo "UserCredential" ==> const user = userCredential.user;
-    /**
-     * en si hay 4 opciones
-     * -> las credenciales
-     * -> el usuario que sale de las credenciales >>>>>
-     * -> la referencia al documenot del usuario
-     * -> el documento usuario >>>>>
-     */
     // Guardar el usuario autenticado en el contexto global
     setUser(loggedInUser);
-
-    // Guardar el usuario en el sessionStorage
-    // ya se hace en el contexto
 
     // Obtener la referencia del documento del usuario en Firestore
     const userRef = doc(getFirestore(), "users", loggedInUser.uid);
 
-    // Obtener los datos del documento del usuario
+    // Verificar si el documento del usuario ya existe
     const docSnapshot = await getDoc(userRef);
     if (docSnapshot.exists()) {
+      // Si el documento existe, cargar sus datos
       setUserDocData({ id: userRef.id, ...docSnapshot.data() });
+    } else {
+      // Si el documento no existe, crear uno nuevo con los datos del usuario
+      const newUser = {
+        name: loggedInUser.displayName || "Usuario sin nombre",
+        photoURL: loggedInUser.photoURL || "",
+        username:
+          loggedInUser.displayName?.toLowerCase().replace(/\s/g, "_") ||
+          `user_${loggedInUser.uid.slice(0, 5)}`,
+        uid: loggedInUser.uid,
+        createdAt: new Date(),
+      };
+
+      await setDoc(userRef, newUser);
+
+      // Guardar los datos recién creados en el contexto
+      setUserDocData({ id: userRef.id, ...newUser });
     }
 
     // Redirigir al usuario a la página deseada
@@ -79,7 +85,7 @@ export default function LoginForm() {
    * el login, en tal caso realiza las acciones perdinentes
    */
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     onAuthStateChanged(auth, userWasLogin);
   }, []);
 
@@ -95,9 +101,8 @@ export default function LoginForm() {
         icon: "error",
         title: "no hay usuario autenticado",
       });
-      setLoading(false)
+      setLoading(false);
     }
-    
   }
 
   function handleLogin({ email, password }) {
@@ -108,8 +113,8 @@ export default function LoginForm() {
       })
       .catch((error) => {
         console.error("Error al iniciar sesión:", error.message);
-        setLoading(false)
-        setError(error.message)
+        setLoading(false);
+        setError(error.message);
       });
   }
 
@@ -125,7 +130,7 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     handleLogin({ email, password });
   };
 
@@ -153,19 +158,22 @@ export default function LoginForm() {
           </h2>
         </header>
 
-        {error ?
+        {error ? (
           <div className="bg-blue-200">
-            <p>{(error === "Firebase: Error (auth/invalid-credential).") ? "CREDENDIALES INVALIDAS" : "NO SE EN QUE FALLASTE" }</p>
+            <p>
+              {error === "Firebase: Error (auth/invalid-credential)."
+                ? "CREDENDIALES INVALIDAS"
+                : "NO SE EN QUE FALLASTE"}
+            </p>
           </div>
-          : null
-        }
+        ) : null}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col">
             <label
               className="mb-2 text-sm font-semibold text-cyan-300"
               htmlFor="email"
-            >             
+            >
               Correo Electrónico
             </label>
             <input
@@ -188,7 +196,7 @@ export default function LoginForm() {
               Contraseña
             </label>
             <input
-              type={showPassword ? "text": "password"}
+              type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               value={password}
@@ -199,11 +207,14 @@ export default function LoginForm() {
             />
 
             <button onClick={() => setShowPassword(!showPassword)}>
-              { showPassword ?
-                  <FontAwesomeIcon icon={faEyeSlash} style={{color: "#d93030",}} />
-                :
-                  <FontAwesomeIcon icon={faEye} style={{color: "#74C0FC",}} />
-              }
+              {showPassword ? (
+                <FontAwesomeIcon
+                  icon={faEyeSlash}
+                  style={{ color: "#d93030" }}
+                />
+              ) : (
+                <FontAwesomeIcon icon={faEye} style={{ color: "#74C0FC" }} />
+              )}
             </button>
           </div>
 

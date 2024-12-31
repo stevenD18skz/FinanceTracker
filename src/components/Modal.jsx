@@ -34,15 +34,15 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
-      <div className="relative m-auto flex w-full max-w-md flex-col rounded-lg bg-gray-700 p-8 shadow-lg">
-        <div className="flex items-center justify-between rounded-t border-b py-4 md:py-5 dark:border-gray-600">
-          <h3 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
+      <div className="relative m-auto flex w-full max-w-md flex-col rounded-lg bg-white p-8 shadow-lg">
+        <div className="flex items-center justify-between rounded-t border-b py-4 md:py-5">
+          <h3 className="mb-4 text-2xl font-semibold text-gray-900">
             Create New Product
           </h3>
           <button
             type="button"
             onClick={onClose}
-            className="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+            className="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
           >
             <svg
               className="h-3 w-3"
@@ -92,12 +92,12 @@ const Modal = ({ isOpen, onClose, onSubmit }) => {
             type={"date"}
           ></StandarInput>
           <div>
-            <label className="block text-gray-200">Tags</label>
+            <label className="block text-gray-900">Tags</label>
             <select
               name="tags"
               value={formData.tags}
               onChange={handleChange}
-              className="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
+              className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
               required
             >
               <option value="">Select category</option>

@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import Table from "../components/Table";
 import ModalProduct from "../components/ModalProduct";
-import axios from "axios";
+
 import Swal from "sweetalert2";
 import ProductCard from "../components/ProductCard";
 import {
   getFirestore,
   collection,
   getDocs,
-  getDoc,
-  doc,
   query,
   where,
   addDoc,
@@ -23,8 +21,7 @@ import { db } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
 
 export default function WishList() {
-  const { user, userDocData } = useAuth();
-  //const user = "V7Uq0H3oRROgX4s2CuxxcOTF5Fo1";
+  const { user } = useAuth();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -32,86 +29,6 @@ export default function WishList() {
   const [isModalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-
-  const items = [
-    {
-      name: "Laptop",
-      description: "Laptop de alto rendimiento",
-      productValue: 1200,
-      currentMoney: 0,
-      createDate: new Date("2024-08-10T11:06:55Z"),
-      goalDate: new Date("2025-08-10T11:07:11Z"),
-      status: "high",
-      image:
-        "https://i.pinimg.com/564x/d0/70/07/d070075c1d5b8d094d43a36ea431d44c.jpg",
-    },
-    {
-      name: "Smartphone",
-      description: "Smartphone con cámara de 64MP",
-      productValue: 800,
-      currentMoney: 0,
-      createDate: new Date("2024-08-10T11:06:55Z"),
-      goalDate: new Date("2025-08-10T11:07:11Z"),
-      status: "medium",
-      image:
-        "https://i.pinimg.com/564x/66/c2/3f/66c23f9566266ec63f39b2dac1a56585.jpg",
-    },
-    {
-      name: "Tablet",
-      description: "Tablet con pantalla de 10 pulgadas",
-      productValue: 6003,
-      currentMoney: 0,
-      createDate: new Date("2024-08-10T11:06:55Z"),
-      goalDate: new Date("2025-08-10T11:07:11Z"),
-      status: "nextToBuy",
-      image:
-        "https://i.pinimg.com/564x/ac/d9/32/acd932b4ee60de4d9cc087e729abb4a7.jpg",
-    },
-    {
-      name: "Monitor",
-      description: "Monitor 4K de 27 pulgadas",
-      productValue: 300,
-      currentMoney: 0,
-      createDate: new Date("2024-08-10T11:06:55Z"),
-      goalDate: new Date("2025-08-10T11:07:11Z"),
-      status: "low",
-      image:
-        "https://i.pinimg.com/736x/50/76/e4/5076e42a03985dd1629988f9b69d72f0.jpg",
-    },
-    {
-      name: "Teclado",
-      description: "Teclado mecánico retroiluminado",
-      productValue: 50,
-      currentMoney: 0,
-      createDate: new Date("2024-08-10T11:06:55Z"),
-      goalDate: new Date("2025-08-10T11:07:11Z"),
-      status: "low",
-      image:
-        "https://i.pinimg.com/564x/70/e7/63/70e763b166fc8017167b643a39ff219a.jpg",
-    },
-    {
-      name: "Televisor",
-      description: "Televisor de alta definición",
-      productValue: 900,
-      currentMoney: 0,
-      createDate: new Date("2024-08-10T11:06:55Z"),
-      goalDate: new Date("2025-08-10T11:07:11Z"),
-      status: "medium",
-      image:
-        "https://i.pinimg.com/564x/40/dc/2c/40dc2c3ce34f91560623913b43d5c5cb.jpg", // Agrega aquí la URL de la imagen del televisor
-    },
-    {
-      name: "Audífonos",
-      description: "Audífonos inalámbricos con cancelación de ruido",
-      productValue: 150,
-      currentMoney: 0,
-      createDate: new Date("2024-08-10T11:06:55Z"),
-      goalDate: new Date("2025-08-10T11:07:11Z"),
-      status: "low",
-      image:
-        "https://i.pinimg.com/564x/71/ce/51/71ce51c79cf330d7887b3922219e7376.jpg", // Agrega aquí la URL de la imagen de los audífonos
-    },
-  ];
 
   const Toast = Swal.mixin({
     toast: true,
@@ -135,11 +52,10 @@ export default function WishList() {
     };
 
     try {
-      const userDocRef = doc(db, "users", user.uid); // Obtén la referencia del documento del usuario
       const queryCollection = collection(db, "productos");
       const querryFiltler = query(
         queryCollection,
-        where("user", "==", userDocRef),
+        where("userId", "==", user.uid),
       );
       getDocs(querryFiltler)
         .then((res) =>
@@ -164,160 +80,49 @@ export default function WishList() {
     fetchProductsByFirebase();
   }, []);
 
-  const toastCreate = (createObject) => {
-    const foundItem = items.find(
-      (item) =>
-        item.name.toLocaleLowerCase() ===
-        createObject.title.toLocaleLowerCase(),
-    );
+  const toastCreate = async (item) => {
+    try {
+      const queryDb = getFirestore();
+      const queryCollection = collection(queryDb, "productos");
 
-    if (!foundItem) {
-      console.error("No se encontró ningún objeto con ese nombre.");
-      return;
+      await addDoc(queryCollection, {
+        userId: user.uid,
+        ...item,
+      });
+
+      fetchProductsByFirebase();
+      Toast.fire({
+        icon: "success",
+        title: "Producto añadido exitosamente",
+      });
+    } catch (e) {
+      console.error("Error añadiendo el producto: ", e);
     }
-
-    const itemForzado = foundItem;
-
-    async function addItem(item) {
-      try {
-        const queryDb = getFirestore();
-        const queryCollection = collection(queryDb, "productos");
-        const docRef = await addDoc(queryCollection, {
-          user: user,
-          ...item,
-        });
-        fetchProductsByFirebase();
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
-    }
-
-    Swal.fire({
-      title: `Do you want to add ${itemForzado.name} to the wishlist?`,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "yes, add",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        addItem(itemForzado);
-        Toast.fire({
-          icon: "success",
-          title: "The product has been added successfully",
-        });
-      } else {
-        Toast.fire({
-          icon: "error",
-          title: "The product was not added successfully",
-        });
-      }
-    });
   };
 
-  const toastUpdate = (updateObject) => {
-    Swal.fire({
-      title: `¿OLAAAAAAAAAAAAAAAA?`,
-      text: "No podrá acceder a la plataforma",
-      icon: "warning",
-      cancelButtonText: "لا",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        //funcion que elimina el producto
-        updateProduct(updateObject);
-        Toast.fire({
-          icon: "success",
-          title: "Usuario inhabilitado con éxito",
-        });
-      } else {
-        Toast.fire({
-          icon: "error",
-          title: "No fue posible inhabilitar al usuario",
-        });
-      }
-    });
-  };
-
-  const toastDelete = (deleteObject) => {
-    async function deleteItem(itemId) {
-      try {
-        const queryDb = getFirestore();
-        const queryDoc = doc(queryDb, "productos", itemId);
-        await deleteDoc(queryDoc);
-        fetchProductsByFirebase();
-      } catch (e) {
-        console.error("Error deleting document: ", e);
-      }
+  const toastDelete = async (itemId) => {
+    try {
+      const queryDb = getFirestore();
+      const queryDoc = doc(queryDb, "productos", itemId);
+      await deleteDoc(queryDoc);
+      fetchProductsByFirebase();
+      Toast.fire({
+        icon: "success",
+        title: "Producto eliminado exitosamente",
+      });
+    } catch (e) {
+      console.error("Error eliminando el producto: ", e);
     }
-
-    async function restoreItem(itemId, itemData) {
-      try {
-        const queryDb = getFirestore();
-        const queryDoc = doc(queryDb, "productos", itemId);
-        await setDoc(queryDoc, itemData);
-        fetchProductsByFirebase();
-      } catch (e) {
-        console.error("Error restoring document: ", e);
-      }
-    }
-
-    Swal.fire({
-      title: `¿Estás seguro que quieres eliminar el producto?`,
-      icon: "question",
-      showCancelButton: true,
-      cancelButtonText: "No",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Guarda los datos del producto antes de eliminarlo
-        const productData = { ...deleteObject };
-
-        deleteItem(deleteObject.id);
-
-        Swal.fire({
-          icon: "success",
-          title: "El producto se eliminó",
-          showCancelButton: true,
-          cancelButtonText: "Cerrar",
-          confirmButtonText: "Deshacer",
-          confirmButtonColor: "#3085d6",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Restaurar el producto si el usuario hace clic en "Deshacer"
-            restoreItem(deleteObject.id, productData);
-            Toast.fire({
-              icon: "info",
-              title: "Eliminación revertida",
-            });
-          }
-        });
-      } else {
-        Toast.fire({
-          icon: "error",
-          title: "El producto no fue eliminado",
-        });
-      }
-    });
   };
 
   if (isLoading) {
     return (
       <>
-        <NavBar></NavBar>
-        <div className="bg-slate-800">
-          <div className="mx-auto min-h-dvh w-10/12 rounded-xl bg-slate-600">
-            <header className="">
-              <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
-                LOADING...
-              </h2>
-            </header>
-          </div>
+        <NavBar />
+        <div className="flex min-h-screen items-center justify-center bg-white">
+          <h2 className="animate-pulse text-3xl font-semibold text-gray-800">
+            Cargando...
+          </h2>
         </div>
       </>
     );
@@ -326,9 +131,11 @@ export default function WishList() {
   if (error) {
     return (
       <>
-        <NavBar></NavBar>
-        <div>
-          <p className="text-center">hubo un error</p>
+        <NavBar />
+        <div className="flex min-h-screen items-center justify-center bg-white">
+          <h2 className="text-2xl font-semibold text-red-500">
+            Hubo un error al cargar los productos.
+          </h2>
         </div>
       </>
     );
@@ -336,36 +143,31 @@ export default function WishList() {
 
   return (
     <>
-      <NavBar></NavBar>
-      <div className="bg-slate-800">
-        <div className="mx-auto min-h-dvh w-10/12 rounded-xl bg-slate-600">
-          <header className="">
-            <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
-              Wish List
+      <NavBar />
+      <div className="min-h-screen bg-gray-100">
+        <div className="container mx-auto px-4 py-8">
+          <header className="mb-10 text-center">
+            <h2 className="text-4xl font-bold uppercase tracking-wide text-gray-800">
+              Mi Lista de Deseos
             </h2>
           </header>
-
-          <div className="grid grid-cols-3 place-items-center gap-y-8">
-            {data.map((current, index) => {
-              return (
-                <ProductCard
-                  key={current.id}
-                  dataCard={current}
-                  cardImage={current.image}
-                  deleteCard={toastDelete}
-                  editCard={toastUpdate}
-                  className="col-span-1"
-                ></ProductCard>
-              );
-            })}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {data.map((item) => (
+              <ProductCard
+                key={item.id}
+                dataCard={item}
+                cardImage={item.image}
+                deleteCard={toastDelete}
+                className="transform transition duration-300 hover:scale-105"
+              />
+            ))}
             <button
               onClick={openModal}
-              className="h-full w-10/12 max-w-md truncate rounded-xl border-4 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
+              className="flex h-40 transform flex-col items-center justify-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-lg font-bold text-white transition-all duration-300 hover:from-blue-500 hover:to-cyan-500"
             >
-              new Monthly esentials
+              + Nuevo Producto
             </button>
           </div>
-
           <ModalProduct
             isOpen={isModalOpen}
             onClose={closeModal}

@@ -1,5 +1,5 @@
 //IMPORTACION DE LIBRERIAS
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 //IMPORTACION DE COMPONENTES
 import NavBar from "../components/NavBar";
@@ -23,86 +23,83 @@ export default function Home() {
     console.log(newIncome);
   };
 
-  // return (
-  //<div className="i min-h-dvh bg-slate-500">
-  //<div className="mx-auto w-10/12 items-center bg-slate-300">
-  // <Table data_list={incomeList}></Table>
-  // </div>
-  // </div>
-  //);
-
   return (
-    <main className="min-h-screen bg-slate-800 text-gray-300">
+    <main className="min-h-screen bg-gray-100 text-gray-800">
       <NavBar />
 
-      <div className="grid grid-cols-12 gap-5 p-4">
-        <aside className="col-span-2 w-full rounded-2xl border border-blue-700 p-3 shadow-lg">
-          {test_data.ACOUNTS.map((current, index) => (
-            <Card key={index} dataCard={current} />
-          ))}
+      <div className="grid grid-cols-12 gap-6 p-6">
+        <aside className="col-span-3 w-full rounded-xl border border-gray-300 bg-white p-5 shadow-md">
+          <h3 className="mb-4 text-lg font-semibold text-gray-600">Accounts</h3>
 
-          <button className="mb-8 w-full rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white">
-            new
+          <div className="grid grid-cols-1 gap-4">
+            {test_data.ACOUNTS.map((current, index) => (
+              <Card key={index} dataCard={current} />
+            ))}
+          </div>
+
+          <button className="mt-6 w-full rounded-lg bg-blue-600 py-2 text-white shadow hover:bg-blue-700">
+            Add New Account
           </button>
 
           <img
-            className="mx-auto w-10/12 rounded-3xl shadow-lg"
+            className="mx-auto max-w-80 mt-6 w-full rounded-lg shadow-lg"
             src="https://i.pinimg.com/originals/80/55/b6/8055b6bca39e97b823e919c917a90312.gif"
             alt="imagen decorativa"
           />
         </aside>
 
-        <div className="col-span-8 w-full rounded-2xl border border-blue-700 p-6 shadow-lg">
-          <h2 className="py-6 text-center text-5xl font-bold uppercase text-gray-400">
+        <div className="col-span-6 w-full rounded-xl border border-gray-300 bg-white p-6 shadow-md">
+          <h2 className="py-4 text-center text-3xl font-bold text-gray-700">
             Monthly Essentials
           </h2>
 
-          <div className="grid grid-cols-3 gap-8 text-black">
+          <div className="grid grid-cols-3 gap-4">
             {test_data.MONTHLY_ESSENTIALS.map((current, index) => (
               <Card key={index} dataCard={current} />
             ))}
 
-            <button className="mb-8 max-w-md truncate rounded-xl border-2 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white">
-              new Monthly esentials
+            <button className="max-w-sm truncate rounded-lg border-2 border-blue-500 bg-white p-4 text-blue-700 shadow hover:bg-blue-100">
+              Add New Essential
             </button>
           </div>
 
-          <div className="flex flex-row items-center justify-between">
-            <h2 className="pb-6 pt-12 text-center text-5xl font-bold uppercase text-gray-400">
-              Income
-            </h2>
+          <div className="mt-8 flex flex-row items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-700">Income</h2>
             <button
               onClick={openModal}
-              className="w-2/12 rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
+              className="rounded-lg bg-green-600 px-4 py-2 text-white shadow hover:bg-green-700"
             >
-              new income
+              Add Income
             </button>
           </div>
 
           <Table data_list={incomeList}></Table>
 
-          <div className="flex flex-row items-center justify-between">
-            <h2 className="pb-6 pt-12 text-center text-5xl font-bold uppercase text-gray-400">
-              expense
-            </h2>
+          <div className="mt-8 flex flex-row items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-700">Expenses</h2>
             <button
               onClick={openModal}
-              className="w-2/12 rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white"
+              className="rounded-lg bg-red-600 px-4 py-2 text-white shadow hover:bg-red-700"
             >
-              new expense
+              Add Expense
             </button>
           </div>
+
           <Table data_list={test_data.EXPENSES}></Table>
 
           <WishList></WishList>
         </div>
 
-        <aside className="col-span-2 w-full rounded-2xl border border-blue-700 p-3 shadow-lg">
-          {test_data.GOALS.map((current, index) => (
-            <Card key={index} dataCard={current} />
-          ))}
-          <button className="mb-8 w-full rounded-xl border border-cyan-800 py-3 transition-all duration-300 ease-in-out hover:border-dashed hover:bg-cyan-600 hover:text-white">
-            new
+        <aside className="col-span-3 w-full rounded-xl border border-gray-300 bg-white p-5 shadow-md">
+          <h3 className="mb-4 text-lg font-semibold text-gray-600">Goals</h3>
+
+          <div className="grid grid-cols-1 gap-4">
+            {test_data.GOALS.map((current, index) => (
+              <Card key={index} dataCard={current} />
+            ))}
+          </div>
+          <button className="mt-6 w-full rounded-lg bg-blue-600 py-2 text-white shadow hover:bg-blue-700">
+            Add New Goal
           </button>
         </aside>
       </div>

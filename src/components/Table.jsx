@@ -62,7 +62,7 @@ export default function Table({ deleteData, updateProduct, data_list }) {
   };
 
   return (
-    <div className="relative overflow-x-auto bg-slate-800 p-5 shadow-md sm:rounded-lg">
+    <div className="relative overflow-x-auto bg-white p-5 shadow-md sm:rounded-lg">
       <header className="flex justify-evenly">
         <SearchBar
           characterSearch={characterSearch}
@@ -77,8 +77,8 @@ export default function Table({ deleteData, updateProduct, data_list }) {
         </button>
       </header>
 
-      <table className="w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+      <table className="w-full text-left text-sm text-gray-500 rtl:text-right">
+        <thead className="bg-gray-50 text-xs uppercase text-gray-700">
           <tr>
             {income.length > 0 &&
               Object.keys(income[0]).map((key) => {
@@ -117,11 +117,11 @@ export default function Table({ deleteData, updateProduct, data_list }) {
             income.map((current) => (
               <tr
                 key={current.id}
-                className="border-b bg-white text-2xl transition-all duration-1000 ease-in-out hover:bg-slate-200 dark:border-gray-700 dark:bg-gray-800"
+                className="border-b bg-white text-2xl transition-all duration-1000 ease-in-out hover:bg-gray-200"
               >
                 <th
                   scope="row"
-                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900"
                 >
                   {current.title}
                 </th>
@@ -143,7 +143,7 @@ export default function Table({ deleteData, updateProduct, data_list }) {
                     onClick={() =>
                       deleteData("http://localhost:3000/wishlist", current.id)
                     }
-                    className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                    className="font-medium text-blue-600 hover:underline"
                   >
                     <FontAwesomeIcon
                       icon={faDeleteLeft}
@@ -157,7 +157,7 @@ export default function Table({ deleteData, updateProduct, data_list }) {
                         current.id,
                       )
                     }
-                    className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                    className="font-medium text-blue-600 hover:underline"
                   >
                     <FontAwesomeIcon
                       icon={faPenToSquare}

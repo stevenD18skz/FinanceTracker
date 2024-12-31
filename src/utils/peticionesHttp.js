@@ -1,4 +1,6 @@
-const fetchProductsWithNode = () => {
+import { doc, deleteDoc } from "firebase/firestore";
+
+export const fetchProductsWithNode = () => {
   setIsLoading(true);
   fetch("http://localhost:3000/wishlist")
     .then((res) => res.json())
@@ -18,7 +20,7 @@ const fetchProductsWithNode = () => {
     });
 };
 
-const createProductWithNode = (dataProductCreate) => {
+export const createProductWithNode = (dataProductCreate) => {
   console.log(dataProductCreate);
 
   const postData = async (body = {}) => {
@@ -64,7 +66,7 @@ const createProductWithNode = (dataProductCreate) => {
     .catch((error) => console.log("Error:", error));
 };
 
-const updateProductWithNode = async (dataUpdateProduct) => {
+export const updateProductWithNode = async (dataUpdateProduct) => {
   console.log(dataUpdateProduct);
 
   try {
@@ -97,7 +99,7 @@ const updateProductWithNode = async (dataUpdateProduct) => {
   }
 };
 
-const deleteProductWithNode = async (id) => {
+export const deleteProductWithNode = async (id) => {
   try {
     const response = await fetch(`http://localhost:3000/wishlist/${id}`, {
       method: "DELETE", // Método POST
@@ -116,15 +118,7 @@ const deleteProductWithNode = async (id) => {
   }
 };
 
-///////////// para un solo documento
-useEffect(() => {
-  const queryDb = getFirestore();
-  const queryDoc = doc(queryDb, "productos", "QlD7b5C20Ql4YCXd1X3Y");
-  getDoc(queryDoc).then((res) => ({ id: res.id, ...res.data() }));
-}, []);
-/////////////
-
-async function addItem() {
+export async function addItem() {
   try {
     const queryDb = getFirestore();
     const queryCollection = collection(queryDb, "productos");
@@ -135,9 +129,7 @@ async function addItem() {
   }
 }
 
-import { doc, deleteDoc } from "firebase/firestore";
-
-async function deleteItem(itemId) {
+export async function deleteItem(itemId) {
   try {
     const queryDb = getFirestore();
     const queryDoc = doc(queryDb, "productos", "QlD7b5C20Ql4YCXd1X3Y");

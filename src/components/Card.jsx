@@ -1,8 +1,8 @@
 export default function Card({ dataCard, cardImage = "" }) {
   return (
-    <div className="w-full max-w-md truncate rounded-xl border-2 border-cyan-500 bg-gray-800 p-6 text-gray-200 shadow-lg">
-      <h2 className="mb-4 text-2xl font-bold text-cyan-400">
-        {dataCard.title} 3
+    <div className="w-full max-w-md truncate rounded-xl border-2 border-blue-500 bg-white p-6 text-gray-800 shadow-lg">
+      <h2 className="mb-4 text-2xl font-bold text-blue-600">
+        {dataCard.title}
       </h2>
 
       {cardImage ? (
@@ -19,9 +19,9 @@ export default function Card({ dataCard, cardImage = "" }) {
         {Object.keys(dataCard)
           .slice(1)
           .map((key) => (
-            <div key={key} className="truncate rounded-md bg-gray-700 p-4">
-              <p className="text-base leading-relaxed text-gray-300">
-                <span className="font-semibold text-cyan-300">{key}: </span>
+            <div key={key} className="truncate rounded-md bg-gray-100 p-4">
+              <p className="text-base leading-relaxed text-gray-700">
+                <span className="font-semibold text-blue-500">{key}: </span>
                 {dataCard[key]}
               </p>
             </div>
