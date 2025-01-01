@@ -4,7 +4,7 @@ import { PlusCircle, ChevronDown } from "lucide-react";
 
 const SpendingStats = ({ period = "1 month", stats }) => {
   return (
-    <div className="rounded-xl bg-white p-6">
+    <div className="h-full rounded-xl bg-white p-6">
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800">
           Spending Statistics

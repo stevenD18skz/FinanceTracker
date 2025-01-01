@@ -83,7 +83,7 @@ const ActivityChart = ({ data, labels, currentValue, currentDay }) => {
   };
 
   return (
-    <div className="rounded-xl bg-white p-6">
+    <div className="h-full rounded-xl bg-white p-6">
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800">Activity</h3>
         <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800">

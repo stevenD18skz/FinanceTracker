@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import Table from "../components/TransactionHistory";
-import ModalProduct from "../components/ModalProduct";
 
 import Swal from "sweetalert2";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/Whistlist/ProductCard";
 import {
   getFirestore,
   collection,
@@ -168,11 +166,6 @@ export default function WishList() {
               + Nuevo Producto
             </button>
           </div>
-          <ModalProduct
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onSubmit={toastCreate}
-          />
         </div>
       </div>
     </>

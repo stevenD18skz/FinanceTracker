@@ -30,7 +30,7 @@ const transactions = [
 
 const TransactionHistory = () => {
   return (
-    <div className="mx-auto rounded-xl bg-white p-6 shadow-lg">
+    <div className="mx-auto h-full rounded-xl bg-white p-6 shadow-lg">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-800">
           Recent Transactions
