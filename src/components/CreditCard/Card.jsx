@@ -21,23 +21,43 @@ const Card = ({ type, balance, cardNumber, expiryDate }) => {
 
   return (
     <div
-      className={`w-full max-w-md bg-gradient-to-br ${cardStyles[type]} rounded-2xl p-6 shadow-xl`}
+      className={`w-full max-w-md bg-gradient-to-br ${cardStyles[type]} relative overflow-hidden rounded-2xl p-6 shadow-xl`}
     >
-      <div className="mb-8 flex items-start justify-between">
-        <div>
-          <p className="mb-1 text-sm text-gray-200">Current Balance</p>
-          <h2 className="text-2xl font-bold text-white">
-            {formatBalance(balance)}
-          </h2>
-        </div>
-        <CardLogo type={type} />
+      {/* Líneas curvas de fondo */}
+      <div className="absolute inset-0">
+        <svg
+          className="absolute h-full w-full"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 400 200"
+        >
+          <path
+            d="M-100 150 C100 100, 300 200, 400 150"
+            stroke="rgba(255, 255, 255, 0.2)"
+            strokeWidth="2"
+            fill="none"
+          />
+        </svg>
       </div>
 
-      <div className="mt-auto">
-        <p className="mb-4 font-mono text-lg text-gray-200">
-          {formatCardNumber(cardNumber)}
-        </p>
-        <p className="text-sm text-gray-200">Valid Thru: {expiryDate}</p>
+      {/* Contenido de la tarjeta */}
+      <div className="relative z-10">
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <p className="mb-1 text-sm text-gray-200">Current Balance</p>
+            <h2 className="text-2xl font-bold text-white">
+              {formatBalance(balance)}
+            </h2>
+          </div>
+          <CardLogo type={type} />
+        </div>
+
+        <div className="mt-auto">
+          <p className="mb-4 font-mono text-lg text-gray-200">
+            {formatCardNumber(cardNumber)}
+          </p>
+          <p className="text-sm text-gray-200">Valid Thru: {expiryDate}</p>
+        </div>
       </div>
     </div>
   );

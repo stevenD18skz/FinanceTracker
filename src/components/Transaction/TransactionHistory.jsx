@@ -9,27 +9,29 @@ const TransactionHistory = ({ dataTransaction }) => {
     setFilter(event.target.value);
   };
 
-  const filteredTransactions = dataTransaction.filter((transaction) => {
-    const transactionDate = new Date(transaction.date);
-    const today = new Date();
-    const daysDifference = (today - transactionDate) / (1000 * 60 * 60 * 24);
+  const filteredTransactions = dataTransaction
+    .filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      const today = new Date();
+      const daysDifference = (today - transactionDate) / (1000 * 60 * 60 * 24);
 
-    switch (filter) {
-      case "today":
-        return (
-          transactionDate.getDate() === today.getDate() &&
-          transactionDate.getMonth() === today.getMonth() &&
-          transactionDate.getFullYear() === today.getFullYear()
-        );
-      case "7":
-        return daysDifference <= 7;
-      case "31":
-        return daysDifference <= 31;
-      case "all":
-      default:
-        return true;
-    }
-  });
+      switch (filter) {
+        case "today":
+          return (
+            transactionDate.getDate() === today.getDate() &&
+            transactionDate.getMonth() === today.getMonth() &&
+            transactionDate.getFullYear() === today.getFullYear()
+          );
+        case "7":
+          return daysDifference <= 7;
+        case "31":
+          return daysDifference <= 31;
+        case "all":
+        default:
+          return true;
+      }
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
     <div className="mx-auto h-full rounded-xl bg-white p-6 shadow-lg">

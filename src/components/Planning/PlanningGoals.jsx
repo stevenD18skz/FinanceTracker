@@ -18,6 +18,7 @@ const PlanningGoals = ({ goals }) => {
             title={goal.title}
             current={goal.current}
             target={goal.target}
+            link={goal.target}
           />
         ))}
       </div>
