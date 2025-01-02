@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,7 +23,76 @@ ChartJS.register(
   Filler,
 );
 
-const ActivityChart = ({ data, labels, currentValue, currentDay }) => {
+const ActivityChart = ({ dataTransaction }) => {
+  const [labels, setLabels] = useState([]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchLabels = () => {
+      const filterCriterion = "This week";
+      switch (filterCriterion) {
+        case "This week":
+          return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        case "Last week":
+          return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        case "This month":
+          return ["1", "2", "3", "4"];
+      }
+    };
+
+    setLabels(fetchLabels());
+  }, []);
+
+  useEffect(() => {
+    const fetchData = () => {
+      const filteredTransactions = dataTransaction.filter((transaction) => {
+        const transactionDate = new Date(transaction.date);
+        const today = new Date();
+        const daysDifference =
+          (today - transactionDate) / (1000 * 60 * 60 * 24);
+
+        const filterCriterion = "This week";
+
+        switch (filterCriterion) {
+          case "today":
+            return (
+              transactionDate.getDate() === today.getDate() &&
+              transactionDate.getMonth() === today.getMonth() &&
+              transactionDate.getFullYear() === today.getFullYear()
+            );
+          case "This week":
+            return daysDifference <= 7;
+          case "31":
+            return daysDifference <= 31;
+          case "all":
+          default:
+            return true;
+        }
+      });
+
+      const dataMap = filteredTransactions.reduce((acc, transaction) => {
+        const transactionDate = new Date(transaction.date);
+        const dayLabel = transactionDate.toLocaleString("en-US", {
+          weekday: "short",
+        });
+
+        if (!acc[dayLabel]) {
+          acc[dayLabel] = 0;
+        }
+        acc[dayLabel] += parseInt(transaction.amount);
+        return acc;
+      }, {});
+
+      const data = labels.map((label) => dataMap[label] || 0);
+
+      return data;
+    };
+
+    if (labels.length > 0) {
+      setData(fetchData());
+    }
+  }, [labels]);
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -46,13 +115,18 @@ const ActivityChart = ({ data, labels, currentValue, currentDay }) => {
         },
         ticks: {
           callback: (value) => `$${value}k`,
-          stepSize: 1,
+          stepSize: 100000,
         },
       },
     },
     plugins: {
       tooltip: {
-        enabled: false,
+        enabled: true,
+        callbacks: {
+          label: function (context) {
+            return `$${context.raw}k`;
+          },
+        },
       },
     },
     interaction: {
@@ -94,15 +168,6 @@ const ActivityChart = ({ data, labels, currentValue, currentDay }) => {
 
       <div className="relative h-64">
         {/* Current value indicator */}
-        <div className="absolute left-1/2 top-8 z-10 -translate-x-1/2 transform rounded-lg bg-gray-900 px-3 py-1 text-sm text-white">
-          <div className="text-center">
-            <div>{currentDay}</div>
-            <div className="font-semibold">${currentValue}</div>
-          </div>
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full transform">
-            <div className="border-8 border-transparent border-t-gray-900" />
-          </div>
-        </div>
 
         <Line options={options} data={chartData} />
       </div>

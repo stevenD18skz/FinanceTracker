@@ -4,9 +4,8 @@ import CardLogo from "./CardLogo";
 const Card = ({ type, balance, cardNumber, expiryDate }) => {
   const cardStyles = {
     visa: "from-blue-600 to-blue-900",
-    mastercard: "from-gray-800 to-gray-900",
-    amex: "from-green-600 to-green-900",
-    discover: "from-orange-600 to-orange-900",
+    mastercard: "from-slate-600 to-slate-950",
+    nubank: "from-purple-600 to-purple-900",
   };
 
   const formatCardNumber = (number) => {

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 // IMPORTACION DE COMPONENTES
 import NavBar from "../components/NavBar";
-import TransactionHistory from "../components/TransactionHistory";
+import TransactionHistory from "../components/Transaction/TransactionHistory";
 import ActivityChart from "../components/ActivityChart";
 import SpendingStats from "../components/Stadistics/SpendingStats";
 import UsageStats from "../components/CreditCard/UsageStats";
@@ -11,11 +11,11 @@ import Card from "../components/CreditCard/Card";
 import PlanningGoals from "../components/Planning/PlanningGoals";
 import TotalBalance from "../components/Balance/TotalBalance";
 import ExpensesProgress from "../components/Balance/ExpensesProgress";
-
-import { PlusCircle, ChevronDown } from "lucide-react";
+import ContendCards from "../components/CreditCard/ContendCards";
 
 // IMPORTACION DE HOOKS O UTILIDADES
 import { test_data } from "../utils/dataJson";
+import { Music2, ArrowRightLeft, ShoppingBag, Apple } from "lucide-react";
 
 export default function Home() {
   const balanceData = {
@@ -24,11 +24,89 @@ export default function Home() {
     expenses: 1230.0,
     creditLimit: 15000.0,
   };
-  
-  const expensesData = {
-    expenses: 85.44,
-    budget: 100,
-  };
+
+  const transactions = [
+    {
+      id: 1,
+      icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
+      name: "YouTube Premium",
+      date: "1 January 2025, 02:25 PM",
+      amount: "796000", // 199 USD to COP
+      type: "expenses",
+    },
+    {
+      id: 2,
+      icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
+      name: "Spotify Premium",
+      date: "19 December 2024, 02:25 PM",
+      amount: "796000", // 199 USD to COP
+      type: "expenses",
+    },
+    {
+      id: 3,
+      icon: <ArrowRightLeft className="h-6 w-6 text-[#00B9FF]" />,
+      name: "Transferwise - Received",
+      date: "19 December 2024, 10:15 AM",
+      amount: "4800000", // 1200 USD to COP
+      type: "income",
+    },
+    {
+      id: 4,
+      icon: <ShoppingBag className="h-6 w-6 text-[#FF0000]" />,
+      name: "H&M Payment",
+      date: "15 December 2024, 06:30 PM",
+      amount: "8800000", // 2200 USD to COP
+      type: "expenses",
+    },
+    {
+      id: 5,
+      icon: <Apple className="h-6 w-6 text-[#424147]" />,
+      name: "iPhone 12 Pro Max",
+      date: "24 December 2024, 01:30 PM",
+      amount: "8800000", // 2200 USD to COP
+      type: "expenses",
+    },
+    {
+      id: 6,
+      icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
+      name: "Spotify Family",
+      date: "25 December 2024, 02:25 PM",
+      amount: "996000", // 249 USD to COP (variedad)
+      type: "expenses",
+    },
+    {
+      id: 7,
+      icon: <ArrowRightLeft className="h-6 w-6 text-[#00B9FF]" />,
+      name: "Transferwise - Sent",
+      date: "26 December 2024, 10:15 AM",
+      amount: "4800000", // 1200 USD to COP
+      type: "expenses",
+    },
+    {
+      id: 8,
+      icon: <ShoppingBag className="h-6 w-6 text-[#FF0000]" />,
+      name: "Amazon Purchase",
+      date: "28 December 2024, 06:30 PM",
+      amount: "2000000", // 500 USD to COP
+      type: "expenses",
+    },
+    {
+      id: 9,
+      icon: <Apple className="h-6 w-6 text-[#424147]" />,
+      name: "MacBook Pro",
+      date: "28 December 2024, 01:30 PM",
+      amount: "10000000", // 2500 USD to COP
+      type: "expenses",
+    },
+    {
+      id: 10,
+      icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
+      name: "Spotify Annual",
+      date: "1 December 2024, 02:25 PM",
+      amount: "3980000", // 995 USD to COP (variedad)
+      type: "expenses",
+    },
+  ];
 
   const spendingStats = [
     {
@@ -50,7 +128,7 @@ export default function Home() {
   const activityData = {
     data: [1.2, 1.8, 2.5, 2.0, 3.5, 2.8, 3.2],
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    currentValue: 2500.15,
+    currentValue: 2,
     currentDay: "Wednesday, 14 July",
   };
 
@@ -63,6 +141,12 @@ export default function Home() {
     },
     {
       type: "mastercard",
+      balance: 80_000.0,
+      cardNumber: "5282345678901289",
+      expiryDate: "09/28",
+    },
+    {
+      type: "nubank",
       balance: 200_000.0,
       cardNumber: "5282345678901289",
       expiryDate: "09/28",
@@ -88,30 +172,16 @@ export default function Home() {
     <main className="min-h-screen bg-gray-200">
       <NavBar />
       <div className="container mx-auto grid grid-cols-12 gap-6 p-6">
-        <div className="col-span-12 w-full rounded-xl border bg-gray-100 p-6 shadow-md">
-          <ExpensesProgress {...expensesData} />
-          <TotalBalance {...balanceData} />
+        <div className="col-span-12 rounded-xl border bg-gray-100 shadow-md">
+          <TotalBalance {...balanceData}></TotalBalance>
         </div>
 
         <div className="col-span-12 w-full rounded-xl border bg-gray-100 p-6 shadow-md">
-          <h3 className="mb-2 text-xl font-semibold text-gray-800">Cards</h3>
-
-          <div className="flex w-full space-x-6">
-            {cardData.map((card) => (
-              <Card key={card.cardNumber} {...card} />
-            ))}
-
-            <button className="flex w-full items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300 hover:bg-gray-100">
-              <div className="flex flex-col items-center text-gray-400 hover:text-gray-600">
-                <PlusCircle className="mb-1 h-6 w-6" />
-                <span className="text-sm">Add</span>
-              </div>
-            </button>
-          </div>
+          <ContendCards cardData={cardData} />
         </div>
 
         <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
-          <TransactionHistory />
+          <TransactionHistory dataTransaction={transactions} />
         </div>
 
         <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
@@ -119,7 +189,7 @@ export default function Home() {
         </div>
 
         <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
-          <ActivityChart {...activityData} />
+          <ActivityChart dataTransaction={transactions} />
         </div>
 
         <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
