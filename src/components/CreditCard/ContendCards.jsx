@@ -25,7 +25,7 @@ const ContendCards = ({ cardData }) => {
   };
 
   return (
-    <div className=" ">
+    <div className="p-6">
       <h3 className="mb-2 text-xl font-semibold text-gray-800">Cards</h3>
 
       <Slider {...settings} className="flex w-full space-x-6">

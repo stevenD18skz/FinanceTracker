@@ -1,0 +1,75 @@
+.custom-scrollbar-x::-webkit-scrollbar {
+  height: 8px;
+}
+
+.custom-scrollbar-x::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar-x::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.custom-scrollbar-x::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.subscription-list {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  min-width: 20rem;
+  max-width: 100%;
+  overflow-x: auto;
+  min-height: 20rem;
+}
+
+.subscription-list h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.subscription-list .card {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  border: 2px dashed #e2e8f0;
+  background-color: #f7fafc;
+  padding: 1rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.subscription-list .card:hover {
+  border-color: #cbd5e0;
+  background-color: #edf2f7;
+}
+
+.subscription-list .card .icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #a0aec0;
+}
+
+.subscription-list .card .icon:hover {
+  color: #718096;
+}
+
+.subscription-list .card .icon .icon-img {
+  margin-bottom: 0.25rem;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.subscription-list .card .icon .icon-text {
+  font-size: 0.875rem;
+}

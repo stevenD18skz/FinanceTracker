@@ -5,16 +5,13 @@ import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import TransactionHistory from "../components/Transaction/TransactionHistory";
 import ActivityChart from "../components/ActivityChart";
-import SpendingStats from "../components/Stadistics/SpendingStats";
-import UsageStats from "../components/CreditCard/UsageStats";
-import Card from "../components/CreditCard/Card";
 import PlanningGoals from "../components/Planning/PlanningGoals";
 import TotalBalance from "../components/Balance/TotalBalance";
-import ExpensesProgress from "../components/Balance/ExpensesProgress";
 import ContendCards from "../components/CreditCard/ContendCards";
+import ContendSubscription from "../components/Subscriptions/ContendSubscription";
 
 // IMPORTACION DE HOOKS O UTILIDADES
-import { test_data } from "../utils/dataJson";
+
 import {
   Music2,
   ArrowRightLeft,
@@ -262,6 +259,14 @@ export default function Home() {
     },
   ];
 
+  const subscriptions = [
+    { name: "Spotify", cost: 9.99, renewalDate: "2023-11-01" },
+    { name: "YouTube Premium", cost: 11.99, renewalDate: "2023-11-05" },
+    { name: "Netflix", cost: 15.99, renewalDate: "2023-11-10" },
+    { name: "Amazon Prime", cost: 12.99, renewalDate: "2023-11-15" },
+    { name: "Hulu", cost: 7.99, renewalDate: "2023-11-20" },
+  ];
+
   const activityData = {
     data: [1.2, 1.8, 2.5, 2.0, 3.5, 2.8, 3.2],
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -311,27 +316,27 @@ export default function Home() {
     <main className="min-h-screen bg-gray-200">
       <NavBar />
       <div className="container mx-auto grid grid-cols-12 gap-6 p-6">
-        <div className="col-span-12 rounded-xl border bg-gray-100 shadow-md">
+        <div className="col-span-12 rounded-xl shadow-md">
           <TotalBalance {...balanceData}></TotalBalance>
         </div>
 
-        <div className="col-span-12 w-full rounded-xl border bg-gray-100 p-6 shadow-md">
+        <div className="col-span-12 rounded-xl shadow-md">
           <ContendCards cardData={cardData} />
         </div>
 
-        <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
+        <div className="col-span-6 rounded-xl shadow-md">
           <TransactionHistory dataTransaction={transactions} />
         </div>
 
-        <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
-          <SpendingStats stats={spendingStats} />
+        <div className="col-span-6 rounded-xl shadow-md">
+          <ContendSubscription subscriptionData={subscriptions} />
         </div>
 
-        <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
+        <div className="col-span-6 rounded-xl shadow-md">
           <ActivityChart dataTransaction={transactions} />
         </div>
 
-        <div className="col-span-6 w-full rounded-xl border bg-gray-100 shadow-md">
+        <div className="col-span-6 rounded-xl shadow-md">
           {/* {<UsageStats totalExpenses={524.0} />} */}
 
           <PlanningGoals goals={planningGoals} />
