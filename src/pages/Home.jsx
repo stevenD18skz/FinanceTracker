@@ -35,7 +35,7 @@ export default function Home() {
     photo: "https://randomuser.me/api/portraits/lego/3.jpg",
     balance: 3_000_000,
     income: 465_000,
-    expenses: 120_000,
+    expense: 120_000,
     saving: 80_000,
   };
 
@@ -70,7 +70,7 @@ export default function Home() {
       name: "YouTube Premium",
       date: "1 January 2025, 02:25 PM",
       amount: 796_000, // 199 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 1,
     },
     {
@@ -79,7 +79,7 @@ export default function Home() {
       name: "Spotify Premium",
       date: "19 December 2024, 02:25 PM",
       amount: 796_000, // 199 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -97,7 +97,7 @@ export default function Home() {
       name: "H&M Payment",
       date: "15 December 2024, 06:30 PM",
       amount: 8800_000, // 2200 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 1,
     },
     {
@@ -106,7 +106,7 @@ export default function Home() {
       name: "iPhone 12 Pro Max",
       date: "24 December 2024, 01:30 PM",
       amount: 8800_000, // 2200 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -115,7 +115,7 @@ export default function Home() {
       name: "Spotify Family",
       date: "25 December 2024, 02:25 PM",
       amount: 996_000, // 249 USD to COP (variedad)
-      type: "expenses",
+      type: "expense",
       cardId: 3,
     },
     {
@@ -124,7 +124,7 @@ export default function Home() {
       name: "Transferwise - Sent",
       date: "26 December 2024, 10:15 AM",
       amount: 4800_000, // 1200 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 1,
     },
     {
@@ -133,7 +133,7 @@ export default function Home() {
       name: "Amazon Purchase",
       date: "28 December 2024, 06:30 PM",
       amount: 2000_000, // 500 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -142,7 +142,7 @@ export default function Home() {
       name: "MacBook Pro",
       date: "28 December 2024, 01:30 PM",
       amount: 10000_000, // 2500 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 3,
     },
     {
@@ -151,7 +151,7 @@ export default function Home() {
       name: "Spotify Annual",
       date: "1 December 2024, 02:25 PM",
       amount: 3980_000, // 995 USD to COP (variedad)
-      type: "expenses",
+      type: "expense",
       cardId: 1,
     },
     {
@@ -160,7 +160,7 @@ export default function Home() {
       name: "Starbucks",
       date: "2 January 2025, 09:15 AM",
       amount: 20_000, // 5 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -169,7 +169,7 @@ export default function Home() {
       name: "Zara Payment",
       date: "3 January 2025, 03:45 PM",
       amount: 350_000, // 87.5 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 3,
     },
     {
@@ -187,7 +187,7 @@ export default function Home() {
       name: "Steam Purchase",
       date: "5 January 2025, 05:35 PM",
       amount: 160_000, // 40 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -196,7 +196,7 @@ export default function Home() {
       name: "Amazon Music",
       date: "6 January 2025, 02:25 PM",
       amount: 996_000, // 249 USD to COP (variedad)
-      type: "expenses",
+      type: "expense",
       cardId: 3,
     },
     {
@@ -205,7 +205,7 @@ export default function Home() {
       name: "Venmo - Sent",
       date: "7 January 2025, 10:15 AM",
       amount: 1200_000, // 300 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 1,
     },
     {
@@ -214,7 +214,7 @@ export default function Home() {
       name: "Dinner at Croissant",
       date: "8 January 2025, 08:00 PM",
       amount: 100_000, // 25 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -232,7 +232,7 @@ export default function Home() {
       name: "Nike Purchase",
       date: "10 January 2025, 04:30 PM",
       amount: 800_000, // 200 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 1,
     },
     {
@@ -241,7 +241,7 @@ export default function Home() {
       name: "Cinema Tickets",
       date: "11 January 2025, 07:45 PM",
       amount: 50_000, // 12.5 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -259,7 +259,7 @@ export default function Home() {
       name: "Walmart Purchase",
       date: "13 January 2025, 03:00 PM",
       amount: 400_000, // 100 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 1,
     },
     {
@@ -268,7 +268,7 @@ export default function Home() {
       name: "Netflix Subscription",
       date: "14 January 2025, 02:25 PM",
       amount: 64_000, // 16 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
 
@@ -278,7 +278,7 @@ export default function Home() {
       name: "Bank Transfer - Sent",
       date: "15 January 2025, 09:00 AM",
       amount: 2000_000, // 500 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -287,7 +287,7 @@ export default function Home() {
       name: "Apple Music",
       date: "16 January 2025, 02:25 PM",
       amount: 996_000, // 249 USD to COP (variedad)
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
     {
@@ -296,7 +296,7 @@ export default function Home() {
       name: "Stripe Payment - Received",
       date: "17 January 2025, 09:30 AM",
       amount: 9600_000, // 2400 USD to COP
-      type: "expenses",
+      type: "expense",
       cardId: 2,
     },
   ];

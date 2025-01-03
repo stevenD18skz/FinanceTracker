@@ -5,7 +5,7 @@ const BalanceMetric = ({ label, amount, className = "" }) => {
     <div className={className}>
       <p className="mb-1 text-sm text-gray-500">{label}</p>
       <p className="text-md font-medium text-gray-700">
-        ${amount.toLocaleString()}
+        ${amount}
       </p>
     </div>
   );

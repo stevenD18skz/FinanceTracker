@@ -1,6 +1,8 @@
 import React from "react";
-import StatCard from "./StatCard";
 import { PlusCircle, ChevronDown } from "lucide-react";
+
+//IMPORTACION DE COMPONENTES
+import StatCard from "./StatCard";
 
 const SpendingStats = ({ period = "1 month", stats }) => {
   return (

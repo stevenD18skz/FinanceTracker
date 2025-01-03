@@ -25,7 +25,8 @@ ChartJS.register(
 
 const ActivityChart = ({ dataTransaction }) => {
   const [labels, setLabels] = useState([]);
-  const [data, setData] = useState([]);
+  const [incomeData, setIncomeData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
 
   useEffect(() => {
     const fetchLabels = () => {
@@ -70,26 +71,33 @@ const ActivityChart = ({ dataTransaction }) => {
         }
       });
 
-      const dataMap = filteredTransactions.reduce((acc, transaction) => {
-        const transactionDate = new Date(transaction.date);
-        const dayLabel = transactionDate.toLocaleString("en-US", {
-          weekday: "short",
-        });
+      const dataMap = filteredTransactions.reduce(
+        (acc, transaction) => {
+          const transactionDate = new Date(transaction.date);
+          const dayLabel = transactionDate.toLocaleString("en-US", {
+            weekday: "short",
+          });
 
-        if (!acc[dayLabel]) {
-          acc[dayLabel] = 0;
-        }
-        acc[dayLabel] += parseInt(transaction.amount);
-        return acc;
-      }, {});
+          if (!acc[transaction.type][dayLabel]) {
+            acc[transaction.type][dayLabel] = 0;
+          }
+          acc[transaction.type][dayLabel] += parseInt(transaction.amount);
 
-      const data = labels.map((label) => dataMap[label] || 0);
+          return acc;
+        },
+        { income: {}, expense: {} }
+      );
 
-      return data;
+      const incomeData = labels.map((label) => dataMap.income[label] || 0);
+      const expenseData = labels.map((label) => dataMap.expense[label] || 0);
+
+      return { incomeData, expenseData };
     };
 
     if (labels.length > 0) {
-      setData(fetchData());
+      const { incomeData, expenseData } = fetchData();
+      setIncomeData(incomeData);
+      setExpenseData(expenseData);
     }
   }, [labels]);
 
@@ -147,10 +155,19 @@ const ActivityChart = ({ dataTransaction }) => {
     labels,
     datasets: [
       {
+        label: "Income",
         fill: true,
-        data,
+        data: incomeData,
         borderColor: "#10B981",
         backgroundColor: "rgba(16, 185, 129, 0.1)",
+        borderWidth: 2,
+      },
+      {
+        label: "Expense",
+        fill: true,
+        data: expenseData,
+        borderColor: "#EF4444",
+        backgroundColor: "rgba(239, 68, 68, 0.1)",
         borderWidth: 2,
       },
     ],
@@ -167,8 +184,6 @@ const ActivityChart = ({ dataTransaction }) => {
       </div>
 
       <div className="relative h-64">
-        {/* Current value indicator */}
-
         <Line options={options} data={chartData} />
       </div>
     </div>

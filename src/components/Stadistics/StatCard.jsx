@@ -1,4 +1,6 @@
 import React from "react";
+
+//IMPORTACION DE COMPONENTES
 import CircularProgress from "./CircularProgress";
 
 const StatCard = ({ title, amount, percentage, color, incomePercentage }) => {
