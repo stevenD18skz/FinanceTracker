@@ -1,29 +1,23 @@
 import React from "react";
 import BalanceMetric from "./BalanceMetric";
-import ExpensesProgress from "./ExpensesProgress";
 
 const TotalBalance = ({ balance, income, expense, saving }) => {
   return (
-    <div className="flex justify-center rounded-xl bg-white p-6">
-      <ExpensesProgress
-        {...{
-          expenses: income,
-          budget: balance,
-        }}
-      />
-
-      <div>
-        <div className="mb-6">
-          <h2 className="mb-2 text-sm text-gray-500">Total Balance</h2>
-          <p className="text-3xl font-bold text-gray-900">
-            ${balance.toLocaleString()}
-          </p>
+    <div className="rounded-xl bg-white p-6">
+      <div className="mx-auto grid grid-cols-12 gap-6">
+        <div className="col-span-4 mb-6 flex items-center border-r-2 pr-6">
+          <div className="mx-auto text-center">
+            <h2 className="mb-2 text-lg text-gray-500">Total Balance</h2>
+            <p className="text-5xl font-bold text-gray-900">
+              ${balance.toLocaleString()}
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 border-t border-gray-100 pt-4">
-          <BalanceMetric label="Income" amount={income} />
-          <BalanceMetric label="Expenses" amount={expense} />
-          <BalanceMetric label="Saving" amount={saving} />
+        <div className="col-span-8 ml-4 grid grid-cols-3 gap-4 border-gray-100 pt-4">
+          <BalanceMetric label="Total Income" amount={income} />
+          <BalanceMetric label="Total Expenses" amount={expense} />
+          <BalanceMetric label="Total Saving" amount={saving} />
         </div>
       </div>
     </div>

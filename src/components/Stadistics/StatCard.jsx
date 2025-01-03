@@ -18,6 +18,9 @@ const StatCard = ({ title, amount, percentage, color, incomePercentage }) => {
         <div className="text-sm text-gray-500">
           {incomePercentage}% of income
         </div>
+        <div className="text-sm text-gray-500">
+          {100 - incomePercentage}% of Expense
+        </div>
       </div>
       <div className="relative">
         <CircularProgress

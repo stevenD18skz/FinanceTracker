@@ -85,7 +85,7 @@ const ActivityChart = ({ dataTransaction }) => {
 
           return acc;
         },
-        { income: {}, expense: {} }
+        { income: {}, expense: {} },
       );
 
       const incomeData = labels.map((label) => dataMap.income[label] || 0);

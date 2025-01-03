@@ -21,12 +21,6 @@ const SpendingStats = ({ period = "1 month", stats }) => {
         {stats.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
-        <button className="flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300">
-          <div className="flex flex-col items-center text-gray-400 hover:text-gray-600">
-            <PlusCircle className="mb-1 h-6 w-6" />
-            <span className="text-sm">Add</span>
-          </div>
-        </button>
       </div>
     </div>
   );

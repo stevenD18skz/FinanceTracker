@@ -14,6 +14,9 @@ import ActivityChart from "../components/Stadistics/ActivityChart";
 
 import PlanningGoals from "../components/Planning/PlanningGoals";
 
+//REVIEW
+import SpendingStats from "../components/Stadistics/SpendingStats";
+
 // IMPORTACION DE HOOKS O UTILIDADES
 import { Moon, Bell, User } from "lucide-react";
 
@@ -352,17 +355,17 @@ export default function Home() {
     },
   ];
 
-  const spendingStats = [
+  const valueSpendingStats = [
     {
-      title: "Transactions",
-      amount: 546,
+      title: "Visa",
+      amount: 59_000,
       percentage: 67,
       color: "#22C55E",
       incomePercentage: 21,
     },
     {
-      title: "Entertainment",
-      amount: 245,
+      title: "Master Card",
+      amount: 120_000,
       percentage: 34,
       color: "#EAB308",
       incomePercentage: 11,
@@ -407,7 +410,9 @@ export default function Home() {
         </div>
 
         <div className="col-span-6 rounded-xl shadow-md">
-          <PlanningGoals goals={planningGoals} />
+          {/*<PlanningGoals goals={planningGoals} />
+           */}
+          {<SpendingStats stats={valueSpendingStats} />}
         </div>
       </div>
     </div>
