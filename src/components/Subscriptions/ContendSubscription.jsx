@@ -5,7 +5,7 @@ import "./ContendSubscription.css";
 
 const ContendSubscription = ({ subscriptionData }) => {
   return (
-    <div className="">
+    <div className="h-full rounded-xl bg-white p-6 shadow-md">
       <h3>Cards</h3>
 
       <div className="subscription-list custom-scrollbar-x">

@@ -2,7 +2,7 @@ import React from "react";
 import BalanceMetric from "./BalanceMetric";
 import ExpensesProgress from "./ExpensesProgress";
 
-const TotalBalance = ({ balance, income, expenses, creditLimit }) => {
+const TotalBalance = ({ balance, income, expenses, saving }) => {
   return (
     <div className="flex justify-center rounded-xl bg-white p-6">
       <ExpensesProgress
@@ -23,7 +23,7 @@ const TotalBalance = ({ balance, income, expenses, creditLimit }) => {
         <div className="grid grid-cols-3 gap-4 border-t border-gray-100 pt-4">
           <BalanceMetric label="Income" amount={income} />
           <BalanceMetric label="Expenses" amount={expenses} />
-          <BalanceMetric label="Credit Limit" amount={creditLimit} />
+          <BalanceMetric label="Saving" amount={saving} />
         </div>
       </div>
     </div>
