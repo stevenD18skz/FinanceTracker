@@ -10,22 +10,24 @@ const BalanceMetric = ({ label, amount, type, className = "" }) => {
     saving: <PiggyBank className="h-6 w-6 text-yellow-500" />,
   };
 
+  const formattedAmount = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
+
   return (
     <div
       className={`flex flex-col items-center rounded-lg bg-white p-4 ${className}`}
     >
-      {/* Icon */}
-      <div className="mb-2 flex items-center justify-center">
-        <div className="rounded-full p-2">
-          <Wallet className="h-6 w-6 text-blue-500" />
+      <div className="flex flex-col items-start rounded-2xl bg-white p-4 shadow-sm">
+        <div className="rounded-lg p-2">
+          <Wallet className="h-5 w-5" />
         </div>
+        <p className="mt-3 text-sm font-medium text-gray-500">{label}</p>
+        <p className="mt-1 text-2xl font-semibold text-blue-600">
+          {formattedAmount}
+        </p>
       </div>
-
-      {/* Label */}
-      <p className="mb-1 text-sm text-gray-500">{label}</p>
-
-      {/* Amount */}
-      <p className="text-xl font-semibold text-blue-600">${amount}</p>
     </div>
   );
 };

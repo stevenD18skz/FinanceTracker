@@ -307,25 +307,39 @@ export default function Home() {
   const subscriptions = [
     {
       id: 1,
-      name: "Spotify premium",
+      name: "Spotify Premium",
       cost: 9.99,
       renewalDate: "2023-11-01",
       status: true,
+      color: "#1DB954",
+      icon: <Music2 className="h-6 w-6 text-white" />,
     },
     {
       id: 2,
       name: "YouTube Premium",
       cost: 11.99,
       renewalDate: "2023-11-05",
-      status: true,
+      status: false,
+      color: "#FF0000",
+      icon: <Projector className="h-6 w-6 text-white" />,
     },
-    { id: 3, name: "Netflix", cost: 15.99, renewalDate: "2023-11-10" },
+    {
+      id: 3,
+      name: "Netflix",
+      cost: 15.99,
+      renewalDate: "2023-11-10",
+      status: false,
+      color: "#E50914",
+      icon: <Projector className="h-6 w-6 text-white" />,
+    },
     {
       id: 4,
       name: "Amazon Prime",
       cost: 12.99,
       renewalDate: "2023-11-15",
       status: true,
+      color: "#FF9900",
+      icon: <ShoppingBag className="h-6 w-6 text-white" />,
     },
     {
       id: 5,
@@ -333,6 +347,8 @@ export default function Home() {
       cost: 7.99,
       renewalDate: "2023-11-20",
       status: true,
+      color: "#3DBB3D",
+      icon: <Projector className="h-6 w-6 text-white" />,
     },
   ];
 

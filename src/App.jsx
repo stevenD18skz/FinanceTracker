@@ -15,11 +15,11 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />{" "}
+          {/* Ruta por defecto */}
+          <Route path="login" element={<LoginForm />} />
+          <Route path="signup" element={<RegisterForm />} />
           <Route path="/" element={<Layout />}>
-            <Route index element={<Navigate to="/login" />} />{" "}
-            {/* Ruta por defecto */}
-            <Route path="login" element={<LoginForm />} />
-            <Route path="signup" element={<RegisterForm />} />
             <Route path="home" element={<Home />} />
           </Route>
         </Routes>
