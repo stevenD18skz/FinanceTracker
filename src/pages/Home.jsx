@@ -20,6 +20,8 @@ import SpendingStats from "../components/Stadistics/SpendingStats";
 // IMPORTACION DE HOOKS O UTILIDADES
 import { Moon, Bell, User } from "lucide-react";
 
+import { Menu, Search } from "lucide-react";
+
 import {
   Music2,
   ArrowRightLeft,
@@ -358,16 +360,19 @@ export default function Home() {
       title: "Buy a car",
       current: 25000,
       target: 47000,
+      dueDate: "Dec 2024",
       image: "",
-      link: "",
+      linkGoal: "https://www.ford.com.co/performance/mustang/",
     },
     {
       id: 2,
       title: "Motorola Edge 50 Fusion",
       current: 15000,
       target: 50000,
+      dueDate: "Dec 2024",
       image: "",
-      link: "",
+      linkGoal:
+        "https://www.ktronix.com/celular-motorola-edge-50-fusion-256gb-verde/p/840023261879?fuente=google&medio=cpc&campaign=KT_COL_MAX_PEF_CPC_AON_CEL_TLP_Celulares_PAC&keyword=&gad_source=1&gclid=Cj0KCQiAst67BhCEARIsAKKdWOl_tbaoz1uxTmnCwQOqRzED3OVtfCmI-j-uPaY7mTysDpspkrGVEh8aAvr7EALw_wcB",
     },
   ];
 
@@ -389,48 +394,103 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-teal-50 p-6">
-      <header className="mb-6 flex items-center justify-between">
-        <div className="flex flex-col">
-          <h1 className="text-xl font-bold">Welcome to FinBank</h1>
-          <p className="text-sm text-gray-600">
-            Hi, Bariy Vollendito. Welcome Back.
+    <div className="min-h-screen bg-gray-50">
+      {/* Navbar */}
+      <nav className="fixed left-0 right-0 top-0 z-10 border-b bg-white/80 px-6 py-3 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <div className="flex items-center gap-2">
+            <button className="rounded-lg p-2 hover:bg-gray-100 lg:hidden">
+              <Menu className="h-5 w-5 text-gray-700" />
+            </button>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">FinBank</h1>
+              <p className="text-sm text-gray-600">Dashboard Overview</p>
+            </div>
+          </div>
+
+          <div className="hidden flex-1 items-center justify-center px-8 lg:flex">
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search transactions, cards, etc..."
+                className="w-full rounded-full border border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button className="rounded-lg p-2 text-gray-700 hover:bg-gray-100">
+              <Moon className="h-5 w-5" />
+            </button>
+            <div className="relative">
+              <button className="rounded-lg p-2 text-gray-700 hover:bg-gray-100">
+                <Bell className="h-5 w-5" />
+              </button>
+              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="hidden flex-col text-right lg:flex">
+                <span className="text-sm font-medium">Bariy Vollendito</span>
+                <span className="text-xs text-gray-500">Premium Account</span>
+              </div>
+              <button className="group relative h-10 w-10 overflow-hidden rounded-full border-2 border-gray-200 hover:ring-2 hover:ring-blue-500">
+                <img
+                  src={balanceData.photo}
+                  alt="Profile"
+                  className="h-full w-full object-cover transition-transform group-hover:scale-110"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="mx-auto max-w-7xl px-4 pt-24 lg:px-6">
+        {/* Welcome Section */}
+        <div className="mb-8 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white lg:p-8">
+          <h2 className="text-2xl font-bold lg:text-3xl">
+            Welcome back, Bariy! 👋
+          </h2>
+          <p className="mt-2 text-blue-100">
+            Here's what's happening with your finances today.
           </p>
         </div>
-        <div className="flex space-x-4">
-          <Moon className="h-6 w-6 cursor-pointer text-gray-700" />
-          <Bell className="h-6 w-6 cursor-pointer text-gray-700" />
-          <User className="h-8 w-8 cursor-pointer text-gray-700" />
-        </div>
-      </header>
 
-      <div className="mx-auto grid grid-cols-12 gap-6">
-        <div className="col-span-12 rounded-xl shadow-md">
-          <TotalBalance {...balanceData} />
-        </div>
+        {/* Dashboard Grid */}
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Total Balance - Full Width */}
+          <div className="rounded-xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md lg:col-span-12">
+            <TotalBalance {...balanceData} />
+          </div>
 
-        <div className="col-span-12 rounded-xl shadow-md">
-          <ContendCards cardData={cardData} />
-        </div>
+          {/* Cards Section - Full Width */}
+          <div className="rounded-xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md lg:col-span-12">
+            <ContendCards cardData={cardData} />
+          </div>
 
-        <div className="col-span-6 rounded-xl shadow-md">
-          <TransactionHistory dataTransaction={transactions} />
-        </div>
+          {/* Transaction History - Half Width */}
+          <div className="rounded-xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md lg:col-span-6">
+            <TransactionHistory dataTransaction={transactions} />
+          </div>
 
-        <div className="col-span-6 rounded-xl shadow-md">
-          <ContendSubscription subscriptionData={subscriptions} />
-        </div>
+          {/* Subscriptions - Half Width */}
+          <div className="rounded-xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md lg:col-span-6">
+            <ContendSubscription subscriptionData={subscriptions} />
+          </div>
 
-        <div className="col-span-6 rounded-xl shadow-md">
-          <ActivityChart dataTransaction={transactions} />
-        </div>
+          {/* Activity Chart - Half Width */}
+          <div className="rounded-xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md lg:col-span-6">
+            <ActivityChart dataTransaction={transactions} />
+          </div>
 
-        <div className="col-span-6 rounded-xl shadow-md">
-          {/*<PlanningGoals goals={planningGoals} />
-           */}
-          {<SpendingStats stats={valueSpendingStats} />}
+          {/* Planning Goals - Half Width */}
+          <div className="rounded-xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md lg:col-span-6">
+            <PlanningGoals goals={planningGoals} />
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
