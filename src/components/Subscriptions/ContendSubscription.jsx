@@ -16,8 +16,8 @@ const ContendSubscription = ({ subscriptionData }) => {
       </header>
 
       <div className="subscription-list custom-scrollbar-x">
-        {subscriptionData.map((card) => (
-          <CardSubscriptions subscription={card} />
+        {subscriptionData.map((card, index) => (
+          <CardSubscriptions key={index} subscription={card} />
         ))}
       </div>
     </div>

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { FaTachometerAlt, FaExchangeAlt, FaChartLine, FaCog, FaBars } from "react-icons/fa";
+import { FaTachometerAlt, FaExchangeAlt, FaChartLine, FaCog, FaBars, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { handleLogout } from "../utils/AuthPort";
 
 const SideBar = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigate = useNavigate();
   const menuItems = [
     { name: "Dashboard", icon: <FaTachometerAlt /> },
     { name: "Transactions", icon: <FaExchangeAlt /> },
@@ -34,6 +37,15 @@ const SideBar = () => {
           </a>
         ))}
       </nav>
+      <div className="absolute bottom-0 w-full p-4">
+        <button
+          onClick={() => handleLogout(navigate)}
+          className="flex items-center w-full rounded px-4 py-2.5 transition duration-200 hover:bg-gray-700 hover:text-white"
+        >
+          <FaSignOutAlt className="mr-3" />
+          <span className={`${isCollapsed ? "hidden" : "block"}`}>Logout</span>
+        </button>
+      </div>
     </div>
   );
 };
