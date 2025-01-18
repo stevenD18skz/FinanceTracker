@@ -33,7 +33,7 @@ import {
   Gamepad,
 } from "lucide-react";
 
-export default function Home() {
+export default function Dashboard() {
   const balanceData = {
     uid: "dgq3aca41fdafe1",
     name: "Bariy Vollendito",

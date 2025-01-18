@@ -5,22 +5,51 @@ import Layout from "./components/Layout";
 
 // IMPORTACIÓN DE PÁGINAS
 import LoginForm from "./pages/Login";
-import RegisterForm from "./pages/SingUp";
-import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard.jsx";
+import Subscriptions from "./pages/Subscriptions.jsx";
+import Profile from "./pages/Profile.jsx";
+import Settings from "./pages/Settings.jsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { useAuth } from "./context/AuthContext.jsx";
+
+const PrivateRoute = ({ element }) => {
+  const { user } = useAuth();
+  return user ? element : <Navigate to="/login" />;
+};
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />{" "}
-          {/* Ruta por defecto */}
+          {/* Redirección inicial */}
+          <Route path="/" element={<Navigate to="/Dashboard" />} />
+
+          {/* Página de inicio de sesión */}
           <Route path="login" element={<LoginForm />} />
-          <Route path="signup" element={<RegisterForm />} />
+
+          {/* Rutas protegidas */}
           <Route path="/" element={<Layout />}>
-            <Route path="home" element={<Home />} />
+            {/* Página principal */}
+            <Route
+              path="Dashboard"
+              element={<PrivateRoute element={<Dashboard />} />}
+            />
+
+            {/* Rutas adicionales */}
+            <Route
+              path="subscriptions"
+              element={<PrivateRoute element={<Subscriptions />} />}
+            />
+            <Route
+              path="profile"
+              element={<PrivateRoute element={<Profile />} />}
+            />
+            <Route
+              path="settings"
+              element={<PrivateRoute element={<Settings />} />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
