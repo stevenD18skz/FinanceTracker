@@ -1,7 +1,7 @@
 export default function Settings() {
   return (
     <div>
-      <p>ola</p>
+      <p>Settings</p>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 export default function Profile() {
   return (
     <div>
-      <p>ola</p>
+      <p>Profile</p>
     </div>
   );
 }
