@@ -1,47 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "./Card";
-
 import { PlusCircle } from "lucide-react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
 
 const ContendCards = ({ cardData }) => {
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = () => {
+    if (currentSlide < cardData.length) {
+      setCurrentSlide((prev) => prev + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide((prev) => prev - 1);
+    }
   };
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-md">
-      <h3 className="mb-2 text-xl font-semibold text-gray-800">Cards</h3>
+    <div className="rounded-xl bg-slate-500 shadow-md">
+      {/* 
+      <div className="mt-4 flex items-center justify-between">
+        <button
+          onClick={prevSlide}
+          disabled={currentSlide === 0}
+          className="rounded-full bg-gray-200 p-2 text-gray-600 hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          &#8592;
+        </button>
 
-      <Slider {...settings} className="flex w-full space-x-6">
-        {cardData.map((card) => (
-          <Card key={card.cardNumber} {...card} />
-        ))}
+        <h3 className="mb-4 text-xl font-semibold text-gray-800">Cards</h3>
 
-        <div>
-          <button className="flex w-full items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300 hover:bg-gray-100">
-            <div className="flex flex-col items-center text-gray-400 hover:text-gray-600">
-              <PlusCircle className="mb-1 h-6 w-6" />
-              <span className="text-sm">Add</span>
+        <button
+          onClick={nextSlide}
+          disabled={currentSlide === cardData.length}
+          className="rounded-full bg-gray-200 p-2 text-gray-600 hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          &#8594;
+        </button>
+      </div>*/}
+
+      <div className="relative overflow-hidden">
+        <div
+          className="flex transition-transform duration-500"
+          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+          {cardData.map((card) => (
+            <div
+              key={card.cardNumber}
+              className="w-full flex-shrink-0"
+              style={{ minWidth: "100%" }}
+            >
+              <Card {...card} />
             </div>
-          </button>
+          ))}
+
+          <div
+            className="flex w-full flex-shrink-0 items-center justify-center px-2"
+            style={{ minWidth: "100%" }}
+          >
+            <button className="flex w-full items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300 hover:bg-gray-100">
+              <div className="flex flex-col items-center text-gray-400 hover:text-gray-600">
+                <PlusCircle className="mb-1 h-6 w-6" />
+                <span className="text-sm">Add</span>
+              </div>
+            </button>
+          </div>
         </div>
-      </Slider>
+      </div>
     </div>
   );
 };

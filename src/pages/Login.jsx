@@ -59,17 +59,6 @@ export default function LoginForm() {
             Iniciar sesión con Google
           </button>
         </div>
-        {/* 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-400">¿No tienes una cuenta?</p>
-          <button
-            onClick={() => navigate("/signup")}
-            className="mt-3 w-full rounded-md bg-blue-500 py-3 text-base font-bold text-gray-200 transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            Regístrate
-          </button>
-        </div>
-        */}
       </div>
     </div>
   );

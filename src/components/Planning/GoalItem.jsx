@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ArrowUpRight,
   TrendingUp,
@@ -7,9 +7,20 @@ import {
   Trophy,
   Rocket,
   Timer,
+  MoreHorizontal,
 } from "lucide-react";
 
-const GoalItem = ({ title, current, target, dueDate, linkGoal }) => {
+const GoalItem = ({
+  title,
+  current,
+  target,
+  dueDate,
+  linkGoal,
+  onEdit,
+  onAddAmount,
+}) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const progress = (current / target) * 100;
   const remaining = target - current;
   const isCompleted = progress >= 100;
@@ -42,6 +53,9 @@ const GoalItem = ({ title, current, target, dueDate, linkGoal }) => {
       <div className="mb-4 flex items-start justify-between">
         <div>
           <div className="mb-1 flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
+              🚗
+            </div>
             <h3 className="font-medium text-gray-800">{title}</h3>
           </div>
           <div className="flex items-center gap-2">
@@ -55,14 +69,49 @@ const GoalItem = ({ title, current, target, dueDate, linkGoal }) => {
             </p>
           </div>
         </div>
-        <a
-          href={linkGoal}
-          target="_blank"
-          className="rounded-lg p-2 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          aria-label="View goal details"
-        >
-          <ArrowUpRight className="h-4 w-4 text-gray-400" />
-        </a>
+
+        {/* Menu de puntos suspensivos */}
+        <div className="relative">
+          <button
+            className="rounded-lg p-2 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Open menu"
+          >
+            <MoreHorizontal className="h-5 w-5 text-gray-400" />
+          </button>
+          {isMenuOpen && (
+            <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+              <ul className="py-1">
+                <li>
+                  <a
+                    href={linkGoal}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    View Details
+                  </a>
+                </li>
+                <li>
+                  <button
+                    onClick={onEdit}
+                    className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Edit Item
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={onAddAmount}
+                    className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Add Amount
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="mb-2">

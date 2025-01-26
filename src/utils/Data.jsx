@@ -57,7 +57,7 @@ const transactions = [
     id: 2,
     icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
     name: "Spotify Premium",
-    date: "19 December 2024, 02:25 PM",
+    date: "19 January 2025, 02:25 PM",
     amount: 796_000, // 199 USD to COP
     type: "expense",
     cardId: 2,
@@ -66,7 +66,7 @@ const transactions = [
     id: 3,
     icon: <ArrowRightLeft className="h-6 w-6 text-[#00B9FF]" />,
     name: "Transferwise - Received",
-    date: "19 December 2024, 10:15 AM",
+    date: "19 January 2025, 10:15 AM",
     amount: 4800_000, // 1200 USD to COP
     type: "income",
     cardId: 3,
@@ -75,7 +75,7 @@ const transactions = [
     id: 4,
     icon: <ShoppingBag className="h-6 w-6 text-[#FF0000]" />,
     name: "H&M Payment",
-    date: "15 December 2024, 06:30 PM",
+    date: "15 January 2025, 06:30 PM",
     amount: 8800_000, // 2200 USD to COP
     type: "expense",
     cardId: 1,
@@ -84,7 +84,7 @@ const transactions = [
     id: 5,
     icon: <Apple className="h-6 w-6 text-[#424147]" />,
     name: "iPhone 12 Pro Max",
-    date: "24 December 2024, 01:30 PM",
+    date: "24 January 2025, 01:30 PM",
     amount: 8800_000, // 2200 USD to COP
     type: "expense",
     cardId: 2,
@@ -93,7 +93,7 @@ const transactions = [
     id: 6,
     icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
     name: "Spotify Family",
-    date: "25 December 2024, 02:25 PM",
+    date: "25 January 2025, 02:25 PM",
     amount: 996_000, // 249 USD to COP (variedad)
     type: "expense",
     cardId: 3,
@@ -102,7 +102,7 @@ const transactions = [
     id: 7,
     icon: <ArrowRightLeft className="h-6 w-6 text-[#00B9FF]" />,
     name: "Transferwise - Sent",
-    date: "26 December 2024, 10:15 AM",
+    date: "26 January 2025, 10:15 AM",
     amount: 4800_000, // 1200 USD to COP
     type: "expense",
     cardId: 1,
@@ -111,7 +111,7 @@ const transactions = [
     id: 8,
     icon: <ShoppingBag className="h-6 w-6 text-[#FF0000]" />,
     name: "Amazon Purchase",
-    date: "28 December 2024, 06:30 PM",
+    date: "28 January 2025, 06:30 PM",
     amount: 2000_000, // 500 USD to COP
     type: "expense",
     cardId: 2,
@@ -120,7 +120,7 @@ const transactions = [
     id: 9,
     icon: <Apple className="h-6 w-6 text-[#424147]" />,
     name: "MacBook Pro",
-    date: "28 December 2024, 01:30 PM",
+    date: "28 January 2025, 01:30 PM",
     amount: 10000_000, // 2500 USD to COP
     type: "expense",
     cardId: 3,
@@ -129,7 +129,7 @@ const transactions = [
     id: 10,
     icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
     name: "Spotify Annual",
-    date: "1 December 2024, 02:25 PM",
+    date: "1 January 2025, 02:25 PM",
     amount: 3980_000, // 995 USD to COP (variedad)
     type: "expense",
     cardId: 1,
@@ -335,7 +335,7 @@ const planningGoals = [
     title: "Buy a car",
     current: 25000,
     target: 47000,
-    dueDate: "Dec 2024",
+    dueDate: "Dec 2025",
     image: "",
     linkGoal: "https://www.ford.com.co/performance/mustang/",
   },
@@ -344,7 +344,7 @@ const planningGoals = [
     title: "Motorola Edge 50 Fusion",
     current: 15000,
     target: 50000,
-    dueDate: "Dec 2024",
+    dueDate: "Dec 2025",
     image: "",
     linkGoal:
       "https://www.ktronix.com/celular-motorola-edge-50-fusion-256gb-verde/p/840023261879?fuente=google&medio=cpc&campaign=KT_COL_MAX_PEF_CPC_AON_CEL_TLP_Celulares_PAC&keyword=&gad_source=1&gclid=Cj0KCQiAst67BhCEARIsAKKdWOl_tbaoz1uxTmnCwQOqRzED3OVtfCmI-j-uPaY7mTysDpspkrGVEh8aAvr7EALw_wcB",

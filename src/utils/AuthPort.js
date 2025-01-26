@@ -47,7 +47,7 @@ export async function successLogin(
     setUserDocData({ id: userRef.id, ...newUser });
   }
 
-  navigate("/home");
+  navigate("/Dashboard");
 }
 
 export function userWasLogin(
