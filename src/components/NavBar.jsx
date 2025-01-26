@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import { Search, Bell, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
     { name: "Dashboard", to: "/dashboard" },
     { name: "Transactions", to: "/transactions" },
     { name: "Subscriptions", to: "/subscriptions" },
+    { name: "planning-goals", to: "/planning-goals" },
     { name: "Wallets", to: "/wallets" },
     { name: "Settings", to: "/settings" },
   ];
@@ -35,7 +43,7 @@ const Navbar = () => {
                   key={item.to}
                   to={item.to}
                   className={`rounded-lg px-4 py-2 text-sm ${
-                    item.name === "Dashboard"
+                    location.pathname === item.to
                       ? "bg-[#262b38] text-white"
                       : "text-gray-300 hover:text-white"
                   }`}

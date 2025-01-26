@@ -6,7 +6,7 @@ import Layout from "./components/Layout";
 // IMPORTACIÓN DE PÁGINAS
 import LoginForm from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
-import Subscriptions from "./pages/Subscriptions.jsx";
+import SubscriptionPage from "./pages/SubscriptionPage.tsx";
 import Profile from "./pages/Profile.jsx";
 import Settings from "./pages/Settings.jsx";
 import PlanningGoalsPage from "./pages/PlanningGoalsPage.tsx";
@@ -40,7 +40,7 @@ function App() {
             {/* Rutas adicionales */}
             <Route
               path="subscriptions"
-              element={<PrivateRoute element={<Subscriptions />} />}
+              element={<PrivateRoute element={<SubscriptionPage />} />}
             />
             <Route
               path="planning-goals"
