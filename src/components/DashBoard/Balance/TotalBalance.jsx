@@ -1,9 +1,10 @@
 import React from "react";
-import BalanceMetric from "./BalanceMetric";
+
+import { formatToCOP } from "../../../utils/functions";
 
 import { ArrowUpRight, ArrowDownRight, Wallet, Receipt } from "lucide-react";
 
-const TotalBalance = ({ balance, income, expense, saving }) => {
+const TotalBalance = ({ income, expense }) => {
   const data = [
     { title: "Employee", amount: "1,000.00", percentage: 40, color: "#f472b6" },
     { title: "Bills", amount: "1,000.00", percentage: 40, color: "#a78bfa" },
@@ -17,7 +18,7 @@ const TotalBalance = ({ balance, income, expense, saving }) => {
         <div className="mb-4 flex items-start justify-between">
           <div>
             <p className="mb-1 text-gray-500">Total Income</p>
-            <h2 className="text-3xl font-bold">$10,456.00</h2>
+            <h2 className="text-3xl font-bold">{formatToCOP(income)}</h2>
           </div>
           <div className="rounded-xl bg-blue-100 p-3">
             <Wallet className="h-6 w-6 text-blue-600" />
@@ -57,7 +58,7 @@ const TotalBalance = ({ balance, income, expense, saving }) => {
         <div className="mb-4 flex items-start justify-between">
           <div>
             <p className="mb-1 text-gray-500">Total Expense</p>
-            <h2 className="text-3xl font-bold">$2,456.00</h2>
+            <h2 className="text-3xl font-bold">{formatToCOP(expense)}</h2>
           </div>
           <div className="rounded-xl bg-red-100 p-3">
             <Receipt className="h-6 w-6 text-red-600" />

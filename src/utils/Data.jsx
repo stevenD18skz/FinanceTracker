@@ -351,28 +351,4 @@ const planningGoals = [
   },
 ];
 
-const valueSpendingStats = [
-  {
-    title: "Visa",
-    amount: 59_000,
-    percentage: 67,
-    color: "#22C55E",
-    incomePercentage: 21,
-  },
-  {
-    title: "Master Card",
-    amount: 120_000,
-    percentage: 34,
-    color: "#EAB308",
-    incomePercentage: 11,
-  },
-];
-
-export {
-  balanceData,
-  cardData,
-  transactions,
-  subscriptions,
-  planningGoals,
-  valueSpendingStats,
-};
+export { balanceData, cardData, transactions, subscriptions, planningGoals };

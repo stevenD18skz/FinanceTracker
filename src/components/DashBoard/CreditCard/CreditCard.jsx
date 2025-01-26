@@ -1,7 +1,23 @@
 import React from "react";
-import CardLogo from "./CardLogo";
 
-const Card = ({ type, balance, cardNumber, expiryDate }) => {
+// Import the logo images
+import visaLogo from "../../../assets/visa.png";
+import mastercardLogo from "../../../assets/mastercard.png";
+import nubankLogo from "../../../assets/nubank.png";
+
+const CreditCardLogo = ({ type }) => {
+  const logos = {
+    visa: <img src={visaLogo} alt="Visa" className="h-12 w-20" />,
+    mastercard: (
+      <img src={mastercardLogo} alt="Mastercard" className="h-12 w-20" />
+    ),
+    nubank: <img src={nubankLogo} alt="Visa" className="h-12 w-20" />,
+  };
+
+  return <div className="text-white">{logos[type]}</div>;
+};
+
+const CreditCard = ({ type, balance, cardNumber, expiryDate }) => {
   const cardStyles = {
     visa: "from-blue-600 to-blue-900",
     mastercard: "from-slate-600 to-slate-950",
@@ -49,7 +65,7 @@ const Card = ({ type, balance, cardNumber, expiryDate }) => {
               {formatBalance(balance)}
             </h2>
           </div>
-          <CardLogo type={type} />
+          <CreditCardLogo type={type} />
         </div>
 
         <div className="mt-auto">
@@ -63,4 +79,4 @@ const Card = ({ type, balance, cardNumber, expiryDate }) => {
   );
 };
 
-export default Card;
+export default CreditCard;

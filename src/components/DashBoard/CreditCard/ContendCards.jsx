@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Card from "./Card";
+import CreditCard from "./CreditCard";
 import { PlusCircle } from "lucide-react";
 
 const ContendCards = ({ cardData }) => {
@@ -51,7 +51,7 @@ const ContendCards = ({ cardData }) => {
               className="w-full flex-shrink-0"
               style={{ minWidth: "100%" }}
             >
-              <Card {...card} />
+              <CreditCard {...card} />
             </div>
           ))}
 

@@ -87,9 +87,10 @@ const GoalItem = ({
                     href={linkGoal}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    View Details
+                    View Details{" "}
+                    <ArrowUpRight className="h-4 w-4 text-gray-400" />
                   </a>
                 </li>
                 <li>
@@ -154,4 +155,30 @@ const GoalItem = ({
   );
 };
 
-export default GoalItem;
+const PlanningGoals = ({ goals }) => {
+  return (
+    <div className="rounded-xl bg-white p-6 shadow-lg">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-800">Planning</h2>
+        <button className="text-sm text-indigo-600 hover:text-indigo-700">
+          View All
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        {goals.map((goal) => (
+          <GoalItem
+            key={goal.id}
+            title={goal.title}
+            current={goal.current}
+            target={goal.target}
+            linkGoal={goal.linkGoal}
+            dueDate={goal.dueDate}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PlanningGoals;

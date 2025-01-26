@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Subscriptions from "./pages/Subscriptions.jsx";
 import Profile from "./pages/Profile.jsx";
 import Settings from "./pages/Settings.jsx";
+import PlanningGoalsPage from "./pages/PlanningGoalsPage.tsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
@@ -36,12 +37,16 @@ function App() {
               path="Dashboard"
               element={<PrivateRoute element={<Dashboard />} />}
             />
-
             {/* Rutas adicionales */}
             <Route
               path="subscriptions"
               element={<PrivateRoute element={<Subscriptions />} />}
             />
+            <Route
+              path="planning-goals"
+              element={<PrivateRoute element={<PlanningGoalsPage />} />}
+            />
+
             <Route
               path="profile"
               element={<PrivateRoute element={<Profile />} />}

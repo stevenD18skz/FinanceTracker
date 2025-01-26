@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "./TransactionHistory.css"; // Import the CSS file for custom styles
-import { FaCalendarAlt } from "react-icons/fa"; // Importa el icono de calendario desde react-icons
+import "./TransactionHistory.css";
+import { FaCalendarAlt } from "react-icons/fa";
 
 const TransactionHistory = ({ dataTransaction }) => {
   const [filter, setFilter] = useState("7");

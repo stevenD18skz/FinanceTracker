@@ -2,15 +2,15 @@
 import React from "react";
 
 // IMPORTACION DE COMPONENTES
-import ContendCards from "../components/CreditCard/ContendCards";
+import ContendCards from "../components/DashBoard/CreditCard/ContendCards";
 
-import TotalBalance from "../components/Balance/TotalBalance";
+import TotalBalance from "../components/DashBoard/Balance/TotalBalance";
 
-import PlanningGoals from "../components/Planning/PlanningGoals";
+import PlanningGoals from "../components/DashBoard/Planning/PlanningGoals";
 
-import TransactionHistory from "../components/Transaction/TransactionHistory";
+import TransactionHistory from "../components/DashBoard/Transaction/TransactionHistory";
 
-import ContendSubscription from "../components/Subscriptions/ContendSubscription";
+import ContendSubscription from "../components/DashBoard/Subscriptions/ContendSubscription";
 
 //IMPORTACION DE MOCKS
 import {
@@ -41,5 +41,4 @@ export default function Dashboard() {
       </div>
     </div>
   );
-  
 }
