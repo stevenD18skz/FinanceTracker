@@ -57,7 +57,7 @@ const CreditCard = ({
   return (
     <div className="perspective group">
       <div
-        className={`w-full max-w-md bg-gradient-to-br ${cardStyles[type]} relative mx-auto mt-2 overflow-hidden rounded-3xl p-6 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl`}
+        className={`w-full max-w-md bg-gradient-to-br ${cardStyles[type]} relative mx-auto mt-2 overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl`}
       >
         {/* Animated background patterns */}
         <div className="absolute inset-0 opacity-10">

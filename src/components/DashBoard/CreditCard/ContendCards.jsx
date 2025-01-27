@@ -24,7 +24,7 @@ const ContendCards = ({ cardData }) => {
 
   return (
     <div
-      className={`rounded-3xl ${isDarkMode ? "bg-gradient-to-b from-slate-800 to-slate-900" : "bg-gradient-to-b from-white to-gray-50"} p-6 shadow-xl transition-colors duration-300`}
+      className={`rounded-xl ${isDarkMode ? "bg-slate-800" : "bg-white"} p-6 transition-colors duration-300`}
     >
       <div className="mb-6 flex items-center justify-between">
         <button

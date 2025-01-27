@@ -8,6 +8,10 @@ import {
   Rocket,
   Timer,
   MoreHorizontal,
+  Plus,
+  ChevronRight,
+  Layout,
+  ListFilter,
 } from "lucide-react";
 
 const GoalItem = ({
@@ -80,7 +84,7 @@ const GoalItem = ({
             <MoreHorizontal className="h-5 w-5 text-gray-400" />
           </button>
           {isMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+            <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white ring-1 ring-black ring-opacity-5">
               <ul className="py-1">
                 <li>
                   <a
@@ -156,17 +160,79 @@ const GoalItem = ({
 };
 
 const PlanningGoals = ({ goals }) => {
+  const [view, setView] = useState("grid"); // 'grid' or 'list'
+  const [filter, setFilter] = useState("all"); // 'all', 'active', 'completed'
+
+  const filteredGoals = goals.filter((goal) => {
+    const progress = (goal.current / goal.target) * 100;
+    if (filter === "completed") return progress >= 100;
+    if (filter === "active") return progress < 100;
+    return true;
+  });
+
   return (
-    <div className="rounded-xl bg-white p-6 shadow-lg">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-800">Planning</h2>
-        <button className="text-sm text-indigo-600 hover:text-indigo-700">
-          View All
-        </button>
+    <div className="w-full max-w-4xl rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-100/50 backdrop-blur-lg transition-all hover:shadow-2xl">
+      <div className="mb-8">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Planning Goals
+            </h2>
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600">
+              {filteredGoals.length} {filter === "all" ? "total" : filter}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex rounded-lg bg-gray-100 p-1">
+              <button
+                onClick={() => setView("grid")}
+                className={`rounded-md p-2 transition-all ${
+                  view === "grid"
+                    ? "bg-white text-gray-800 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                <Layout className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setView("list")}
+                className={`rounded-md p-2 transition-all ${
+                  view === "list"
+                    ? "bg-white text-gray-800 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                <ListFilter className="h-4 w-4" />
+              </button>
+            </div>
+            <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700">
+              <Plus className="h-4 w-4" />
+              New Goal
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {["all", "active", "completed"].map((filterType) => (
+            <button
+              key={filterType}
+              onClick={() => setFilter(filterType)}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                filter === filterType
+                  ? "bg-gray-100 text-gray-800"
+                  : "text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="space-y-3">
-        {goals.map((goal) => (
+      <div
+        className={`grid gap-4 ${view === "grid" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}
+      >
+        {filteredGoals.map((goal) => (
           <GoalItem
             key={goal.id}
             title={goal.title}
@@ -177,6 +243,18 @@ const PlanningGoals = ({ goals }) => {
           />
         ))}
       </div>
+
+      {filteredGoals.length === 0 && (
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
+          <p className="text-gray-500">
+            No goals found for the selected filter.
+          </p>
+          <button className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700">
+            Create your first goal
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
