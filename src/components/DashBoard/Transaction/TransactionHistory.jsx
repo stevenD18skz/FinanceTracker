@@ -14,7 +14,7 @@ const TransactionItem = ({ transaction }) => {
   return (
     <div
       key={transaction.id}
-      className="flex items-center justify-between rounded-xl p-3"
+      className="flex items-center justify-between rounded-xl p-3 hover:bg-slate-200"
     >
       <div className="flex items-center space-x-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">

@@ -344,6 +344,42 @@ const planningGoalsData = [
     linkGoal:
       "https://www.ktronix.com/celular-motorola-edge-50-fusion-256gb-verde/p/840023261879?fuente=google&medio=cpc&campaign=KT_COL_MAX_PEF_CPC_AON_CEL_TLP_Celulares_PAC&keyword=&gad_source=1&gclid=Cj0KCQiAst67BhCEARIsAKKdWOl_tbaoz1uxTmnCwQOqRzED3OVtfCmI-j-uPaY7mTysDpspkrGVEh8aAvr7EALw_wcB",
   },
+  {
+    id: 3,
+    title: "Trip to Japan",
+    current: 10000,
+    target: 20000,
+    dueDate: "Jun 2026",
+    image: "",
+    linkGoal: "https://www.japan.travel/en/",
+  },
+  {
+    id: 4,
+    title: "MacBook Pro M2",
+    current: 20000,
+    target: 60000,
+    dueDate: "Dec 2026",
+    image: "",
+    linkGoal: "https://www.apple.com/macbook-pro-14-and-16/",
+  },
+  {
+    id: 5,
+    title: "Home Gym Setup",
+    current: 8000,
+    target: 30000,
+    dueDate: "Sep 2025",
+    image: "",
+    linkGoal: "https://www.roguefitness.com/garage-gym-builder",
+  },
+  {
+    id: 6,
+    title: "Charity Fundraiser",
+    current: 5000,
+    target: 10000,
+    dueDate: "Nov 2025",
+    image: "",
+    linkGoal: "https://www.globalgiving.org/",
+  },
 ];
 
 export {

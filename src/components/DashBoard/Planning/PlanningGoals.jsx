@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./ContainerPlanning.css";
 
 // LIBRARY IMPORTS
 import {
@@ -170,7 +171,7 @@ const PlanningGoals = ({ goals }) => {
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="planning-list custom-scrollbar">
         {goals.map((goal) => (
           <GoalItem
             key={goal.id}

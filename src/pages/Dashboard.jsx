@@ -19,7 +19,7 @@ import {
 
 export default function Dashboard() {
   return (
-    <div className="grid min-h-screen grid-cols-1 gap-4 bg-slate-600 px-12 pt-4 lg:grid-cols-3">
+    <div className="grid min-h-screen grid-cols-1 gap-4 bg-slate-300 px-12 pt-4 lg:grid-cols-3">
       {/* Left Column */}
       <div className="space-y-4">
         <ContendCards cardData={cardData} />
