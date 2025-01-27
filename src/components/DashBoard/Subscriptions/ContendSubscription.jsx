@@ -2,33 +2,31 @@ import React from "react";
 import { Zap, Plus } from "lucide-react";
 import "./ContendSubscription.css";
 
-const CardSubscriptions = ({ subscription }) => {
+//UTILS IMPORT
+import { formatToCOP } from "../../../utils/functions";
+
+//COMPONENTS IMPORT
+import TitleContainer from "../../ui/TitleContainer";
+
+const SubscriptionsItem = ({ subscription }) => {
   return (
     <div
-      className={`flex items-center justify-between rounded-2xl p-4 shadow-sm ${
-        subscription.status ? "bg-slate-100" : ""
+      className={`flex items-center justify-between rounded-xl p-3 ${
+        subscription.status ? "bg-gray-300" : ""
       }`}
     >
       {/* Sección Izquierda */}
-
-      <div className="flex items-center gap-3">
-        <div
-          className={`flex h-12 w-12 items-center justify-center rounded-xl`}
-          style={{ backgroundColor: subscription.color }}
-        >
-          {React.isValidElement(subscription.icon) ? (
-            subscription.icon
-          ) : (
-            <Zap />
-          )}
+      <div className="flex items-center space-x-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
+          {subscription.icon}
         </div>
         <div className="flex flex-col">
-          <h3 className="text-base font-medium text-gray-900">
+          <span className="text-base font-medium text-gray-800">
             {subscription.name}
-          </h3>
-          <h4 className="text-sm text-gray-500">
+          </span>
+          <span className="text-sm text-gray-500">
             {subscription.status ? "Paid the 11th" : `Pay before the 11th`}
-          </h4>
+          </span>
         </div>
       </div>
 
@@ -39,17 +37,18 @@ const CardSubscriptions = ({ subscription }) => {
             subscription.status ? "text-green-400" : "text-red-400"
           }`}
         >
-          ${subscription.cost}
+          {formatToCOP(subscription.cost)}
         </span>
+
         <button
           className={`text-md w-28 rounded-full px-6 py-2 font-medium transition-all duration-300 ${
             subscription.status
               ? "bg-gray-200 text-gray-600 hover:bg-gray-300"
-              : "bg-violet-600 text-white hover:bg-violet-700"
+              : "bg-emerald-600 text-white hover:bg-emerald-700"
           }`}
           disabled={subscription.status}
         >
-          {subscription.status ? "Paid" : "Pay now"}
+          {subscription.status ? "Paid" : "Pay"}
         </button>
       </div>
     </div>
@@ -58,19 +57,14 @@ const CardSubscriptions = ({ subscription }) => {
 
 const ContendSubscription = ({ subscriptionData }) => {
   return (
-    <div className="h-full rounded-xl bg-white p-6 ">
+    <div className="h-full rounded-xl bg-white p-6">
       <header className="mb-4 flex items-center justify-between">
-        <h3 className="text-3xl font-semibold">Monthly Payment</h3>
-        <button className="rounded-3xl border-2 border-solid px-6 py-2">
-          <p className="flex items-center text-xl font-semibold">
-            Add <Plus></Plus>
-          </p>
-        </button>
+        <TitleContainer text={"Monthly Payment"}></TitleContainer>
       </header>
 
-      <div className="subscription-list custom-scrollbar-x">
+      <div className="subscription-list custom-scrollbar">
         {subscriptionData.map((card, index) => (
-          <CardSubscriptions key={index} subscription={card} />
+          <SubscriptionsItem key={index} subscription={card} />
         ))}
       </div>
     </div>

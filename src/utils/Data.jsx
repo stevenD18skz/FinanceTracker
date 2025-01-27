@@ -14,8 +14,8 @@ const balanceData = {
   name: "Bariy Vollendito",
   photo: "https://randomuser.me/api/portraits/lego/3.jpg",
   balance: 3_000_000,
-  income: 465_000,
-  expense: 120_000,
+  income: 10_456_000,
+  expense: 32_000,
   saving: 80_000,
 };
 
@@ -43,7 +43,7 @@ const cardData = [
   },
 ];
 
-const transactions = [
+const transactionsData = [
   {
     id: 1,
     icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
@@ -281,55 +281,50 @@ const transactions = [
   },
 ];
 
-const subscriptions = [
+const subscriptionsData = [
   {
     id: 1,
     name: "Spotify Premium",
-    cost: 9.99,
+    cost: 19_000,
     renewalDate: "2023-11-01",
     status: true,
-    color: "#1DB954",
-    icon: <Music2 className="h-6 w-6 text-white" />,
+    icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
   },
   {
     id: 2,
     name: "YouTube Premium",
-    cost: 11.99,
+    cost: 12_000,
     renewalDate: "2023-11-05",
     status: false,
-    color: "#FF0000",
-    icon: <Projector className="h-6 w-6 text-white" />,
+    icon: <Projector className="h-6 w-6 text-[#FF0000]" />,
   },
   {
     id: 3,
     name: "Netflix",
-    cost: 15.99,
+    cost: 15_000,
     renewalDate: "2023-11-10",
     status: false,
-    color: "#E50914",
-    icon: <Projector className="h-6 w-6 text-white" />,
+    icon: <Projector className="h-6 w-6 text-[#E50914]" />,
   },
   {
     id: 4,
     name: "Amazon Prime",
-    cost: 12.99,
+    cost: 12_000,
     renewalDate: "2023-11-15",
     status: true,
-    color: "#FF9900",
-    icon: <ShoppingBag className="h-6 w-6 text-white" />,
+    icon: <ShoppingBag className="h-6 w-6 text-[#FF9900]" />,
   },
   {
     id: 5,
     name: "Hulu",
-    cost: 7.99,
+    cost: 7_000,
     renewalDate: "2023-11-20",
     status: true,
-    color: "#3DBB3D",
-    icon: <Projector className="h-6 w-6 text-white" />,
+    icon: <Projector className="h-6 w-6 text-[#3DBB3D]" />,
   },
 ];
 
-const planningGoals = [
+const planningGoalsData = [
   {
     id: 1,
     title: "Buy a car",
@@ -351,4 +346,10 @@ const planningGoals = [
   },
 ];
 
-export { balanceData, cardData, transactions, subscriptions, planningGoals };
+export {
+  balanceData,
+  cardData,
+  transactionsData,
+  subscriptionsData,
+  planningGoalsData,
+};

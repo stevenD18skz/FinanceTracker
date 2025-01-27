@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import CreditCard from "./CreditCard";
+
+// LIBRARY IMPORTS
 import { PlusCircle, ChevronLeft, ChevronRight, Sun, Moon } from "lucide-react";
+
+//COMPONENTS IMPORT
+import TitleContainer from "../../ui/TitleContainer";
+import CreditCard from "./CreditCard";
 
 const ContendCards = ({ cardData }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -38,11 +43,7 @@ const ContendCards = ({ cardData }) => {
         </button>
 
         <div className="flex items-center gap-4">
-          <h3
-            className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-gray-800"}`}
-          >
-            My Cards
-          </h3>
+          <TitleContainer text={"My Cards"} />
           {/*  
           <button
             onClick={toggleTheme}

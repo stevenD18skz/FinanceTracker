@@ -12,9 +12,9 @@ import ContendSubscription from "../components/DashBoard/Subscriptions/ContendSu
 import {
   balanceData,
   cardData,
-  transactions,
-  subscriptions,
-  planningGoals as df,
+  transactionsData,
+  subscriptionsData,
+  planningGoalsData,
 } from "../utils/Data";
 
 export default function Dashboard() {
@@ -23,7 +23,7 @@ export default function Dashboard() {
       {/* Left Column */}
       <div className="space-y-4">
         <ContendCards cardData={cardData} />
-        <PlanningGoals goals={df} />
+        <PlanningGoals goals={planningGoalsData} />
       </div>
 
       {/* Middle and Right Columns */}
@@ -31,8 +31,8 @@ export default function Dashboard() {
         <TotalBalance {...balanceData} />
 
         <div className="grid grid-cols-2 rounded-xl bg-white">
-          <TransactionHistory dataTransaction={transactions} />
-          <ContendSubscription subscriptionData={subscriptions} />
+          <TransactionHistory dataTransaction={transactionsData} />
+          <ContendSubscription subscriptionData={subscriptionsData} />
         </div>
       </div>
     </div>

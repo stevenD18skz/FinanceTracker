@@ -1,7 +1,6 @@
 import React from "react";
-import { CreditCard as CreditCardIcon } from "lucide-react";
 
-const CreditCardLogo = ({ type, isDarkMode }) => {
+const CreditCardLogo = ({ type }) => {
   const logos = {
     visa: (
       <div className="flex items-center font-bold text-white">
@@ -74,7 +73,7 @@ const CreditCard = ({
         {/* Content */}
         <div className="relative z-10">
           <div className="mb-12 flex items-start justify-end">
-            <CreditCardLogo type={type} isDarkMode={isDarkMode} />
+            <CreditCardLogo type={type} />
           </div>
 
           <div className="mt-auto space-y-6">

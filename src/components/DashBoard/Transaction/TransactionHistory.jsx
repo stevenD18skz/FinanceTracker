@@ -1,6 +1,44 @@
 import React, { useState } from "react";
 import "./TransactionHistory.css";
+
+// LIBRARY IMPORTS
 import { FaCalendarAlt } from "react-icons/fa";
+
+//COMPONETS IMPORT
+import TitleContainer from "../../ui/TitleContainer";
+
+//UTILS IMPORT
+import { formatToCOP } from "../../../utils/functions";
+
+const TransactionItem = ({ transaction }) => {
+  return (
+    <div
+      key={transaction.id}
+      className="flex items-center justify-between rounded-xl p-3"
+    >
+      <div className="flex items-center space-x-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
+          {transaction.icon}
+        </div>
+        <div className="flex flex-col">
+          <span className="text-base font-medium text-gray-800">
+            {transaction.name}
+          </span>
+          <span className="text-sm text-gray-500">{transaction.date}</span>
+        </div>
+      </div>
+
+      <span
+        className={`text-xl font-medium ${
+          transaction.type === "income" ? "text-green-600" : "text-red-600"
+        }`}
+      >
+        {transaction.type === "income" ? "+" : "-"}
+        {formatToCOP(transaction.amount)}
+      </span>
+    </div>
+  );
+};
 
 const TransactionHistory = ({ dataTransaction }) => {
   const [filter, setFilter] = useState("7");
@@ -34,13 +72,12 @@ const TransactionHistory = ({ dataTransaction }) => {
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
-    <div className="h-full rounded-xl bg-white p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-800">
-          Recent Transactions
-        </h2>
+    <div className="rounded-xl bg-white p-6">
+      <div className="mb-4 flex items-center justify-between">
+        <TitleContainer text={"Recent Transactions"} />
+
         <div className="flex items-center space-x-2">
-          <FaCalendarAlt className="h-6 w-6 text-gray-400" />
+          <FaCalendarAlt className="h-6 w-6 text-gray-500" />
           <select
             className="text-sm text-gray-500"
             value={filter}
@@ -58,37 +95,7 @@ const TransactionHistory = ({ dataTransaction }) => {
         className={`transaction-list ${filteredTransactions.length > 4 ? "custom-scrollbar" : ""}`}
       >
         {filteredTransactions.map((transaction) => (
-          <div
-            key={transaction.id}
-            className="flex items-center justify-between rounded-lg p-3 transition-colors duration-150 hover:bg-gray-50"
-          >
-            <div className="flex items-center space-x-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
-                {transaction.icon}
-              </div>
-              <div>
-                <p className="font-medium text-gray-800">{transaction.name}</p>
-                <p className="text-sm text-gray-500">{transaction.date}</p>
-              </div>
-            </div>
-            <span
-              className={`font-semibold ${
-                transaction.type === "income"
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {transaction.type === "income" ? "+" : "-"}
-              {new Intl.NumberFormat("es-CO", {
-                style: "currency",
-                currency: "COP",
-                minimumFractionDigits: 0,
-              })
-                .format(transaction.amount)
-                .replace("COP", "")
-                .trim()}
-            </span>
-          </div>
+          <TransactionItem transaction={transaction} />
         ))}
       </div>
     </div>
