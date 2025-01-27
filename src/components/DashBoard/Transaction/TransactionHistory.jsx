@@ -34,7 +34,7 @@ const TransactionHistory = ({ dataTransaction }) => {
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
-    <div className="h-full rounded-xl bg-white p-6 shadow-lg">
+    <div className="h-full rounded-xl bg-white p-6">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-800">
           Recent Transactions

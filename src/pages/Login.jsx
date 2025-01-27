@@ -1,6 +1,5 @@
 //importacion de librerias
 import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";
 
 //firebase
 import { auth } from "../firebase/config";
@@ -10,12 +9,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+//IMPORTACION DE PUERTOS
 import { handleGoogleSignIn, userWasLogin } from "../utils/AuthPort";
 
 export default function LoginForm() {
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate();
   const { setUser, setUserDocData } = useAuth();
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

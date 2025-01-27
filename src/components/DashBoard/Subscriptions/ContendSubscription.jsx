@@ -58,7 +58,7 @@ const CardSubscriptions = ({ subscription }) => {
 
 const ContendSubscription = ({ subscriptionData }) => {
   return (
-    <div className="h-full rounded-xl bg-white p-6 shadow-md">
+    <div className="h-full rounded-xl bg-white p-6 ">
       <header className="mb-4 flex items-center justify-between">
         <h3 className="text-3xl font-semibold">Monthly Payment</h3>
         <button className="rounded-3xl border-2 border-solid px-6 py-2">

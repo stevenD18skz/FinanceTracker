@@ -6,11 +6,14 @@ import Layout from "./components/Layout";
 // IMPORTACIÓN DE PÁGINAS
 import LoginForm from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
+
 import SubscriptionPage from "./pages/SubscriptionPage.tsx";
-import Profile from "./pages/Profile.jsx";
-import Settings from "./pages/Settings.jsx";
 import PlanningGoalsPage from "./pages/PlanningGoalsPage.tsx";
 
+import Profile from "./pages/Profile.jsx";
+import Settings from "./pages/Settings.jsx";
+
+//CONTEXT AND HOOKS
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 
@@ -37,7 +40,8 @@ function App() {
               path="Dashboard"
               element={<PrivateRoute element={<Dashboard />} />}
             />
-            {/* Rutas adicionales */}
+
+            {/* Páginas Individuales*/}
             <Route
               path="subscriptions"
               element={<PrivateRoute element={<SubscriptionPage />} />}
@@ -47,6 +51,7 @@ function App() {
               element={<PrivateRoute element={<PlanningGoalsPage />} />}
             />
 
+            {/* Páginas Usuario*/}
             <Route
               path="profile"
               element={<PrivateRoute element={<Profile />} />}
