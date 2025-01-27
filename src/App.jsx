@@ -7,6 +7,8 @@ import Layout from "./components/Layout";
 import LoginForm from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
 
+import WalletPage from "./pages/WalletPage.tsx";
+import TransactionPage from "./pages/TransactionPage.tsx";
 import SubscriptionPage from "./pages/SubscriptionPage.tsx";
 import PlanningGoalsPage from "./pages/PlanningGoalsPage.tsx";
 
@@ -42,6 +44,14 @@ function App() {
             />
 
             {/* Páginas Individuales*/}
+            <Route
+              path="wallets"
+              element={<PrivateRoute element={<WalletPage />} />}
+            />
+            <Route
+              path="transactions"
+              element={<PrivateRoute element={<TransactionPage />} />}
+            />
             <Route
               path="subscriptions"
               element={<PrivateRoute element={<SubscriptionPage />} />}

@@ -1,15 +1,19 @@
-import React, { useState } from "react";
-import { Search, Bell, Menu } from "lucide-react";
+import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+
+import { Search, Bell, Menu, Settings, User, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+import { handleLogout } from "../utils/AuthPort";
+
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -20,6 +24,23 @@ const Navbar = () => {
     { name: "Wallets", to: "/wallets" },
     { name: "Settings", to: "/settings" },
   ];
+
+  const handleProfileClick = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const closeDropdown = (e) => {
+      const target = e.target;
+      if (!target.closest(".profile-menu")) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("click", closeDropdown);
+    return () => document.removeEventListener("click", closeDropdown);
+  }, []);
 
   return (
     <nav className="top-0 z-50 w-full bg-[#1a1f2e] text-white">
@@ -66,11 +87,47 @@ const Navbar = () => {
               <button className="rounded-lg p-2 hover:bg-[#262b38]">
                 <Bell className="h-5 w-5" />
               </button>
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt="Profile"
-                className="h-8 w-8 rounded-full"
-              />
+              {/* Profile dropdown */}
+              <div className="profile-menu relative">
+                <button
+                  onClick={handleProfileClick}
+                  className="flex items-center focus:outline-none"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    alt="Profile"
+                    className="h-8 w-8 rounded-full ring-2 ring-transparent transition-all hover:ring-indigo-500"
+                  />
+                </button>
+
+                {/* Dropdown menu */}
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 rounded-lg bg-[#262b38] py-2 shadow-xl ring-1 ring-black ring-opacity-5">
+                    <Link
+                      to="/profile"
+                      className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[#1a1f2e] hover:text-white"
+                    >
+                      <User className="mr-3 h-4 w-4" />
+                      Profile
+                    </Link>
+                    <Link
+                      to="/settings"
+                      className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-[#1a1f2e] hover:text-white"
+                    >
+                      <Settings className="mr-3 h-4 w-4" />
+                      Settings
+                    </Link>
+                    <div className="my-1 border-t border-gray-700"></div>
+                    <button
+                      onClick={() => handleLogout(navigate)}
+                      className="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-[#1a1f2e] hover:text-white"
+                    >
+                      <LogOut className="mr-3 h-4 w-4" />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
