@@ -1,92 +1,24 @@
-import React, { useState } from "react";
-import { Music2, Plus, Zap, Monitor, Search, ArrowUpDown } from "lucide-react";
+// React y hooks
+import * as React from "react";
+import { useState } from "react";
+
+// Componentes internos
 import { SubscriptionCard } from "../components/subscriptionsPage/SubscriptionCard";
 import { SubscriptionStats } from "../components/subscriptionsPage/SubscriptionStats";
 import { SubscriptionForm } from "../components/subscriptionsPage/SubscriptionForm";
 import { SubscriptionDetails } from "../components/subscriptionsPage/SubscriptionDetails";
+
+// Utilidades y datos
+import { subscriptionsData as initialSubscriptions } from "../utils/Data";
+
+// Tipos
 import type {
   Subscription,
   SubscriptionStats as Stats,
 } from "../components/subscriptionsPage/types";
 
-const initialSubscriptions: Subscription[] = [
-  {
-    id: 1,
-    name: "Spotify Premium",
-    cost: 9.99,
-    renewalDate: "2024-03-20",
-    status: true,
-    color: "#1DB954",
-    icon: <Music2 className="h-6 w-6 text-white" />,
-    category: "entertainment",
-    billingCycle: "monthly",
-  },
-  {
-    id: 2,
-    name: "Netflix",
-    cost: 15.99,
-    renewalDate: "2024-03-15",
-    status: false,
-    color: "#E50914",
-    icon: <Monitor className="h-6 w-6 text-white" />,
-    category: "entertainment",
-    billingCycle: "monthly",
-  },
-  {
-    id: 3,
-    name: "Adobe Creative Cloud",
-    cost: 52.99,
-    renewalDate: "2024-03-25",
-    status: true,
-    color: "#FF0000",
-    icon: <Zap className="h-6 w-6 text-white" />,
-    category: "productivity",
-    billingCycle: "monthly",
-  },
-];
-
-const calculateStats = (subs: Subscription[]): Stats => {
-  const activeSubscriptions = subs.filter((sub) => sub.status);
-  const unpaidSubscriptions = subs.filter((sub) => !sub.status);
-
-  return {
-    totalActive: activeSubscriptions.length,
-    monthlySpending: subs.reduce((acc, sub) => acc + sub.cost, 0),
-    nextPayment:
-      unpaidSubscriptions.length > 0 ? unpaidSubscriptions[0].cost : 0,
-    nextPaymentDate:
-      unpaidSubscriptions.length > 0
-        ? unpaidSubscriptions[0].renewalDate
-        : new Date().toISOString(),
-  };
-};
-
-const sortOptions = [
-  {
-    label: "Date",
-    value: "date",
-    options: [
-      { label: "Newest First", value: "date-desc" },
-      { label: "Oldest First", value: "date-asc" },
-    ],
-  },
-  {
-    label: "Cost",
-    value: "cost",
-    options: [
-      { label: "Highest First", value: "cost-desc" },
-      { label: "Lowest First", value: "cost-asc" },
-    ],
-  },
-  {
-    label: "Status",
-    value: "status",
-    options: [
-      { label: "Paid First", value: "status-paid" },
-      { label: "Unpaid First", value: "status-unpaid" },
-    ],
-  },
-];
+// Iconos de Lucide React (agrupados por funcionalidad o categoría)
+import { Plus, Search, ArrowUpDown } from "lucide-react";
 
 export default function SubscriptionPage() {
   const [subscriptions, setSubscriptions] =
@@ -99,6 +31,23 @@ export default function SubscriptionPage() {
     useState<Subscription | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date-desc");
+
+  const calculateStats = (subs: Subscription[]): Stats => {
+    const activeSubscriptions = subs.filter((sub) => sub.status);
+    const unpaidSubscriptions = subs.filter((sub) => !sub.status);
+
+    return {
+      totalActive: activeSubscriptions.length,
+      monthlySpending: subs.reduce((acc, sub) => acc + sub.cost, 0),
+      nextPayment:
+        unpaidSubscriptions.length > 0 ? unpaidSubscriptions[0].cost : 0,
+      nextPaymentDate:
+        unpaidSubscriptions.length > 0
+          ? unpaidSubscriptions[0].renewalDate
+          : new Date().toISOString(),
+    };
+  };
+
   const stats = calculateStats(subscriptions);
 
   const handlePayment = (id: number) => {
@@ -182,6 +131,33 @@ export default function SubscriptionPage() {
   const filteredSubscriptions = subscriptions.filter((sub) =>
     sub.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  const sortOptions = [
+    {
+      label: "Date",
+      value: "date",
+      options: [
+        { label: "Newest First", value: "date-desc" },
+        { label: "Oldest First", value: "date-asc" },
+      ],
+    },
+    {
+      label: "Cost",
+      value: "cost",
+      options: [
+        { label: "Highest First", value: "cost-desc" },
+        { label: "Lowest First", value: "cost-asc" },
+      ],
+    },
+    {
+      label: "Status",
+      value: "status",
+      options: [
+        { label: "Paid First", value: "status-paid" },
+        { label: "Unpaid First", value: "status-unpaid" },
+      ],
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-100">

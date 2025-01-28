@@ -9,7 +9,7 @@ import ModalGeneric from "../components/ui/ModalGeneric";
 import { planningGoalsData } from "../utils/Data";
 
 // Tipos
-import { Goal, ViewMode, FilterType } from "../components/types"; // Nuevo import
+import { Goal } from "../components/types"; // Nuevo import
 
 // Iconos de Lucide React (agrupados por funcionalidad o categoría)
 import {
@@ -42,11 +42,11 @@ const GoalItem = ({
   target,
   dueDate,
   linkGoal,
-  onEdit,
-  onDelete,
-  onComplete,
   onView,
+  onEdit,
   onAddAmount,
+  onComplete,
+  onDelete,
 }) => {
   const progress = (current / target) * 100;
   const remaining = target - current;
@@ -100,6 +100,19 @@ const GoalItem = ({
         <div className="flex items-center gap-2">
           <button
             onClick={(e) => {
+              if (linkGoal) {
+                window.open(linkGoal, "_blank"); // Abre el enlace en una nueva pestaña
+              } else {
+                console.log("El enlace no está definido.");
+              }
+            }}
+            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-red-600"
+            title="Delete"
+          >
+            <ArrowUpRight className="h-5 w-5" />
+          </button>
+          <button
+            onClick={(e) => {
               e.stopPropagation();
               onView();
             }}
@@ -147,19 +160,6 @@ const GoalItem = ({
             title="Delete"
           >
             <Trash2 className="h-5 w-5" />
-          </button>
-          <button
-            onClick={(e) => {
-              if (linkGoal) {
-                window.open(linkGoal, "_blank"); // Abre el enlace en una nueva pestaña
-              } else {
-                console.log("El enlace no está definido.");
-              }
-            }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-red-600"
-            title="Delete"
-          >
-            <ArrowUpRight className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -352,7 +352,7 @@ const PlanningGoalsPage = () => {
   }, [view]);
 
   return (
-    <div className="w-full rounded-3xl bg-gradient-to-b from-white to-gray-50/50 p-8 shadow-xl ring-1 ring-gray-100/50 backdrop-blur-lg transition-all hover:shadow-2xl">
+    <div className="min-h-screen bg-slate-200 p-8">
       <div className="mb-8 space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -445,7 +445,7 @@ const PlanningGoalsPage = () => {
 
       <div className="flex gap-6">
         <div
-          className={`grid flex-1 gap-4 space-y-4 ${
+          className={`grid flex-1 gap-3 ${
             view === "grid"
               ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
               : "grid-cols-1"

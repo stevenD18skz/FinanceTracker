@@ -22,7 +22,6 @@ const Navbar = () => {
     { name: "Subscriptions", to: "/subscriptions" },
     { name: "planning-goals", to: "/planning-goals" },
     { name: "Wallets", to: "/wallets" },
-    { name: "Settings", to: "/settings" },
   ];
 
   const handleProfileClick = () => {

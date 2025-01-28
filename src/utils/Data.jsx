@@ -289,6 +289,8 @@ const subscriptionsData = [
     renewalDate: "2023-11-01",
     status: true,
     icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
+    category: "entertainment",
+    billingCycle: "monthly",
   },
   {
     id: 2,
@@ -297,6 +299,8 @@ const subscriptionsData = [
     renewalDate: "2023-11-05",
     status: false,
     icon: <Projector className="h-6 w-6 text-[#FF0000]" />,
+    category: "entertainment",
+    billingCycle: "monthly",
   },
   {
     id: 3,
@@ -305,6 +309,8 @@ const subscriptionsData = [
     renewalDate: "2023-11-10",
     status: false,
     icon: <Projector className="h-6 w-6 text-[#E50914]" />,
+    category: "entertainment",
+    billingCycle: "monthly",
   },
   {
     id: 4,
@@ -313,6 +319,8 @@ const subscriptionsData = [
     renewalDate: "2023-11-15",
     status: true,
     icon: <ShoppingBag className="h-6 w-6 text-[#FF9900]" />,
+    category: "entertainment",
+    billingCycle: "monthly",
   },
   {
     id: 5,
@@ -321,6 +329,8 @@ const subscriptionsData = [
     renewalDate: "2023-11-20",
     status: true,
     icon: <Projector className="h-6 w-6 text-[#3DBB3D]" />,
+    category: "entertainment",
+    billingCycle: "monthly",
   },
 ];
 
@@ -406,21 +416,21 @@ const planningGoalsData = [
   },
   {
     id: 5,
-    title: "Home Gym Setup",
-    current: 8000,
-    target: 30000,
-    status: "active", // Agregado
+    title: "Buy LED lights",
+    current: 1500,
+    target: 1500,
+    status: "completed", // Agregado
     priority: "medium", // Agregado
-    createdAt: "2024-03-10T10:00:00Z", // Agregado
-    updatedAt: "2024-03-10T10:00:00Z", // Agregado
-    dueDate: "Sep 2025",
-    description: "Saving to build a home gym for fitness and health.", // Agregado
-    linkGoal: "https://www.roguefitness.com/garage-gym-builder",
+    createdAt: "2025-01-27T10:00:00Z", // Agregado
+    updatedAt: "2025-01-27T10:00:00Z", // Agregado
+    dueDate: "Jun 2025",
+    description: "Saving to purchase LED lights for home decoration.", // Agregado
+    linkGoal: "https://www.philips.com/c-m-li/led-lights",
     milestones: [
       // Agregado
-      { title: "Research gym equipment", completed: true },
-      { title: "Save 25% of target amount", completed: false },
-      { title: "Purchase essential equipment", completed: false },
+      { title: "Measure the areas for installation", completed: true },
+      { title: "Save 50% of target amount", completed: false },
+      { title: "Research color and style options", completed: false },
     ],
   },
   {
