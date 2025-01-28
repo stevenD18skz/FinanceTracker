@@ -7,10 +7,11 @@ import { differenceInDays } from "date-fns";
 import GoalItem from "../components/PlanningPage/GoalItem";
 import GoalDetails from "../components/PlanningPage/GoalDetails";
 import ModalGeneric from "../components/ui/ModalGeneric";
-import CreateGoalModal from "../components/PlanningPage/CreateGoalModal";
+import CreateEditGoalModalProps from "../components/PlanningPage/CreateEditGoalModalProps";
 
 // Utilidades y datos
-import { planningGoalsData } from "../utils/Data";
+
+// Puertos
 import {
   createGoal,
   getGoals,
@@ -32,41 +33,20 @@ import {
 } from "lucide-react";
 
 const PlanningGoalsPage = () => {
-  const [view, setView] = useState("grid");
+  const [view, setView] = useState<"grid" | "list">("grid");
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
+  // CRUD
+  const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const [goalToUpdate, setGoalToUpdate] = useState<Goal | null>(null);
   const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
+
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
-
-  const confirmDelete = () => {
-    if (goalToDelete) {
-      //hacer la accion de eliminar
-      deleteGoal(goalToDelete.id);
-      setShowDeleteModal(false);
-      setGoalToDelete(null);
-    }
-  };
-
-  const handleCreateGoal = (
-    newGoal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
-  ) => {
-    // Here you would typically make an API call to create the goal
-    const goalFinal = {
-      ...newGoal,
-      id: 10,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      current: 0,
-    };
-    console.log("New goal:", goalFinal);
-    createGoal(goalFinal);
-    setShowCreateModal(false);
-  };
 
   const processedGoals = getGoals()
     .filter((goal) => {
@@ -102,9 +82,52 @@ const PlanningGoalsPage = () => {
     localStorage.setItem("planningGoalsView", view);
   }, [view]);
 
+  const handleCreateGoal = (
+    newGoal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
+  ) => {
+    // Here you would typically make an API call to create the goal
+    const goalFinal = {
+      ...newGoal,
+      id: 10,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      current: 0,
+    };
+    console.log("New goal:", goalFinal);
+    createGoal(goalFinal);
+    setShowModal(false);
+  };
+
+  const handleUpdate = (
+    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
+  ) => {
+    updateGoal(goalToUpdate?.id, goal);
+    setShowModal(false); // Cierra el modal después de enviar
+  };
+
+  const handleSubmit = (
+    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
+  ) => {
+    if (goalToUpdate) {
+      handleUpdate(goal);
+    } else {
+      handleCreateGoal(goal);
+    }
+    setShowModal(false);
+  };
+
+  const confirmDelete = () => {
+    if (goalToDelete) {
+      deleteGoal(goalToDelete.id);
+      setShowDeleteModal(false);
+      setGoalToDelete(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-200 p-8">
       {/**Stats Summary */}
+      {goalToUpdate?.title}
 
       {/**Header and Controllers */}
       <div className="mb-8 space-y-6">
@@ -144,7 +167,10 @@ const PlanningGoalsPage = () => {
             </div>
             <button
               className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => setShowCreateModal(true)}
+              onClick={() => {
+                setGoalToUpdate(null);
+                setShowModal(true);
+              }}
             >
               <Plus className="h-4 w-4" />
               New Goal
@@ -217,14 +243,17 @@ const PlanningGoalsPage = () => {
               target={goal.target}
               dueDate={goal.dueDate}
               linkGoal={goal.linkGoal}
-              onEdit={() => {}}
               onAddAmount={() => {}}
+              onComplete={() => {}}
+              onView={() => setSelectedGoal(goal)}
+              onUpdate={() => {
+                setGoalToUpdate(goal);
+                setShowModal(true);
+              }}
               onDelete={() => {
                 setShowDeleteModal(true);
                 setGoalToDelete(goal);
               }}
-              onComplete={() => {}}
-              onView={() => setSelectedGoal(goal)}
             />
           ))}
         </div>
@@ -263,7 +292,10 @@ const PlanningGoalsPage = () => {
               </p>
               <button
                 className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
-                onClick={() => setShowCreateModal(true)}
+                onClick={() => {
+                  setGoalToUpdate(null);
+                  setShowModal(true);
+                }}
               >
                 Create your first goal
                 <ChevronRight className="h-4 w-4" />
@@ -273,7 +305,15 @@ const PlanningGoalsPage = () => {
         </div>
       )}
 
-      {/**Modal to Eliminate */}
+      {/* Modal to Create and Update */}
+      <CreateEditGoalModalProps
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmit}
+        initialData={goalToUpdate}
+      />
+
+      {/* Modal to Delete */}
       <ModalGeneric
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
@@ -301,13 +341,6 @@ const PlanningGoalsPage = () => {
           </div>
         </div>
       </ModalGeneric>
-
-      {/* Create Goal Modal */}
-      <CreateGoalModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSubmit={handleCreateGoal}
-      />
     </div>
   );
 };

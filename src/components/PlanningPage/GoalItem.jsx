@@ -22,7 +22,7 @@ const GoalItem = ({
   dueDate,
   linkGoal,
   onView,
-  onEdit,
+  onUpdate,
   onAddAmount,
   onComplete,
   onDelete,
@@ -103,7 +103,7 @@ const GoalItem = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onEdit();
+              onUpdate();
             }}
             className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-gray-600"
             title="Edit"

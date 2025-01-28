@@ -9,6 +9,7 @@ export function getGoals() {
 }
 
 export function updateGoal(id, updatedData) {
+  console.log(id, updatedData);
   const goalIndex = planningGoalsData.findIndex((goal) => goal.id === id);
   if (goalIndex !== -1) {
     planningGoalsData[goalIndex] = {
