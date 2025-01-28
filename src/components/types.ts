@@ -6,7 +6,6 @@ export interface Goal {
   target: number;
   dueDate?: string;
   linkGoal?: string;
-  category: string;
   description: string;
   status: "active" | "completed" | "inactive";
   priority: "high" | "medium" | "low";
