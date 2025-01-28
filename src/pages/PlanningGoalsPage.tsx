@@ -1,6 +1,24 @@
+// React y hooks
+import * as React from "react";
+import { useState, useEffect } from "react";
+
+// Componentes internos
+import ModalGeneric from "../components/ui/ModalGeneric";
+
+// Utilidades y datos
 import { planningGoalsData } from "../utils/Data";
 
+// Tipos
+import { Goal } from "../components/types"; // Nuevo import
+
+// Iconos de Lucide React (agrupados por funcionalidad o categoría)
 import {
+  Plus,
+  ChevronRight,
+  Layout,
+  ListFilter,
+  Search,
+  // Iconos de acciones
   CheckCircle,
   Edit2,
   Eye,
@@ -8,10 +26,7 @@ import {
   PlusCircle,
   Trash2,
   X,
-} from "lucide-react";
-
-import React, { useState, useEffect } from "react";
-import {
+  // Iconos de progreso o metas
   ArrowUpRight,
   TrendingUp,
   Target,
@@ -19,33 +34,7 @@ import {
   Trophy,
   Rocket,
   Timer,
-  MoreHorizontal,
-  Plus,
-  ChevronRight,
-  Layout,
-  ListFilter,
-  Search,
 } from "lucide-react";
-import ModalGeneric from "../components/ui/ModalGeneric";
-
-interface Goal {
-  id: string;
-  title: string;
-  current: number;
-  target: number;
-  dueDate?: string;
-  linkGoal?: string;
-  category: string;
-  description: string;
-  status: "active" | "completed" | "inactive";
-  priority: "high" | "medium" | "low";
-  createdAt: string;
-  updatedAt: string;
-  milestones: Array<{
-    title: string;
-    completed: boolean;
-  }>;
-}
 
 const GoalDetails = ({ goal, onClose }) => {
   const progress = (goal.current / goal.target) * 100;
@@ -280,7 +269,7 @@ const GoalItem = ({
           </div>
           {dueDate && <span className="text-gray-500">Due {dueDate}</span>}
         </div>
-        <div className="h-2.5 overflow-hidden rounded-full bg-gray-100">
+        <div className="h-3 overflow-hidden rounded-full bg-gray-100">
           <div
             className={`h-full rounded-full transition-all duration-500 ease-out ${getProgressColor(
               progress,
