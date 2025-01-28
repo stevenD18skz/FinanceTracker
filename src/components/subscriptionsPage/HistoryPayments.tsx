@@ -45,7 +45,7 @@ const HistoryPayments: React.FC<HistoryPaymentsProps> = ({ subscriptions }) => {
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900">
-                    {subscription.name}
+                    {subscription.subscriptionId}
                   </h4>
                   <p className="text-sm text-gray-500">
                     Due {format(new Date(subscription.date), "MMM d, yyyy")}
@@ -55,7 +55,7 @@ const HistoryPayments: React.FC<HistoryPaymentsProps> = ({ subscriptions }) => {
               <div className="text-right">
                 <p className="font-medium text-gray-900">
                   {formatCurrency(
-                    subscription.cost,
+                    subscription.amount,
                     subscription.currency.code,
                   )}
                 </p>

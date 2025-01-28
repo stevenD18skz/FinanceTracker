@@ -1,15 +1,15 @@
 // React y hooks
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // Componentes internos
 import SubscriptionStats from "../components/subscriptionsPage/SubscriptionStats";
 import HistoryPayments from "../components/subscriptionsPage/HistoryPayments";
+import SubscriptionDetail from "../components/subscriptionsPage/SubscriptionDetail";
 
 // Utilidades y datos
 import { formatCurrency, formatDate } from "../utils/formatters";
-import { subscriptionsData } from "../utils/Data";
-import { currencies } from "../types/currency";
+import { subscriptionsData, paymentHistoryData } from "../utils/Data";
 
 // Tipos
 import {
@@ -31,7 +31,12 @@ import {
   Edit3,
   Trash2,
   ArrowUpRight,
+  Layout,
+  ListFilter,
+  ChevronRight,
+  PackageOpen,
 } from "lucide-react";
+import ModalGeneric from "../components/ui/ModalGeneric";
 
 const SubscriptionCard = ({ subscription }: { subscription: Subscription }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,9 +55,9 @@ const SubscriptionCard = ({ subscription }: { subscription: Subscription }) => {
     return info[cycle];
   };
 
-  const cycleInfo = getBillingCycleInfo(subscription.billingCycle);
+  const cycleInfo = getBillingCycleInfo(subscription.paymentFrequency);
   const daysUntilRenewal = Math.ceil(
-    (new Date(subscription.renewalDate).getTime() - new Date().getTime()) /
+    (new Date(subscription.nextPaymentDate).getTime() - new Date().getTime()) /
       (1000 * 60 * 60 * 24),
   );
 
@@ -65,7 +70,7 @@ const SubscriptionCard = ({ subscription }: { subscription: Subscription }) => {
           </div>
           <div>
             <h3 className="font-medium text-gray-900">{subscription.name}</h3>
-            <p className="text-sm text-gray-500">{subscription.description}</p>
+            <p className="text-sm text-gray-500"></p>
           </div>
         </div>
         <button
@@ -103,7 +108,7 @@ const SubscriptionCard = ({ subscription }: { subscription: Subscription }) => {
         <div className="text-right">
           <p className="text-sm text-gray-500">Next renewal</p>
           <p className="font-medium text-gray-900">
-            {formatDate(subscription.renewalDate)}
+            {formatDate(subscription.nextPaymentDate)}
           </p>
           <p
             className={`text-sm ${daysUntilRenewal <= 7 ? "text-red-500" : "text-gray-500"}`}
@@ -139,160 +144,210 @@ const SubscriptionManager = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const subscriptions: Subscription[] = subscriptionsData;
+  ////===============
+  const [filter, setFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("progress");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  const paymentHistory: PaymentHistory[] = [
-    {
-      id: "1",
-      subscriptionId: "1",
-      amount: 19000,
-      currency: currencies[2],
-      date: "2024-02-25",
-      status: "completed",
-    },
-    {
-      id: "2",
-      subscriptionId: "2",
-      amount: 45000,
-      currency: currencies[2],
-      date: "2024-02-28",
-      status: "completed",
-    },
-    {
-      id: "3",
-      subscriptionId: "4",
-      amount: 120000,
-      currency: currencies[2],
-      date: "2024-02-01",
-      status: "completed",
-    },
-    {
-      id: "4",
-      subscriptionId: "5",
-      amount: 150000,
-      currency: currencies[2],
-      date: "2024-02-28",
-      status: "completed",
-    },
-    // Previous months
-    {
-      id: "5",
-      subscriptionId: "1",
-      amount: 19000,
-      currency: currencies[2],
-      date: "2024-01-25",
-      status: "completed",
-    },
-    {
-      id: "6",
-      subscriptionId: "2",
-      amount: 45000,
-      currency: currencies[2],
-      date: "2024-01-28",
-      status: "completed",
-    },
-    {
-      id: "7",
-      subscriptionId: "4",
-      amount: 120000,
-      currency: currencies[2],
-      date: "2024-01-01",
-      status: "completed",
-    },
-    {
-      id: "8",
-      subscriptionId: "5",
-      amount: 150000,
-      currency: currencies[2],
-      date: "2024-01-28",
-      status: "completed",
-    },
-  ];
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [subscriptioToDelete, setSubscriptionToDelete] =
+    useState<Subscription | null>(null);
+  const [selectedSubscription, setSelectedSubscription] =
+    useState<Subscription | null>(null);
+
+  //===============
+
+  const subscriptions: Subscription[] = subscriptionsData;
+  const paymentHistory: PaymentHistory[] = paymentHistoryData;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
+      {/**Stats Summary */}
       <SubscriptionStats
         subscriptions={subscriptions}
         paymentHistory={paymentHistory}
       />
 
-      <HistoryPayments subscriptions={paymentHistory}></HistoryPayments>
-
-      {/* Controls */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search subscriptions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-64 rounded-lg border-gray-200 pl-10 pr-4 focus:border-indigo-500 focus:ring-indigo-500"
-            />
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+      {/**Header and Controllers */}
+      <div className="my-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Planning Goals
+            </h2>
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600">
+              {subscriptions.length} {filter === "all" ? "total" : filter}
+            </span>
           </div>
-
-          <div className="flex items-center gap-2 rounded-lg bg-white p-1 shadow-sm">
-            <button
-              onClick={() => setView("grid")}
-              className={`rounded-md p-2 ${
-                view === "grid"
-                  ? "bg-indigo-500 text-white"
-                  : "text-gray-400 hover:bg-gray-100"
-              }`}
-            >
-              <BarChart3 className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => setView("list")}
-              className={`rounded-md p-2 ${
-                view === "list"
-                  ? "bg-indigo-500 text-white"
-                  : "text-gray-400 hover:bg-gray-100"
-              }`}
-            >
-              <Filter className="h-5 w-5" />
+          <div className="flex items-center gap-2">
+            <div className="flex rounded-lg bg-gray-100 p-1">
+              <button
+                onClick={() => setView("grid")}
+                className={`rounded-md p-2 transition-all ${
+                  view === "grid"
+                    ? "bg-white text-gray-800 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+                title="Grid view"
+              >
+                <Layout className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setView("list")}
+                className={`rounded-md p-2 transition-all ${
+                  view === "list"
+                    ? "bg-white text-gray-800 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+                title="List view"
+              >
+                <ListFilter className="h-4 w-4" />
+              </button>
+            </div>
+            <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <Plus className="h-4 w-4" />
+              New Goal
             </button>
           </div>
         </div>
 
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
-        >
-          <Plus className="h-5 w-5" />
-          Add Subscription
-        </button>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            {["all", "active", "completed"].map((filterType) => (
+              <button
+                key={filterType}
+                onClick={() => setFilter(filterType)}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  filter === filterType
+                    ? "bg-gray-100 text-gray-800"
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div
+              className={`relative transition-all ${
+                isSearchFocused ? "w-64" : "w-48"
+              }`}
+            >
+              <input
+                type="text"
+                placeholder="Search goals..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                className="w-full rounded-lg border-gray-200 bg-white py-2 pl-10 pr-4 text-sm placeholder-gray-400 shadow-sm transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            </div>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="rounded-lg border-gray-200 bg-white py-2 pl-3 pr-10 text-sm text-gray-600 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+            >
+              <option value="progress">Sort by Progress</option>
+              <option value="dueDate">Sort by Due Date</option>
+              <option value="amount">Sort by Amount</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      {/* Subscriptions Grid */}
-      <div
-        className={`grid gap-6 ${view === "grid" ? "md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}
-      >
-        {subscriptions.map((subscription) => (
-          <SubscriptionCard key={subscription.id} subscription={subscription} />
-        ))}
+      {/**View Items */}
+
+      <div className="flex gap-6">
+        <div
+          className={`grid flex-1 gap-6 ${
+            view === "grid"
+              ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+              : "grid-cols-1"
+          }`}
+        >
+          {subscriptions.map((subscription) => (
+            <SubscriptionCard
+              key={subscription.id}
+              subscription={subscription}
+            />
+          ))}
+        </div>
+
+        {selectedSubscription && (
+          <div className="w-96 shrink-0">
+            <SubscriptionDetail
+              subscription={selectedSubscription}
+              onClose={() => {}}
+            ></SubscriptionDetail>
+          </div>
+        )}
       </div>
 
       {/* Empty State */}
       {subscriptions.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-lg bg-white py-12">
-          <CreditCard className="mb-4 h-12 w-12 text-gray-400" />
-          <h3 className="mb-2 text-lg font-medium text-gray-900">
-            No subscriptions yet
-          </h3>
-          <p className="mb-4 text-gray-500">
-            Start by adding your first subscription
-          </p>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
-          >
-            <Plus className="h-5 w-5" />
-            Add Subscription
-          </button>
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
+          {searchQuery ? (
+            <>
+              <p className="text-gray-500">
+                No goals found matching "{searchQuery}"
+              </p>
+              <button
+                onClick={() => setSearchQuery("")}
+                className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              >
+                Clear search
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </>
+          ) : (
+            <>
+              <PackageOpen className="h-24 w-24 text-gray-500" />
+              <p className="text-gray-500">
+                No goals found for the selected filter.
+              </p>
+              <button className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700">
+                Create your first goal
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </>
+          )}
         </div>
       )}
+
+      {/* History */}
+      <HistoryPayments subscriptions={paymentHistory}></HistoryPayments>
+
+      {/**Modal to Eliminate */}
+      <ModalGeneric
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete Goal"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-gray-500">
+            Are you sure you want to delete this goal? This action cannot be
+            undone.
+          </p>
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={() => setShowDeleteModal(false)}
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {}}
+              className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </ModalGeneric>
     </div>
   );
 };

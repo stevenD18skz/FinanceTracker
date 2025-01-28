@@ -1,15 +1,25 @@
 // React y hooks
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { differenceInDays } from "date-fns";
 
 // Componentes internos
+import GoalItem from "../components/PlanningPage/GoalItem";
+import GoalDetails from "../components/PlanningPage/GoalDetails";
 import ModalGeneric from "../components/ui/ModalGeneric";
+import CreateGoalModal from "../components/PlanningPage/CreateGoalModal";
 
 // Utilidades y datos
 import { planningGoalsData } from "../utils/Data";
+import {
+  createGoal,
+  getGoals,
+  updateGoal,
+  deleteGoal,
+} from "../utils/ports/PlanningPort";
 
 // Tipos
-import { Goal } from "../components/types"; // Nuevo import
+import { Goal } from "../types/goal"; // Nuevo import
 
 // Iconos de Lucide React (agrupados por funcionalidad o categoría)
 import {
@@ -18,286 +28,8 @@ import {
   Layout,
   ListFilter,
   Search,
-  // Iconos de acciones
-  CheckCircle,
-  Edit2,
-  Eye,
   PackageOpen,
-  PlusCircle,
-  Trash2,
-  X,
-  // Iconos de progreso o metas
-  ArrowUpRight,
-  TrendingUp,
-  Target,
-  Award,
-  Trophy,
-  Rocket,
-  Timer,
 } from "lucide-react";
-
-const GoalItem = ({
-  title,
-  current,
-  target,
-  dueDate,
-  linkGoal,
-  onView,
-  onEdit,
-  onAddAmount,
-  onComplete,
-  onDelete,
-}) => {
-  const progress = (current / target) * 100;
-  const remaining = target - current;
-  const isCompleted = progress >= 100;
-
-  const getProgressColor = (progress) => {
-    if (progress >= 100) return "bg-green-500";
-    if (progress >= 75) return "bg-blue-500";
-    if (progress >= 50) return "bg-yellow-500";
-    return "bg-indigo-500";
-  };
-
-  const getMotivationalIcon = (progress) => {
-    if (progress >= 100) return <Trophy className="h-5 w-5 text-yellow-500" />;
-    if (progress >= 75) return <Award className="h-5 w-5 text-blue-500" />;
-    if (progress >= 50) return <Rocket className="h-5 w-5 text-purple-500" />;
-    if (progress >= 25) return <Target className="h-5 w-5 text-indigo-500" />;
-    return <Timer className="h-5 w-5 text-gray-500" />;
-  };
-
-  const getMotivationalMessage = (progress) => {
-    if (progress >= 100) return "Amazing achievement! 🎉";
-    if (progress >= 75) return "Almost there! 🚀";
-    if (progress >= 50) return "Halfway there! 💪";
-    if (progress >= 25) return "Great start! 👏";
-    return "Let's get started! 🎯";
-  };
-
-  return (
-    <div className="group relative rounded-xl bg-white p-5 transition-all hover:shadow-lg">
-      <div className="mb-4 flex items-start justify-between">
-        <div>
-          <div className="mb-1 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
-              🚗
-            </div>
-            <h3 className="font-medium text-gray-800">{title}</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-gray-400" />
-            <p className="text-sm text-gray-500">
-              <span className="font-medium text-gray-700">
-                ${current.toLocaleString()}
-              </span>
-              {" / "}
-              <span className="text-gray-500">${target.toLocaleString()}</span>
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={(e) => {
-              if (linkGoal) {
-                window.open(linkGoal, "_blank"); // Abre el enlace en una nueva pestaña
-              } else {
-                console.log("El enlace no está definido.");
-              }
-            }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-red-600"
-            title="Delete"
-          >
-            <ArrowUpRight className="h-5 w-5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onView();
-            }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-gray-600"
-            title="View Details"
-          >
-            <Eye className="h-5 w-5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit();
-            }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-gray-600"
-            title="Edit"
-          >
-            <Edit2 className="h-5 w-5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddAmount();
-            }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-gray-600"
-            title="View Details"
-          >
-            <PlusCircle className="h-5 w-5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onComplete();
-            }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-green-600"
-            title="Mark as Complete"
-          >
-            <CheckCircle className="h-5 w-5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-red-600"
-            title="Delete"
-          >
-            <Trash2 className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
-      <div className="mb-2">
-        <div className="mb-1 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            {getMotivationalIcon(progress)}
-            <span className="font-medium text-gray-700">
-              {progress.toFixed(1)}% Complete
-            </span>
-          </div>
-          {dueDate && <span className="text-gray-500">Due {dueDate}</span>}
-        </div>
-        <div className="h-3 overflow-hidden rounded-full bg-gray-100">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ease-out ${getProgressColor(
-              progress,
-            )}`}
-            style={{ width: `${Math.min(progress, 100)}%` }}
-          />
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-500">
-          {isCompleted ? (
-            <span className="text-green-600">Goal Completed! 🎉</span>
-          ) : (
-            <>${remaining.toLocaleString()} to go</>
-          )}
-        </span>
-        <span
-          className={`font-medium ${
-            isCompleted ? "text-green-600" : "text-gray-600"
-          }`}
-        >
-          {getMotivationalMessage(progress)}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const GoalDetails = ({ goal, onClose }) => {
-  const progress = (goal.current / goal.target) * 100;
-
-  const getProgressColor = (progress) => {
-    if (progress >= 100) return "bg-green-500";
-    if (progress >= 75) return "bg-blue-500";
-    if (progress >= 50) return "bg-yellow-500";
-    return "bg-indigo-500";
-  };
-
-  return (
-    <div className="rounded-xl bg-white p-6 shadow-lg">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-            🎯
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800">
-              {goal.title}
-            </h2>
-            <p className="text-sm text-gray-500">{goal.category}</p>
-          </div>
-        </div>
-        <button
-          onClick={onClose}
-          className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-        >
-          <X className="h-5 w-5" />
-        </button>
-      </div>
-
-      <div className="mb-8">
-        <div className="mb-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-gray-400" />
-            <span className="text-lg font-medium text-gray-700">
-              ${goal.current.toLocaleString()} / ${goal.target.toLocaleString()}
-            </span>
-          </div>
-          {goal.dueDate && (
-            <span className="text-sm text-gray-500">Due {goal.dueDate}</span>
-          )}
-        </div>
-        <div className="h-3 overflow-hidden rounded-full bg-gray-100">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ease-out ${getProgressColor(
-              progress,
-            )}`}
-            style={{ width: `${Math.min(progress, 100)}%` }}
-          />
-        </div>
-      </div>
-
-      <div className="mb-8">
-        <h3 className="mb-4 text-lg font-medium text-gray-800">Description</h3>
-        <p className="text-gray-600">{goal.description}</p>
-      </div>
-
-      <div>
-        <h3 className="mb-4 text-lg font-medium text-gray-800">Milestones</h3>
-        <div className="space-y-3">
-          {goal.milestones.map((milestone, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between rounded-lg border border-gray-200 p-4"
-            >
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={milestone.completed}
-                  className="h-5 w-5 rounded border-gray-300 text-indigo-600"
-                  readOnly
-                />
-                <span
-                  className={`${
-                    milestone.completed
-                      ? "text-gray-400 line-through"
-                      : "text-gray-700"
-                  }`}
-                >
-                  {milestone.title}
-                </span>
-              </div>
-              {milestone.completed && (
-                <Trophy className="h-5 w-5 text-yellow-500" />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const PlanningGoalsPage = () => {
   const [view, setView] = useState("grid");
@@ -307,18 +39,36 @@ const PlanningGoalsPage = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
 
   const confirmDelete = () => {
     if (goalToDelete) {
       //hacer la accion de eliminar
+      deleteGoal(goalToDelete.id);
       setShowDeleteModal(false);
       setGoalToDelete(null);
     }
   };
 
-  const processedGoals = planningGoalsData
+  const handleCreateGoal = (
+    newGoal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
+  ) => {
+    // Here you would typically make an API call to create the goal
+    const goalFinal = {
+      ...newGoal,
+      id: 10,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      current: 0,
+    };
+    console.log("New goal:", goalFinal);
+    createGoal(goalFinal);
+    setShowCreateModal(false);
+  };
+
+  const processedGoals = getGoals()
     .filter((goal) => {
       const progress = (goal.current / goal.target) * 100;
       const matchesFilter =
@@ -339,7 +89,8 @@ const PlanningGoalsPage = () => {
         case "progress":
           return getProgress(b) - getProgress(a);
         case "dueDate":
-          return new Date(a.dueDate) - new Date(b.dueDate);
+          //return new Date(a.dueDate) - new Date(b.dueDate);
+          return differenceInDays(new Date(a.dueDate), new Date(b.dueDate));
         case "amount":
           return b.target - a.target;
         default:
@@ -353,6 +104,9 @@ const PlanningGoalsPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-200 p-8">
+      {/**Stats Summary */}
+
+      {/**Header and Controllers */}
       <div className="mb-8 space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -388,7 +142,10 @@ const PlanningGoalsPage = () => {
                 <ListFilter className="h-4 w-4" />
               </button>
             </div>
-            <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <button
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={() => setShowCreateModal(true)}
+            >
               <Plus className="h-4 w-4" />
               New Goal
             </button>
@@ -443,6 +200,7 @@ const PlanningGoalsPage = () => {
         </div>
       </div>
 
+      {/**View Items */}
       <div className="flex gap-6">
         <div
           className={`grid flex-1 gap-3 ${
@@ -460,7 +218,11 @@ const PlanningGoalsPage = () => {
               dueDate={goal.dueDate}
               linkGoal={goal.linkGoal}
               onEdit={() => {}}
-              onDelete={() => {}}
+              onAddAmount={() => {}}
+              onDelete={() => {
+                setShowDeleteModal(true);
+                setGoalToDelete(goal);
+              }}
               onComplete={() => {}}
               onView={() => setSelectedGoal(goal)}
             />
@@ -476,10 +238,12 @@ const PlanningGoalsPage = () => {
         )}
       </div>
 
+      {/**Empty results */}
       {processedGoals.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
           {searchQuery ? (
             <>
+              <PackageOpen className="h-24 w-24 text-gray-500" />
               <p className="text-gray-500">
                 No goals found matching "{searchQuery}"
               </p>
@@ -497,7 +261,10 @@ const PlanningGoalsPage = () => {
               <p className="text-gray-500">
                 No goals found for the selected filter.
               </p>
-              <button className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700">
+              <button
+                className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                onClick={() => setShowCreateModal(true)}
+              >
                 Create your first goal
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -506,6 +273,7 @@ const PlanningGoalsPage = () => {
         </div>
       )}
 
+      {/**Modal to Eliminate */}
       <ModalGeneric
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
@@ -513,8 +281,9 @@ const PlanningGoalsPage = () => {
       >
         <div className="space-y-4">
           <p className="text-sm text-gray-500">
-            Are you sure you want to delete this goal? This action cannot be
-            undone.
+            Are you sure you want to delete
+            <strong> {goalToDelete?.title} </strong>
+            goal? This action cannot be undone.
           </p>
           <div className="flex justify-end gap-3">
             <button
@@ -532,6 +301,13 @@ const PlanningGoalsPage = () => {
           </div>
         </div>
       </ModalGeneric>
+
+      {/* Create Goal Modal */}
+      <CreateGoalModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreateGoal}
+      />
     </div>
   );
 };

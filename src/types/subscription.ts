@@ -9,28 +9,30 @@ export type SubscriptionCategory =
   | "education"
   | "other";
 
-export type PaymentFrequency = "monthly" | "yearly" | "quarterly" | "weekly";
+export type PaymentFrequency = string; //"monthly" | "yearly" | "quarterly" | "weekly";
 
-export type NotificationType = "email" | "push" | "both";
+export type NotificationType = string; // "email" | "push" | "both";
 
-export type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
+export type PaymentStatus = string; //"pending" | "completed" | "failed" | "cancelled";
+
+export interface NotificationSettings {
+  type: string; // "email" | "sms" | "push";
+  daysBeforePayment: number;
+  enabled: boolean;
+}
 
 export interface Subscription {
   id: string;
   name: string;
   cost: number;
-  currency: Currency;
-  category: SubscriptionCategory;
-  paymentFrequency: PaymentFrequency;
+  currency: string;
+  category: string;
+  paymentFrequency: string; //"monthly" | "yearly";
   nextPaymentDate: string;
   startDate: string;
-  status: "active" | "cancelled";
-  notes?: string;
-  notificationSettings: {
-    type: NotificationType;
-    daysBeforePayment: number;
-    enabled: boolean;
-  };
+  status: string; //"active" | "inactive";
+  icon: React.ReactNode;
+  notificationSettings: NotificationSettings;
 }
 
 export interface PaymentHistory {

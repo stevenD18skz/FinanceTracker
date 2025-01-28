@@ -7,7 +7,7 @@ import { ArrowUpRight, ArrowDownRight, Wallet, Receipt } from "lucide-react";
 import TitleContainer from "../../ui/TitleContainer";
 
 //UTILS IMPORT
-import { formatToCOP } from "../../../utils/functions";
+import { formatCurrency } from "../../../utils/formatters";
 
 const TotalBalance = ({ income, expense }) => {
   const data = [
@@ -27,7 +27,7 @@ const TotalBalance = ({ income, expense }) => {
             <div>
               <p className="mb-1 text-gray-500">Total Income</p>
               <h2 className="text-5xl font-semibold tracking-tighter">
-                {formatToCOP(income)}
+                {formatCurrency(income)}
               </h2>
             </div>
             <div className="rounded-xl bg-blue-100 p-3">
@@ -72,7 +72,7 @@ const TotalBalance = ({ income, expense }) => {
             <div>
               <p className="mb-1 text-gray-500">Total Expense</p>
               <h2 className="text-5xl font-semibold tracking-tighter">
-                {formatToCOP(expense)}
+                {formatCurrency(expense)}
               </h2>
             </div>
             <div className="rounded-xl bg-red-100 p-3">

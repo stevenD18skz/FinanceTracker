@@ -1,8 +1,4 @@
-export interface Currency {
-  code: string;
-  symbol: string;
-  name: string;
-}
+import { Currency, currencies } from "../types/currency";
 
 export const formatCurrency = (
   amount: number,
@@ -15,14 +11,6 @@ export const formatCurrency = (
     maximumFractionDigits: 0,
   }).format(amount);
 };
-
-export const currencies: Currency[] = [
-  { code: "USD", symbol: "$", name: "US Dollar" },
-  { code: "EUR", symbol: "€", name: "Euro" },
-  { code: "COP", symbol: "$", name: "Colombian Peso" },
-  { code: "GBP", symbol: "£", name: "British Pound" },
-  // Add more currencies as needed
-];
 
 export const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString("es-CO", {

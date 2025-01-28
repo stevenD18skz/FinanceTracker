@@ -3,7 +3,7 @@ import { Zap, Plus } from "lucide-react";
 import "./ContendSubscription.css";
 
 //UTILS IMPORT
-import { formatToCOP } from "../../../utils/functions";
+import { formatCurrency } from "../../../utils/formatters";
 
 //COMPONENTS IMPORT
 import TitleContainer from "../../ui/TitleContainer";
@@ -37,7 +37,7 @@ const SubscriptionsItem = ({ subscription }) => {
             subscription.status ? "text-green-400" : "text-red-400"
           }`}
         >
-          {formatToCOP(subscription.cost)}
+          {formatCurrency(subscription.cost)}
         </span>
 
         <button

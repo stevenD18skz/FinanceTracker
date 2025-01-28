@@ -8,7 +8,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import TitleContainer from "../../ui/TitleContainer";
 
 //UTILS IMPORT
-import { formatToCOP } from "../../../utils/functions";
+import { formatCurrency } from "../../../utils/formatters";
 
 const TransactionItem = ({ transaction }) => {
   return (
@@ -34,7 +34,7 @@ const TransactionItem = ({ transaction }) => {
         }`}
       >
         {transaction.type === "income" ? "+" : "-"}
-        {formatToCOP(transaction.amount)}
+        {formatCurrency(transaction.amount)}
       </span>
     </div>
   );
