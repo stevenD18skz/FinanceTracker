@@ -1,4 +1,16 @@
-import React, { useState } from 'react';
+import { planningGoalsData } from "../utils/Data";
+
+import {
+  CheckCircle,
+  Edit2,
+  Eye,
+  PackageOpen,
+  PlusCircle,
+  Trash2,
+  X,
+} from "lucide-react";
+
+import React, { useState, useEffect } from "react";
 import {
   ArrowUpRight,
   TrendingUp,
@@ -7,19 +19,14 @@ import {
   Trophy,
   Rocket,
   Timer,
-  ChevronRight,
+  MoreHorizontal,
   Plus,
+  ChevronRight,
+  Layout,
+  ListFilter,
   Search,
-  Filter,
-  SlidersHorizontal,
-  ArrowUpDown,
-  Edit2,
-  Trash2,
-  CheckCircle,
-  Eye,
-  X,
-} from 'lucide-react';
-
+} from "lucide-react";
+import ModalGeneric from "../components/ui/ModalGeneric";
 
 interface Goal {
   id: string;
@@ -30,8 +37,8 @@ interface Goal {
   linkGoal?: string;
   category: string;
   description: string;
-  status: 'active' | 'completed' | 'inactive';
-  priority: 'high' | 'medium' | 'low';
+  status: "active" | "completed" | "inactive";
+  priority: "high" | "medium" | "low";
   createdAt: string;
   updatedAt: string;
   milestones: Array<{
@@ -40,102 +47,27 @@ interface Goal {
   }>;
 }
 
-interface SortOption {
-  label: string;
-  value: string;
-  options: Array<{
-    label: string;
-    value: string;
-  }>;
-}
-
-const sortOptions: SortOption[] = [
-  {
-    label: 'Date',
-    value: 'date',
-    options: [
-      { label: 'Newest First', value: 'date-desc' },
-      { label: 'Oldest First', value: 'date-asc' },
-    ],
-  },
-  {
-    label: 'Alphabetical',
-    value: 'alpha',
-    options: [
-      { label: 'A to Z', value: 'alpha-asc' },
-      { label: 'Z to A', value: 'alpha-desc' },
-    ],
-  },
-  {
-    label: 'Status',
-    value: 'status',
-    options: [
-      { label: 'Active First', value: 'status-active' },
-      { label: 'Completed First', value: 'status-completed' },
-      { label: 'Inactive First', value: 'status-inactive' },
-    ],
-  },
-  {
-    label: 'Priority',
-    value: 'priority',
-    options: [
-      { label: 'High First', value: 'priority-high' },
-      { label: 'Medium First', value: 'priority-medium' },
-      { label: 'Low First', value: 'priority-low' },
-    ],
-  },
-];
-
-const TableOfContents = ({ categories, activeCategory, onSelectCategory }) => (
-  <div className="w-64 shrink-0 rounded-xl bg-white p-5 shadow-lg">
-    <h3 className="mb-4 font-semibold text-gray-800">Categories</h3>
-    <nav className="space-y-1">
-      <button
-        onClick={() => onSelectCategory('all')}
-        className={`w-full rounded-lg px-4 py-2 text-left text-sm transition-colors ${
-          activeCategory === 'all'
-            ? 'bg-indigo-50 text-indigo-700'
-            : 'text-gray-600 hover:bg-gray-50'
-        }`}
-      >
-        All Goals
-      </button>
-      {categories.map((category) => (
-        <button
-          key={category}
-          onClick={() => onSelectCategory(category)}
-          className={`w-full rounded-lg px-4 py-2 text-left text-sm transition-colors ${
-            activeCategory === category
-              ? 'bg-indigo-50 text-indigo-700'
-              : 'text-gray-600 hover:bg-gray-50'
-          }`}
-        >
-          {category}
-        </button>
-      ))}
-    </nav>
-  </div>
-);
-
 const GoalDetails = ({ goal, onClose }) => {
   const progress = (goal.current / goal.target) * 100;
 
   const getProgressColor = (progress) => {
-    if (progress >= 100) return 'bg-green-500';
-    if (progress >= 75) return 'bg-blue-500';
-    if (progress >= 50) return 'bg-yellow-500';
-    return 'bg-indigo-500';
+    if (progress >= 100) return "bg-green-500";
+    if (progress >= 75) return "bg-blue-500";
+    if (progress >= 50) return "bg-yellow-500";
+    return "bg-indigo-500";
   };
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-lg">
+    <div className="rounded-xl bg-red-400 p-6 shadow-lg">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
             🎯
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gray-800">{goal.title}</h2>
+            <h2 className="text-xl font-semibold text-gray-800">
+              {goal.title}
+            </h2>
             <p className="text-sm text-gray-500">{goal.category}</p>
           </div>
         </div>
@@ -162,7 +94,7 @@ const GoalDetails = ({ goal, onClose }) => {
         <div className="h-3 overflow-hidden rounded-full bg-gray-100">
           <div
             className={`h-full rounded-full transition-all duration-500 ease-out ${getProgressColor(
-              progress
+              progress,
             )}`}
             style={{ width: `${Math.min(progress, 100)}%` }}
           />
@@ -177,7 +109,7 @@ const GoalDetails = ({ goal, onClose }) => {
       <div>
         <h3 className="mb-4 text-lg font-medium text-gray-800">Milestones</h3>
         <div className="space-y-3">
-          {goal.milestones.map((milestone, index) => (
+          {/*goal.milestones.map((milestone, index) => (
             <div
               key={index}
               className="flex items-center justify-between rounded-lg border border-gray-200 p-4"
@@ -192,8 +124,8 @@ const GoalDetails = ({ goal, onClose }) => {
                 <span
                   className={`${
                     milestone.completed
-                      ? 'text-gray-400 line-through'
-                      : 'text-gray-700'
+                      ? "text-gray-400 line-through"
+                      : "text-gray-700"
                   }`}
                 >
                   {milestone.title}
@@ -203,7 +135,7 @@ const GoalDetails = ({ goal, onClose }) => {
                 <Trophy className="h-5 w-5 text-yellow-500" />
               )}
             </div>
-          ))}
+          ))*/}
         </div>
       </div>
     </div>
@@ -220,16 +152,17 @@ const GoalItem = ({
   onDelete,
   onComplete,
   onView,
+  onAddAmount,
 }) => {
   const progress = (current / target) * 100;
   const remaining = target - current;
   const isCompleted = progress >= 100;
 
   const getProgressColor = (progress) => {
-    if (progress >= 100) return 'bg-green-500';
-    if (progress >= 75) return 'bg-blue-500';
-    if (progress >= 50) return 'bg-yellow-500';
-    return 'bg-indigo-500';
+    if (progress >= 100) return "bg-green-500";
+    if (progress >= 75) return "bg-blue-500";
+    if (progress >= 50) return "bg-yellow-500";
+    return "bg-indigo-500";
   };
 
   const getMotivationalIcon = (progress) => {
@@ -241,10 +174,10 @@ const GoalItem = ({
   };
 
   const getMotivationalMessage = (progress) => {
-    if (progress >= 100) return 'Amazing achievement! 🎉';
-    if (progress >= 75) return 'Almost there! 🚀';
-    if (progress >= 50) return 'Halfway there! 💪';
-    if (progress >= 25) return 'Great start! 👏';
+    if (progress >= 100) return "Amazing achievement! 🎉";
+    if (progress >= 75) return "Almost there! 🚀";
+    if (progress >= 50) return "Halfway there! 💪";
+    if (progress >= 25) return "Great start! 👏";
     return "Let's get started! 🎯";
   };
 
@@ -254,7 +187,7 @@ const GoalItem = ({
         <div>
           <div className="mb-1 flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
-              🎯
+              🚗
             </div>
             <h3 className="font-medium text-gray-800">{title}</h3>
           </div>
@@ -264,7 +197,7 @@ const GoalItem = ({
               <span className="font-medium text-gray-700">
                 ${current.toLocaleString()}
               </span>
-              {' / '}
+              {" / "}
               <span className="text-gray-500">${target.toLocaleString()}</span>
             </p>
           </div>
@@ -294,6 +227,16 @@ const GoalItem = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
+              onAddAmount();
+            }}
+            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-gray-600"
+            title="View Details"
+          >
+            <PlusCircle className="h-5 w-5" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
               onComplete();
             }}
             className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-green-600"
@@ -311,6 +254,19 @@ const GoalItem = ({
           >
             <Trash2 className="h-5 w-5" />
           </button>
+          <button
+            onClick={(e) => {
+              if (linkGoal) {
+                window.open(linkGoal, "_blank"); // Abre el enlace en una nueva pestaña
+              } else {
+                console.log("El enlace no está definido.");
+              }
+            }}
+            className="rounded-lg p-2 text-gray-400 hover:bg-gray-50 hover:text-red-600"
+            title="Delete"
+          >
+            <ArrowUpRight className="h-5 w-5" />
+          </button>
         </div>
       </div>
 
@@ -327,7 +283,7 @@ const GoalItem = ({
         <div className="h-2.5 overflow-hidden rounded-full bg-gray-100">
           <div
             className={`h-full rounded-full transition-all duration-500 ease-out ${getProgressColor(
-              progress
+              progress,
             )}`}
             style={{ width: `${Math.min(progress, 100)}%` }}
           />
@@ -344,7 +300,7 @@ const GoalItem = ({
         </span>
         <span
           className={`font-medium ${
-            isCompleted ? 'text-green-600' : 'text-gray-600'
+            isCompleted ? "text-green-600" : "text-gray-600"
           }`}
         >
           {getMotivationalMessage(progress)}
@@ -354,189 +310,159 @@ const GoalItem = ({
   );
 };
 
-const Modal = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-          <button
-            onClick={onClose}
-            className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-};
-
 const PlanningGoalsPage = () => {
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
-  const [sortBy, setSortBy] = useState('date-desc');
+  const [view, setView] = useState("grid");
+  const [filter, setFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("progress");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
-
-  // Example data - replace with your actual data
-  const [goals, setGoals] = useState<Goal[]>([
-    {
-      id: '1',
-      title: 'New Car',
-      current: 15000,
-      target: 30000,
-      category: 'Vehicle',
-      status: 'active',
-      priority: 'high',
-      createdAt: '2024-03-10T10:00:00Z',
-      updatedAt: '2024-03-10T10:00:00Z',
-      dueDate: 'Dec 2024',
-      description:
-        'Saving for a new electric vehicle to reduce carbon footprint and lower long-term transportation costs.',
-      milestones: [
-        { title: 'Research car models', completed: true },
-        { title: 'Save 50% of target amount', completed: false },
-        { title: 'Get insurance quotes', completed: false },
-      ],
-    },
-    {
-      id: '2',
-      title: 'Emergency Fund',
-      current: 5000,
-      target: 10000,
-      category: 'Savings',
-      status: 'active',
-      priority: 'high',
-      createdAt: '2024-03-09T10:00:00Z',
-      updatedAt: '2024-03-09T10:00:00Z',
-      dueDate: 'Jun 2024',
-      description: 'Building an emergency fund for unexpected expenses.',
-      milestones: [
-        { title: 'Save first $1000', completed: true },
-        { title: 'Reach 50% of goal', completed: true },
-        { title: 'Complete emergency fund', completed: false },
-      ],
-    },
-  ]);
-
-  const categories = [...new Set(goals.map((goal) => goal.category))];
-
-  const handleSort = (value: string) => {
-    setSortBy(value);
-    let sortedGoals = [...goals];
-
-    switch (value) {
-      case 'date-desc':
-        sortedGoals.sort(
-          (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-        );
-        break;
-      case 'date-asc':
-        sortedGoals.sort(
-          (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-        );
-        break;
-      case 'alpha-asc':
-        sortedGoals.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'alpha-desc':
-        sortedGoals.sort((a, b) => b.title.localeCompare(a.title));
-        break;
-      case 'status-active':
-        sortedGoals.sort((a, b) => (a.status === 'active' ? -1 : 1));
-        break;
-      case 'status-completed':
-        sortedGoals.sort((a, b) => (a.status === 'completed' ? -1 : 1));
-        break;
-      case 'priority-high':
-        sortedGoals.sort((a, b) => (a.priority === 'high' ? -1 : 1));
-        break;
-      case 'priority-medium':
-        sortedGoals.sort((a, b) => (a.priority === 'medium' ? -1 : 1));
-        break;
-      case 'priority-low':
-        sortedGoals.sort((a, b) => (a.priority === 'low' ? -1 : 1));
-        break;
-    }
-
-    setGoals(sortedGoals);
-  };
-
-  const handleDelete = (goal: Goal) => {
-    setGoalToDelete(goal);
-    setShowDeleteModal(true);
-  };
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
 
   const confirmDelete = () => {
     if (goalToDelete) {
-      const updatedGoals = goals.filter((g) => g.id !== goalToDelete.id);
-      setGoals(updatedGoals);
+      //hacer la accion de eliminar
       setShowDeleteModal(false);
       setGoalToDelete(null);
     }
   };
 
-  const filteredGoals = goals.filter(
-    (goal) =>
-      (activeCategory === 'all' || goal.category === activeCategory) &&
-      goal.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const processedGoals = planningGoalsData
+    .filter((goal) => {
+      const progress = (goal.current / goal.target) * 100;
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "completed" && progress >= 100) ||
+        (filter === "active" && progress < 100);
+
+      const matchesSearch = goal.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      return matchesFilter && matchesSearch;
+    })
+    .sort((a, b) => {
+      const getProgress = (goal) => (goal.current / goal.target) * 100;
+
+      switch (sortBy) {
+        case "progress":
+          return getProgress(b) - getProgress(a);
+        case "dueDate":
+          return new Date(a.dueDate) - new Date(b.dueDate);
+        case "amount":
+          return b.target - a.target;
+        default:
+          return 0;
+      }
+    });
+
+  useEffect(() => {
+    localStorage.setItem("planningGoalsView", view);
+  }, [view]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Planning Goals</h1>
-        <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
-          <Plus className="h-4 w-4" />
-          New Goal
-        </button>
-      </div>
-
-      <div className="mb-6 flex gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search goals..."
-            className="w-full rounded-lg border-gray-200 pl-10 focus:border-indigo-500 focus:ring-indigo-500"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+    <div className="w-full rounded-3xl bg-gradient-to-b from-white to-gray-50/50 p-8 shadow-xl ring-1 ring-gray-100/50 backdrop-blur-lg transition-all hover:shadow-2xl">
+      <div className="mb-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Planning Goals
+            </h2>
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600">
+              {processedGoals.length} {filter === "all" ? "total" : filter}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex rounded-lg bg-gray-100 p-1">
+              <button
+                onClick={() => setView("grid")}
+                className={`rounded-md p-2 transition-all ${
+                  view === "grid"
+                    ? "bg-white text-gray-800 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+                title="Grid view"
+              >
+                <Layout className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setView("list")}
+                className={`rounded-md p-2 transition-all ${
+                  view === "list"
+                    ? "bg-white text-gray-800 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+                title="List view"
+              >
+                <ListFilter className="h-4 w-4" />
+              </button>
+            </div>
+            <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <Plus className="h-4 w-4" />
+              New Goal
+            </button>
+          </div>
         </div>
-        <div className="relative">
-          <select
-            value={sortBy}
-            onChange={(e) => handleSort(e.target.value)}
-            className="rounded-md border border-gray-300 bg-white pl-3 pr-10 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          >
-            {sortOptions.map((group) => (
-              <optgroup key={group.value} label={group.label}>
-                {group.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </optgroup>
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            {["all", "active", "completed"].map((filterType) => (
+              <button
+                key={filterType}
+                onClick={() => setFilter(filterType)}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  filter === filterType
+                    ? "bg-gray-100 text-gray-800"
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+              </button>
             ))}
-          </select>
-          <ArrowUpDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div
+              className={`relative transition-all ${
+                isSearchFocused ? "w-64" : "w-48"
+              }`}
+            >
+              <input
+                type="text"
+                placeholder="Search goals..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                className="w-full rounded-lg border-gray-200 bg-white py-2 pl-10 pr-4 text-sm placeholder-gray-400 shadow-sm transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            </div>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="rounded-lg border-gray-200 bg-white py-2 pl-3 pr-10 text-sm text-gray-600 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+            >
+              <option value="progress">Sort by Progress</option>
+              <option value="dueDate">Sort by Due Date</option>
+              <option value="amount">Sort by Amount</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <div className="flex gap-6">
-        <TableOfContents
-          categories={categories}
-          activeCategory={activeCategory}
-          onSelectCategory={setActiveCategory}
-        />
-
-        <div className="flex-1 space-y-4">
-          {filteredGoals.map((goal) => (
+        <div
+          className={`grid flex-1 gap-4 space-y-4 ${
+            view === "grid"
+              ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+              : "grid-cols-1"
+          }`}
+        >
+          {processedGoals.map((goal) => (
             <GoalItem
               key={goal.id}
               title={goal.title}
@@ -545,13 +471,12 @@ const PlanningGoalsPage = () => {
               dueDate={goal.dueDate}
               linkGoal={goal.linkGoal}
               onEdit={() => {}}
-              onDelete={() => handleDelete(goal)}
+              onDelete={() => {}}
               onComplete={() => {}}
               onView={() => setSelectedGoal(goal)}
             />
           ))}
         </div>
-
         {selectedGoal && (
           <div className="w-96 shrink-0">
             <GoalDetails
@@ -562,7 +487,37 @@ const PlanningGoalsPage = () => {
         )}
       </div>
 
-      <Modal
+      {processedGoals.length === 0 && (
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
+          {searchQuery ? (
+            <>
+              <p className="text-gray-500">
+                No goals found matching "{searchQuery}"
+              </p>
+              <button
+                onClick={() => setSearchQuery("")}
+                className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              >
+                Clear search
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </>
+          ) : (
+            <>
+              <PackageOpen className="h-24 w-24 text-gray-500" />
+              <p className="text-gray-500">
+                No goals found for the selected filter.
+              </p>
+              <button className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700">
+                Create your first goal
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      <ModalGeneric
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         title="Delete Goal"
@@ -587,7 +542,7 @@ const PlanningGoalsPage = () => {
             </button>
           </div>
         </div>
-      </Modal>
+      </ModalGeneric>
     </div>
   );
 };
