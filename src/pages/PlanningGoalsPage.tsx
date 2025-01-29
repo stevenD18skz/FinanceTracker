@@ -7,8 +7,8 @@ import { differenceInDays } from "date-fns";
 import PlanningGoalStats from "../components/PlanningPage/PlanningGoalStats";
 import GoalItem from "../components/PlanningPage/GoalItem";
 import GoalDetails from "../components/PlanningPage/GoalDetails";
-import ModalGeneric from "../components/ui/ModalGeneric";
 import CreateEditGoalModalProps from "../components/PlanningPage/CreateEditGoalModalProps";
+import ModalGeneric from "../components/ui/ModalGeneric";
 
 //Componente UI
 import EmptyResults from "../components/ui/EmptyResults";
@@ -42,7 +42,6 @@ const PlanningGoalsPage = () => {
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // CRUD
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
@@ -128,7 +127,7 @@ const PlanningGoalsPage = () => {
       />
 
       {/**View Items */}
-      <div className="flex gap-6">
+      <div className="mb-8 flex gap-6">
         <div
           className={`grid flex-1 gap-3 ${
             view === "grid"
@@ -170,7 +169,6 @@ const PlanningGoalsPage = () => {
       </div>
 
       {/**Empty results */}
-
       <EmptyResults
         items={processedGoals}
         searchQuery={searchQuery}

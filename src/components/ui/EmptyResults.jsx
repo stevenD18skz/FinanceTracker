@@ -9,9 +9,8 @@ const EmptyResults = ({
 }) => {
   return (
     <>
-      <p>ola </p>
       {items.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
+        <div className="mb-8 flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
           {searchQuery ? (
             <>
               <PackageOpen className="h-24 w-24 text-gray-500" />
