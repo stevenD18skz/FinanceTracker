@@ -1,7 +1,13 @@
 import { planningGoalsData } from "../Data";
 
 export function createGoal(newGoal) {
-  planningGoalsData.push(newGoal);
+  planningGoalsData.push({
+    ...newGoal,
+    id: 10,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    current: 0,
+  });
 }
 
 export function getGoals() {

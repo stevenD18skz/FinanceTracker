@@ -1,13 +1,17 @@
 // React y hooks
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { differenceInDays } from "date-fns";
 
 // Componentes internos
+import PlanningGoalStats from "../components/PlanningPage/PlanningGoalStats";
 import GoalItem from "../components/PlanningPage/GoalItem";
 import GoalDetails from "../components/PlanningPage/GoalDetails";
 import ModalGeneric from "../components/ui/ModalGeneric";
 import CreateEditGoalModalProps from "../components/PlanningPage/CreateEditGoalModalProps";
+
+//Componente UI
+import EmptyResults from "../components/ui/EmptyResults";
 
 // Utilidades y datos
 
@@ -31,6 +35,7 @@ import {
   Search,
   PackageOpen,
 } from "lucide-react";
+import PageHeader from "../components/ui/HeaderControllers";
 
 const PlanningGoalsPage = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -40,15 +45,16 @@ const PlanningGoalsPage = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // CRUD
-  const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [goalToUpdate, setGoalToUpdate] = useState<Goal | null>(null);
-  const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
-
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
 
-  const processedGoals = getGoals()
+  const [showModalCreateUpdate, setShowModalCreateUpdate] = useState(false);
+  const [goalToUpdate, setGoalToUpdate] = useState<Goal | null>(null);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
+
+  //Functions
+  const processedGoals: Goal[] = getGoals()
     .filter((goal) => {
       const progress = (goal.current / goal.target) * 100;
       const matchesFilter =
@@ -78,42 +84,15 @@ const PlanningGoalsPage = () => {
       }
     });
 
-  useEffect(() => {
-    localStorage.setItem("planningGoalsView", view);
-  }, [view]);
-
-  const handleCreateGoal = (
-    newGoal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
-  ) => {
-    // Here you would typically make an API call to create the goal
-    const goalFinal = {
-      ...newGoal,
-      id: 10,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      current: 0,
-    };
-    console.log("New goal:", goalFinal);
-    createGoal(goalFinal);
-    setShowModal(false);
-  };
-
-  const handleUpdate = (
-    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
-  ) => {
-    updateGoal(goalToUpdate?.id, goal);
-    setShowModal(false); // Cierra el modal después de enviar
-  };
-
   const handleSubmit = (
     goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
   ) => {
     if (goalToUpdate) {
-      handleUpdate(goal);
+      updateGoal(goalToUpdate?.id, goal);
     } else {
-      handleCreateGoal(goal);
+      createGoal(goal);
     }
-    setShowModal(false);
+    setShowModalCreateUpdate(false);
   };
 
   const confirmDelete = () => {
@@ -127,104 +106,26 @@ const PlanningGoalsPage = () => {
   return (
     <div className="min-h-screen bg-slate-200 p-8">
       {/**Stats Summary */}
-      {goalToUpdate?.title}
+      <PlanningGoalStats goals={getGoals()} />
 
       {/**Header and Controllers */}
-      <div className="mb-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-semibold text-gray-800">
-              Planning Goals
-            </h2>
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600">
-              {processedGoals.length} {filter === "all" ? "total" : filter}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex rounded-lg bg-gray-100 p-1">
-              <button
-                onClick={() => setView("grid")}
-                className={`rounded-md p-2 transition-all ${
-                  view === "grid"
-                    ? "bg-white text-gray-800 shadow-sm"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-                title="Grid view"
-              >
-                <Layout className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setView("list")}
-                className={`rounded-md p-2 transition-all ${
-                  view === "list"
-                    ? "bg-white text-gray-800 shadow-sm"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-                title="List view"
-              >
-                <ListFilter className="h-4 w-4" />
-              </button>
-            </div>
-            <button
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={() => {
-                setGoalToUpdate(null);
-                setShowModal(true);
-              }}
-            >
-              <Plus className="h-4 w-4" />
-              New Goal
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            {["all", "active", "completed"].map((filterType) => (
-              <button
-                key={filterType}
-                onClick={() => setFilter(filterType)}
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                  filter === filterType
-                    ? "bg-gray-100 text-gray-800"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div
-              className={`relative transition-all ${
-                isSearchFocused ? "w-64" : "w-48"
-              }`}
-            >
-              <input
-                type="text"
-                placeholder="Search goals..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setIsSearchFocused(false)}
-                className="w-full rounded-lg border-gray-200 bg-white py-2 pl-10 pr-4 text-sm placeholder-gray-400 shadow-sm transition-all focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-              />
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-            </div>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-lg border-gray-200 bg-white py-2 pl-3 pr-10 text-sm text-gray-600 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-            >
-              <option value="progress">Sort by Progress</option>
-              <option value="dueDate">Sort by Due Date</option>
-              <option value="amount">Sort by Amount</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Goals"
+        itemCount={processedGoals.length}
+        filterOptions={["all", "active", "completed"]}
+        selectedFilter={filter}
+        setFilter={setFilter}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        view={view}
+        setView={setView}
+        onNewItem={() => {
+          setGoalToUpdate(null);
+          setShowModalCreateUpdate(true);
+        }}
+      />
 
       {/**View Items */}
       <div className="flex gap-6">
@@ -248,7 +149,7 @@ const PlanningGoalsPage = () => {
               onView={() => setSelectedGoal(goal)}
               onUpdate={() => {
                 setGoalToUpdate(goal);
-                setShowModal(true);
+                setShowModalCreateUpdate(true);
               }}
               onDelete={() => {
                 setShowDeleteModal(true);
@@ -257,6 +158,7 @@ const PlanningGoalsPage = () => {
             />
           ))}
         </div>
+
         {selectedGoal && (
           <div className="w-96 shrink-0">
             <GoalDetails
@@ -268,47 +170,21 @@ const PlanningGoalsPage = () => {
       </div>
 
       {/**Empty results */}
-      {processedGoals.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
-          {searchQuery ? (
-            <>
-              <PackageOpen className="h-24 w-24 text-gray-500" />
-              <p className="text-gray-500">
-                No goals found matching "{searchQuery}"
-              </p>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
-              >
-                Clear search
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </>
-          ) : (
-            <>
-              <PackageOpen className="h-24 w-24 text-gray-500" />
-              <p className="text-gray-500">
-                No goals found for the selected filter.
-              </p>
-              <button
-                className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
-                onClick={() => {
-                  setGoalToUpdate(null);
-                  setShowModal(true);
-                }}
-              >
-                Create your first goal
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </>
-          )}
-        </div>
-      )}
+
+      <EmptyResults
+        items={processedGoals}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onClickButton={() => {
+          setGoalToUpdate(null);
+          setShowModalCreateUpdate(true);
+        }}
+      />
 
       {/* Modal to Create and Update */}
       <CreateEditGoalModalProps
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        isOpen={showModalCreateUpdate}
+        onClose={() => setShowModalCreateUpdate(false)}
         onSubmit={handleSubmit}
         initialData={goalToUpdate}
       />

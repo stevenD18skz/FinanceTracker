@@ -3,180 +3,105 @@ import * as React from "react";
 import { useState } from "react";
 
 // Componentes internos
-import SubscriptionStats from "../components/subscriptionsPage/SubscriptionStats";
-import HistoryPayments from "../components/subscriptionsPage/HistoryPayments";
+import SubscriptionItem from "../components/subscriptionsPage/SubscriptionItem";
 import SubscriptionDetail from "../components/subscriptionsPage/SubscriptionDetail";
+import ModalGeneric from "../components/ui/ModalGeneric";
+
+import SubscriptionStats from "../components/subscriptionsPage/SubscriptionStats";
 
 // Utilidades y datos
-import { formatCurrency, formatDate } from "../utils/formatters";
-import { subscriptionsData, paymentHistoryData } from "../utils/Data";
+import { paymentHistoryData } from "../utils/Data";
+
+// Puertos
+import {
+  getSubscriptions,
+  createSubscription,
+  updateSubscription,
+  deleteSubscription,
+} from "../utils/ports/Subscription";
 
 // Tipos
-import {
-  PaymentFrequency,
-  Subscription,
-  PaymentHistory,
-} from "../types/subscription";
+import { Subscription, PaymentHistory } from "../types/subscription";
 
 // Iconos de Lucide React (agrupados por funcionalidad o categoría)
 import {
-  Plus,
-  BarChart3,
-  Filter,
-  Search,
-  CreditCard,
-  Settings2,
-  CheckCircle2,
-  XCircle,
-  Edit3,
-  Trash2,
-  ArrowUpRight,
+  ChevronRight,
   Layout,
   ListFilter,
-  ChevronRight,
   PackageOpen,
+  Plus,
+  Search,
 } from "lucide-react";
-import ModalGeneric from "../components/ui/ModalGeneric";
-
-const SubscriptionCard = ({ subscription }: { subscription: Subscription }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const getBillingCycleInfo = (cycle: PaymentFrequency) => {
-    const info = {
-      monthly: { label: "Monthly", color: "text-blue-600", bg: "bg-blue-50" },
-      yearly: { label: "Yearly", color: "text-green-600", bg: "bg-green-50" },
-      quarterly: {
-        label: "Quarterly",
-        color: "text-purple-600",
-        bg: "bg-purple-50",
-      },
-      weekly: { label: "Weekly", color: "text-orange-600", bg: "bg-orange-50" },
-    };
-    return info[cycle];
-  };
-
-  const cycleInfo = getBillingCycleInfo(subscription.paymentFrequency);
-  const daysUntilRenewal = Math.ceil(
-    (new Date(subscription.nextPaymentDate).getTime() - new Date().getTime()) /
-      (1000 * 60 * 60 * 24),
-  );
-
-  return (
-    <div className="group relative rounded-xl bg-white p-6 shadow-md transition-all hover:shadow-lg">
-      <div className="mb-4 flex items-start justify-between">
-        <div className="flex items-start gap-4">
-          <div className={`rounded-xl bg-gray-100 p-3`}>
-            {subscription.icon}
-          </div>
-          <div>
-            <h3 className="font-medium text-gray-900">{subscription.name}</h3>
-            <p className="text-sm text-gray-500"></p>
-          </div>
-        </div>
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="rounded-lg p-2 text-gray-400 hover:bg-gray-100"
-        >
-          <Settings2 className="h-5 w-5" />
-        </button>
-
-        {isMenuOpen && (
-          <div className="absolute right-0 top-12 z-10 w-48 rounded-lg bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5">
-            <button className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              <Edit3 className="mr-2 h-4 w-4" />
-              Edit
-            </button>
-            <button className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <p className="text-2xl font-bold text-gray-900">
-            {formatCurrency(subscription.cost)}
-          </p>
-          <span
-            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${cycleInfo.bg} ${cycleInfo.color}`}
-          >
-            {cycleInfo.label}
-          </span>
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-gray-500">Next renewal</p>
-          <p className="font-medium text-gray-900">
-            {formatDate(subscription.nextPaymentDate)}
-          </p>
-          <p
-            className={`text-sm ${daysUntilRenewal <= 7 ? "text-red-500" : "text-gray-500"}`}
-          >
-            {daysUntilRenewal} days left
-          </p>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between border-t pt-4">
-        <div className="flex items-center gap-2">
-          {subscription.status ? (
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-          ) : (
-            <XCircle className="h-5 w-5 text-red-500" />
-          )}
-          <span
-            className={`text-sm ${subscription.status ? "text-green-500" : "text-red-500"}`}
-          >
-            {subscription.status ? "Active" : "Inactive"}
-          </span>
-        </div>
-        <button className="flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700">
-          View Details
-          <ArrowUpRight className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const SubscriptionManager = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  ////===============
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
+  // CRUD
+  const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [subscriptioToDelete, setSubscriptionToDelete] =
+
+  const [subscriptionToUpdate, setSubscriptionToUpdate] =
     useState<Subscription | null>(null);
+  const [subscriptionToDelete, setSubscriptionToDelete] =
+    useState<Subscription | null>(null);
+
   const [selectedSubscription, setSelectedSubscription] =
     useState<Subscription | null>(null);
 
-  //===============
-
-  const subscriptions: Subscription[] = subscriptionsData;
   const paymentHistory: PaymentHistory[] = paymentHistoryData;
+
+  const processedSubscriptions = getSubscriptions()
+    .filter((subscription) => {
+      return true;
+    })
+    .sort((a, b) => {
+      return true;
+    });
+
+  const handleSubmit = (
+    subscription: Omit<
+      Subscription,
+      "id" | "createdAt" | "updatedAt" | "current"
+    >,
+  ) => {
+    if (subscriptionToUpdate) {
+      updateSubscription(subscriptionToUpdate?.id, subscription);
+    } else {
+      createSubscription(subscription);
+    }
+    setShowModal(false);
+  };
+
+  const confirmDelete = () => {
+    if (subscriptionToDelete) {
+      deleteSubscription(subscriptionToDelete.id);
+      setShowDeleteModal(false);
+      setSubscriptionToDelete(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       {/**Stats Summary */}
       <SubscriptionStats
-        subscriptions={subscriptions}
+        subscriptions={processedSubscriptions}
         paymentHistory={paymentHistory}
       />
 
       {/**Header and Controllers */}
-      <div className="my-8 space-y-6">
+      <div className="mb-8 space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-semibold text-gray-800">
-              Planning Goals
+              Planning Subscriptions
             </h2>
             <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600">
-              {subscriptions.length} {filter === "all" ? "total" : filter}
+              {processedSubscriptions.length}{" "}
+              {filter === "all" ? "total" : filter}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -204,9 +129,15 @@ const SubscriptionManager = () => {
                 <ListFilter className="h-4 w-4" />
               </button>
             </div>
-            <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <button
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={() => {
+                setSubscriptionToUpdate(null);
+                setShowModal(true);
+              }}
+            >
               <Plus className="h-4 w-4" />
-              New Goal
+              New Subscription
             </button>
           </div>
         </div>
@@ -236,7 +167,7 @@ const SubscriptionManager = () => {
             >
               <input
                 type="text"
-                placeholder="Search goals..."
+                placeholder="Search subscriptions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
@@ -260,7 +191,6 @@ const SubscriptionManager = () => {
       </div>
 
       {/**View Items */}
-
       <div className="flex gap-6">
         <div
           className={`grid flex-1 gap-6 ${
@@ -269,8 +199,8 @@ const SubscriptionManager = () => {
               : "grid-cols-1"
           }`}
         >
-          {subscriptions.map((subscription) => (
-            <SubscriptionCard
+          {processedSubscriptions.map((subscription) => (
+            <SubscriptionItem
               key={subscription.id}
               subscription={subscription}
             />
@@ -287,13 +217,14 @@ const SubscriptionManager = () => {
         )}
       </div>
 
-      {/* Empty State */}
-      {subscriptions.length === 0 && (
+      {/**Empty results */}
+      {processedSubscriptions.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
           {searchQuery ? (
             <>
+              <PackageOpen className="h-24 w-24 text-gray-500" />
               <p className="text-gray-500">
-                No goals found matching "{searchQuery}"
+                No subscriptions found matching "{searchQuery}"
               </p>
               <button
                 onClick={() => setSearchQuery("")}
@@ -307,10 +238,16 @@ const SubscriptionManager = () => {
             <>
               <PackageOpen className="h-24 w-24 text-gray-500" />
               <p className="text-gray-500">
-                No goals found for the selected filter.
+                No subscriptions found for the selected filter.
               </p>
-              <button className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700">
-                Create your first goal
+              <button
+                className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                onClick={() => {
+                  setSubscriptionToUpdate(null);
+                  setShowModal(true);
+                }}
+              >
+                Create your first subscription
                 <ChevronRight className="h-4 w-4" />
               </button>
             </>
@@ -318,10 +255,7 @@ const SubscriptionManager = () => {
         </div>
       )}
 
-      {/* History */}
-      <HistoryPayments subscriptions={paymentHistory}></HistoryPayments>
-
-      {/**Modal to Eliminate */}
+      {/* Modal to Delete */}
       <ModalGeneric
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
@@ -329,8 +263,9 @@ const SubscriptionManager = () => {
       >
         <div className="space-y-4">
           <p className="text-sm text-gray-500">
-            Are you sure you want to delete this goal? This action cannot be
-            undone.
+            Are you sure you want to delete
+            <strong> {subscriptionToDelete?.name} </strong>
+            subscription? This action cannot be undone.
           </p>
           <div className="flex justify-end gap-3">
             <button
@@ -340,7 +275,7 @@ const SubscriptionManager = () => {
               Cancel
             </button>
             <button
-              onClick={() => {}}
+              onClick={confirmDelete}
               className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
             >
               Delete
