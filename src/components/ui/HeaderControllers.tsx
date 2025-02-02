@@ -1,7 +1,23 @@
 import { Layout, ListFilter, Plus, Search } from "lucide-react";
 
 import React from "react";
-const PageHeader = ({
+
+interface PageHeaderProps {
+  title: string;
+  itemCount: number;
+  filterOptions: string[];
+  selectedFilter: string;
+  setFilter: (filter: string) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  sortBy: string;
+  setSortBy: (sort: string) => void;
+  view: string;
+  setView: (view: string) => void;
+  onNewItem: () => void;
+}
+
+const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   itemCount,
   filterOptions = [],
@@ -16,7 +32,7 @@ const PageHeader = ({
   onNewItem,
 }) => {
   return (
-    <div className="mb-8 space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-semibold text-gray-800">{title}</h2>

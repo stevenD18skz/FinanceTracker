@@ -1,6 +1,6 @@
 // React y hooks
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { differenceInDays } from "date-fns";
 
 // Componentes internos
@@ -9,6 +9,7 @@ import GoalItem from "../components/PlanningPage/GoalItem";
 import GoalDetails from "../components/PlanningPage/GoalDetails";
 import CreateEditGoalModalProps from "../components/PlanningPage/CreateEditGoalModalProps";
 import ModalGeneric from "../components/ui/ModalGeneric";
+import PageHeader from "../components/ui/HeaderControllers";
 
 //Componente UI
 import EmptyResults from "../components/ui/EmptyResults";
@@ -24,24 +25,15 @@ import {
 } from "../utils/ports/PlanningPort";
 
 // Tipos
-import { Goal } from "../types/goal"; // Nuevo import
-
-// Iconos de Lucide React (agrupados por funcionalidad o categoría)
-import {
-  Plus,
-  ChevronRight,
-  Layout,
-  ListFilter,
-  Search,
-  PackageOpen,
-} from "lucide-react";
-import PageHeader from "../components/ui/HeaderControllers";
+import { Goal } from "../types/goal";
 
 const PlanningGoalsPage = () => {
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [view, setView] = useState("grid");
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [allItems, setAllItems] = useState<Goal[] | []>([]);
 
   // CRUD
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
@@ -52,8 +44,12 @@ const PlanningGoalsPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
 
+  useEffect(() => {
+    setAllItems(getGoals());
+  }, []);
+
   //Functions
-  const processedGoals: Goal[] = getGoals()
+  const processedGoals: Goal[] = allItems
     .filter((goal) => {
       const progress = (goal.current / goal.target) * 100;
       const matchesFilter =
@@ -103,9 +99,9 @@ const PlanningGoalsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-200 p-8">
+    <div className="min-h-screen space-y-8 bg-slate-200 p-8">
       {/**Stats Summary */}
-      <PlanningGoalStats goals={getGoals()} />
+      <PlanningGoalStats goals={allItems} />
 
       {/**Header and Controllers */}
       <PageHeader
@@ -127,7 +123,7 @@ const PlanningGoalsPage = () => {
       />
 
       {/**View Items */}
-      <div className="mb-8 flex gap-6">
+      <div className="flex gap-4">
         <div
           className={`grid flex-1 gap-3 ${
             view === "grid"
@@ -159,12 +155,10 @@ const PlanningGoalsPage = () => {
         </div>
 
         {selectedGoal && (
-          <div className="w-96 shrink-0">
-            <GoalDetails
-              goal={selectedGoal}
-              onClose={() => setSelectedGoal(null)}
-            />
-          </div>
+          <GoalDetails
+            goal={selectedGoal}
+            onClose={() => setSelectedGoal(null)}
+          />
         )}
       </div>
 
