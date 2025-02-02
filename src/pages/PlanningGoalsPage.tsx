@@ -1,6 +1,5 @@
-// React y hooks
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { differenceInDays } from "date-fns";
 
 // Componentes internos
@@ -11,12 +10,10 @@ import CreateEditGoalModalProps from "../components/PlanningPage/CreateEditGoalM
 import ModalGeneric from "../components/ui/ModalGeneric";
 import PageHeader from "../components/ui/HeaderControllers";
 
-//Componente UI
+// Componente UI
 import EmptyResults from "../components/ui/EmptyResults";
 
-// Utilidades y datos
-
-// Puertos
+// Puertos (se asume que estas funciones retornan promesas)
 import {
   createGoal,
   getGoals,
@@ -32,23 +29,40 @@ const PlanningGoalsPage = () => {
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [allItems, setAllItems] = useState<Goal[] | []>([]);
+  const [allItems, setAllItems] = useState<Goal[]>([]);
+  
+  // Estados para el manejo de errores y carga
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // CRUD
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
-
   const [showModalCreateUpdate, setShowModalCreateUpdate] = useState(false);
   const [goalToUpdate, setGoalToUpdate] = useState<Goal | null>(null);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
 
-  useEffect(() => {
-    setAllItems(getGoals());
+  // Función para obtener metas
+  const fetchGoals = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const goals = await getGoals();
+      setAllItems(goals);
+    } catch (err) {
+      console.error("Error al obtener las metas:", err);
+      setError("Error al cargar las metas.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  //Functions
+  // useEffect con dependencias adecuadas
+  useEffect(() => {
+    fetchGoals();
+  }, [fetchGoals]);
+
+  // Lógica para filtrar y ordenar las metas
   const processedGoals: Goal[] = allItems
     .filter((goal) => {
       const progress = (goal.current / goal.target) * 100;
@@ -64,13 +78,12 @@ const PlanningGoalsPage = () => {
       return matchesFilter && matchesSearch;
     })
     .sort((a, b) => {
-      const getProgress = (goal) => (goal.current / goal.target) * 100;
+      const getProgress = (goal: Goal) => (goal.current / goal.target) * 100;
 
       switch (sortBy) {
         case "progress":
           return getProgress(b) - getProgress(a);
         case "dueDate":
-          //return new Date(a.dueDate) - new Date(b.dueDate);
           return differenceInDays(new Date(a.dueDate), new Date(b.dueDate));
         case "amount":
           return b.target - a.target;
@@ -79,31 +92,58 @@ const PlanningGoalsPage = () => {
       }
     });
 
-  const handleSubmit = (
-    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
+  // Manejo del submit para crear o actualizar una meta
+  const handleSubmit = async (
+    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">
   ) => {
-    if (goalToUpdate) {
-      updateGoal(goalToUpdate?.id, goal);
-    } else {
-      createGoal(goal);
+    setLoading(true);
+    setError(null);
+    try {
+      if (goalToUpdate) {
+        await updateGoal(goalToUpdate.id, goal);
+      } else {
+        await createGoal(goal);
+      }
+      // Actualizar el estado con la nueva lista de metas
+      await fetchGoals();
+      setShowModalCreateUpdate(false);
+    } catch (err) {
+      console.error("Error al guardar la meta:", err);
+      setError("Error al guardar la meta.");
+    } finally {
+      setLoading(false);
     }
-    setShowModalCreateUpdate(false);
   };
 
-  const confirmDelete = () => {
-    if (goalToDelete) {
-      deleteGoal(goalToDelete.id);
+  // Manejo de la eliminación de una meta
+  const confirmDelete = async () => {
+    if (!goalToDelete) return;
+    setLoading(true);
+    setError(null);
+    try {
+      await deleteGoal(goalToDelete.id);
+      // Actualizar el estado con la nueva lista de metas
+      await fetchGoals();
       setShowDeleteModal(false);
       setGoalToDelete(null);
+    } catch (err) {
+      console.error("Error al eliminar la meta:", err);
+      setError("Error al eliminar la meta.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen space-y-8 bg-slate-200 p-8">
-      {/**Stats Summary */}
+      {/** Mensajes de carga o error */}
+      {loading && <p>Cargando...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/** Stats Summary */}
       <PlanningGoalStats goals={allItems} />
 
-      {/**Header and Controllers */}
+      {/** Header and Controllers */}
       <PageHeader
         title="Goals"
         itemCount={processedGoals.length}
@@ -122,7 +162,7 @@ const PlanningGoalsPage = () => {
         }}
       />
 
-      {/**View Items */}
+      {/** View Items */}
       <div className="flex gap-4">
         <div
           className={`grid flex-1 gap-3 ${
@@ -162,7 +202,7 @@ const PlanningGoalsPage = () => {
         )}
       </div>
 
-      {/**Empty results */}
+      {/** Empty results */}
       <EmptyResults
         items={processedGoals}
         searchQuery={searchQuery}
@@ -173,7 +213,7 @@ const PlanningGoalsPage = () => {
         }}
       />
 
-      {/* Modal to Create and Update */}
+      {/** Modal para Crear/Editar */}
       <CreateEditGoalModalProps
         isOpen={showModalCreateUpdate}
         onClose={() => setShowModalCreateUpdate(false)}
@@ -181,7 +221,7 @@ const PlanningGoalsPage = () => {
         initialData={goalToUpdate}
       />
 
-      {/* Modal to Delete */}
+      {/** Modal para Eliminar */}
       <ModalGeneric
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
