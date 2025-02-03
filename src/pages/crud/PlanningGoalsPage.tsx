@@ -3,53 +3,51 @@ import { useState, useEffect, useCallback } from "react";
 import { differenceInDays } from "date-fns";
 
 // Componentes internos
-import SubscriptionStats from "../components/subscriptionsPage/SubscriptionStats.tsx";
-import SubscriptionItem from "../components/subscriptionsPage/SubscriptionItem.tsx";
-import SubscriptionDetail from "../components/subscriptionsPage/SubscriptionDetail.jsx";
-import CreateEditSubscriptionModal from "../components/subscriptionsPage/CreateEditSubscriptionModal.tsx";
+import PlanningGoalStats from "../../components/PlanningPage/PlanningGoalStats.tsx";
+import GoalItem from "../../components/PlanningPage/GoalItem.jsx";
+import GoalDetails from "../../components/PlanningPage/GoalDetails.jsx";
+import CreateEditGoalModalProps from "../../components/PlanningPage/CreateEditGoalModalProps.tsx";
 
 // Componentes UI
-import Loading from "../components/ui/Loading.jsx";
-import EmptyResults from "../components/ui/EmptyResults";
-import ModalGeneric from "../components/ui/ModalGeneric";
-import PageHeader from "../components/ui/HeaderControllers";
+import Loading from "../../components/ui/Loading.jsx";
+import EmptyResults from "../../components/ui/EmptyResults.jsx";
+import ModalGeneric from "../../components/ui/ModalGeneric.tsx";
+import PageHeader from "../../components/ui/HeaderControllers.tsx";
 
 // Puertos
 import {
-  createSubscription,
-  getSubscriptions,
-  updateSubscription,
-  deleteSubscription,
-} from "../utils/ports/Subscription.js";
-import { paymentHistoryData } from "../utils/Data.jsx";
+  createGoal,
+  getGoals,
+  updateGoal,
+  deleteGoal,
+} from "../../utils/ports/PlanningPort.tsx";
 
 // Tipos
-import { Subscription } from "../types/subscription.ts";
-import { PaymentHistory } from "../types/subscription.ts";
+import { Goal } from "../../types/goal.ts";
 
-const SubscriptionPage = () => {
+const PlanningGoalsPage = () => {
   const [view, setView] = useState("grid");
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
   const [searchQuery, setSearchQuery] = useState("");
-  const [allItems, setAllItems] = useState<Subscription[]>([]);
+  const [allItems, setAllItems] = useState<Goal[]>([]);
 
   // Estados para el manejo de carga
   const [loading, setLoading] = useState(false);
 
   // CRUD
-  const [selectedGoal, setSelectedGoal] = useState<Subscription | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
   const [showModalCreateUpdate, setShowModalCreateUpdate] = useState(false);
-  const [goalToUpdate, setGoalToUpdate] = useState<Subscription | null>(null);
+  const [goalToUpdate, setGoalToUpdate] = useState<Goal | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [goalToDelete, setGoalToDelete] = useState<Subscription | null>(null);
+  const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
 
   // Función para obtener metas
   const fetchGoals = useCallback(async () => {
     setLoading(true);
 
     try {
-      const goals = await getSubscriptions();
+      const goals = await getGoals();
       setAllItems(goals);
     } catch (err) {
       console.error("Error al obtener las metas:", err);
@@ -64,38 +62,61 @@ const SubscriptionPage = () => {
   }, [fetchGoals]);
 
   // Lógica para filtrar y ordenar las metas
-  const processedGoals: Subscription[] = allItems;
+  const processedGoals: Goal[] = allItems
+    .filter((goal) => {
+      const progress = (goal.current / goal.target) * 100;
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "completed" && progress >= 100) ||
+        (filter === "active" && progress < 100);
 
-  // Funciones inline extraídas y memorizadas con useCallback
+      const matchesSearch = goal.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      return matchesFilter && matchesSearch;
+    })
+    .sort((a, b) => {
+      const getProgress = (goal: Goal) => (goal.current / goal.target) * 100;
+
+      switch (sortBy) {
+        case "progress":
+          return getProgress(b) - getProgress(a);
+        case "dueDate":
+          return differenceInDays(new Date(a.dueDate), new Date(b.dueDate));
+        case "amount":
+          return b.target - a.target;
+        default:
+          return 0;
+      }
+    });
 
   // Manejar la acción de ver detalles de la meta
-  const handleViewGoal = useCallback((goal: Subscription) => {
+  const handleViewGoal = useCallback((goal: Goal) => {
     setSelectedGoal(goal);
   }, []);
 
   // Manejar la acción de actualizar la meta
-  const handleUpdateGoal = useCallback((goal: Subscription) => {
+  const handleUpdateGoal = useCallback((goal: Goal) => {
     setGoalToUpdate(goal);
     setShowModalCreateUpdate(true);
   }, []);
 
   // Manejar la acción de eliminar la meta
-  const handleDeleteGoal = useCallback((goal: Subscription) => {
+  const handleDeleteGoal = useCallback((goal: Goal) => {
     setGoalToDelete(goal);
     setShowDeleteModal(true);
   }, []);
 
   // Manejo del submit para crear o actualizar una meta
   const handleSubmit = useCallback(
-    async (
-      goal: Omit<Subscription, "id" | "createdAt" | "updatedAt" | "current">,
-    ) => {
+    async (goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">) => {
       setLoading(true);
       try {
         if (goalToUpdate) {
-          await updateSubscription(goalToUpdate.id, goal);
+          await updateGoal(goalToUpdate.id, goal);
         } else {
-          await createSubscription(goal);
+          await createGoal(goal);
         }
         // Actualizar el estado con la nueva lista de metas
         await fetchGoals();
@@ -115,7 +136,7 @@ const SubscriptionPage = () => {
     setLoading(true);
 
     try {
-      await deleteSubscription(goalToDelete.id);
+      await deleteGoal(goalToDelete.id);
       // Actualizar el estado con la nueva lista de metas
       await fetchGoals();
       setShowDeleteModal(false);
@@ -130,11 +151,7 @@ const SubscriptionPage = () => {
   return (
     <div className="min-h-screen bg-slate-200 p-8">
       {/** Stats Summary */}
-
-      <SubscriptionStats
-        subscriptions={allItems}
-        paymentHistory={paymentHistoryData}
-      />
+      <PlanningGoalStats goals={allItems} />
 
       {/** Header and Controllers */}
       <PageHeader
@@ -165,13 +182,26 @@ const SubscriptionPage = () => {
           }`}
         >
           {processedGoals.map((goal) => (
-            <SubscriptionItem subscription={goal} />
+            <GoalItem
+              key={goal.id}
+              title={goal.title}
+              current={goal.current}
+              target={goal.target}
+              dueDate={goal.dueDate}
+              linkGoal={goal.linkGoal}
+              onAddAmount={() => {}}
+              onComplete={() => {}}
+              // Uso de funciones memorizadas en lugar de inline
+              onView={() => handleViewGoal(goal)}
+              onUpdate={() => handleUpdateGoal(goal)}
+              onDelete={() => handleDeleteGoal(goal)}
+            />
           ))}
         </div>
 
         {selectedGoal && (
-          <SubscriptionDetail
-            subscription={selectedGoal}
+          <GoalDetails
+            goal={selectedGoal}
             onClose={() => setSelectedGoal(null)}
           />
         )}
@@ -193,7 +223,7 @@ const SubscriptionPage = () => {
       />
 
       {/** Modal para Crear/Editar */}
-      <CreateEditSubscriptionModal
+      <CreateEditGoalModalProps
         isOpen={showModalCreateUpdate}
         onClose={() => setShowModalCreateUpdate(false)}
         onSubmit={handleSubmit}
@@ -209,7 +239,7 @@ const SubscriptionPage = () => {
         <div className="space-y-4">
           <p className="text-sm text-gray-500">
             Are you sure you want to delete
-            <strong> {goalToDelete?.name} </strong>
+            <strong> {goalToDelete?.title} </strong>
             goal? This action cannot be undone.
           </p>
           <div className="flex justify-end gap-3">
@@ -232,4 +262,4 @@ const SubscriptionPage = () => {
   );
 };
 
-export default SubscriptionPage;
+export default PlanningGoalsPage;

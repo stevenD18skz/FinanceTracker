@@ -3,52 +3,58 @@ import { useState, useEffect, useCallback } from "react";
 import { differenceInDays } from "date-fns";
 
 // Componentes internos
-import PlanningGoalStats from "../components/PlanningPage/PlanningGoalStats";
-import GoalItem from "../components/PlanningPage/GoalItem";
-import GoalDetails from "../components/PlanningPage/GoalDetails";
-import CreateEditGoalModalProps from "../components/PlanningPage/CreateEditGoalModalProps";
+import SubscriptionStats from "../../components/subscriptionsPage/SubscriptionStats.tsx";
+import SubscriptionItem from "../../components/subscriptionsPage/SubscriptionItem.tsx";
+import SubscriptionDetail from "../../components/subscriptionsPage/SubscriptionDetail.jsx";
+import CreateEditSubscriptionModal from "../../components/subscriptionsPage/CreateEditSubscriptionModal.tsx";
 
 // Componentes UI
-import Loading from "../components/ui/Loading.jsx";
-import EmptyResults from "../components/ui/EmptyResults";
-import ModalGeneric from "../components/ui/ModalGeneric";
-import PageHeader from "../components/ui/HeaderControllers";
+import Loading from "../../components/ui/Loading.jsx";
+import EmptyResults from "../../components/ui/EmptyResults.jsx";
+import ModalGeneric from "../../components/ui/ModalGeneric.tsx";
+import PageHeader from "../../components/ui/HeaderControllers.tsx";
 
 // Puertos
 import {
-  createGoal,
-  getGoals,
-  updateGoal,
-  deleteGoal,
-} from "../utils/ports/PlanningPort.tsx";
+  createSubscription,
+  getSubscriptions,
+  updateSubscription,
+  deleteSubscription,
+} from "../../utils/ports/Subscription.js";
+import { paymentHistoryData } from "../../utils/Data.jsx";
 
 // Tipos
-import { Goal } from "../types/goal";
+import { Subscription } from "../../types/subscription.ts";
+import { PaymentHistory } from "../../types/subscription.ts";
 
-const PlanningGoalsPage = () => {
+const SubscriptionPage = () => {
   const [view, setView] = useState("grid");
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
   const [searchQuery, setSearchQuery] = useState("");
-  const [allItems, setAllItems] = useState<Goal[]>([]);
+  const [allItems, setAllItems] = useState<Subscription[]>([]);
+  const paymentHistory: PaymentHistory[] = paymentHistoryData;
 
   // Estados para el manejo de carga
   const [loading, setLoading] = useState(false);
 
   // CRUD
-  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const [selectedSubscription, setSelectedSubscription] =
+    useState<Subscription | null>(null);
   const [showModalCreateUpdate, setShowModalCreateUpdate] = useState(false);
-  const [goalToUpdate, setGoalToUpdate] = useState<Goal | null>(null);
+  const [subscriptionToUpdate, setSubscriptionToUpdate] =
+    useState<Subscription | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
+  const [subscriptionToDelete, setSubscriptionToDelete] =
+    useState<Subscription | null>(null);
 
   // Función para obtener metas
-  const fetchGoals = useCallback(async () => {
+  const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
 
     try {
-      const goals = await getGoals();
-      setAllItems(goals);
+      const subscriptions = await getSubscriptions();
+      setAllItems(subscriptions);
     } catch (err) {
       console.error("Error al obtener las metas:", err);
     } finally {
@@ -58,70 +64,46 @@ const PlanningGoalsPage = () => {
 
   // useEffect con dependencias adecuadas
   useEffect(() => {
-    fetchGoals();
-  }, [fetchGoals]);
+    fetchSubscriptions();
+  }, [fetchSubscriptions]);
 
   // Lógica para filtrar y ordenar las metas
-  const processedGoals: Goal[] = allItems
-    .filter((goal) => {
-      const progress = (goal.current / goal.target) * 100;
-      const matchesFilter =
-        filter === "all" ||
-        (filter === "completed" && progress >= 100) ||
-        (filter === "active" && progress < 100);
-
-      const matchesSearch = goal.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-
-      return matchesFilter && matchesSearch;
-    })
-    .sort((a, b) => {
-      const getProgress = (goal: Goal) => (goal.current / goal.target) * 100;
-
-      switch (sortBy) {
-        case "progress":
-          return getProgress(b) - getProgress(a);
-        case "dueDate":
-          return differenceInDays(new Date(a.dueDate), new Date(b.dueDate));
-        case "amount":
-          return b.target - a.target;
-        default:
-          return 0;
-      }
-    });
-
-  // Funciones inline extraídas y memorizadas con useCallback
+  const processedSubscriptions: Subscription[] = allItems;
 
   // Manejar la acción de ver detalles de la meta
-  const handleViewGoal = useCallback((goal: Goal) => {
-    setSelectedGoal(goal);
+  const handleViewSubscription = useCallback((subscription: Subscription) => {
+    setSelectedSubscription(subscription);
   }, []);
 
   // Manejar la acción de actualizar la meta
-  const handleUpdateGoal = useCallback((goal: Goal) => {
-    setGoalToUpdate(goal);
+  const handleUpdateSubscription = useCallback((subscription: Subscription) => {
+    setSubscriptionToUpdate(subscription);
     setShowModalCreateUpdate(true);
   }, []);
 
   // Manejar la acción de eliminar la meta
-  const handleDeleteGoal = useCallback((goal: Goal) => {
-    setGoalToDelete(goal);
+  const handleDeleteSubscription = useCallback((subscription: Subscription) => {
+    setSubscriptionToDelete(subscription);
     setShowDeleteModal(true);
   }, []);
 
   // Manejo del submit para crear o actualizar una meta
   const handleSubmit = useCallback(
-    async (goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">) => {
+    async (
+      subscription: Omit<
+        Subscription,
+        "id" | "createdAt" | "updatedAt" | "current"
+      >,
+    ) => {
       setLoading(true);
       try {
-        if (goalToUpdate) {
-          await updateGoal(goalToUpdate.id, goal);
+        if (subscriptionToUpdate) {
+          await updateSubscription(subscriptionToUpdate.id, subscription);
         } else {
-          await createGoal(goal);
+          await createSubscription(subscription);
         }
         // Actualizar el estado con la nueva lista de metas
-        await fetchGoals();
+        await fetchSubscriptions();
         setShowModalCreateUpdate(false);
       } catch (err) {
         console.error("Error al guardar la meta:", err);
@@ -129,36 +111,40 @@ const PlanningGoalsPage = () => {
         setLoading(false);
       }
     },
-    [goalToUpdate, fetchGoals],
+    [subscriptionToUpdate, fetchSubscriptions],
   );
 
   // Manejo de la eliminación de una meta
   const confirmDelete = useCallback(async () => {
-    if (!goalToDelete) return;
+    if (!subscriptionToDelete) return;
     setLoading(true);
 
     try {
-      await deleteGoal(goalToDelete.id);
+      await deleteSubscription(subscriptionToDelete.id);
       // Actualizar el estado con la nueva lista de metas
-      await fetchGoals();
+      await fetchSubscriptions();
       setShowDeleteModal(false);
-      setGoalToDelete(null);
+      setSubscriptionToDelete(null);
     } catch (err) {
       console.error("Error al eliminar la meta:", err);
     } finally {
       setLoading(false);
     }
-  }, [goalToDelete, fetchGoals]);
+  }, [subscriptionToDelete, fetchSubscriptions]);
 
   return (
     <div className="min-h-screen bg-slate-200 p-8">
       {/** Stats Summary */}
-      <PlanningGoalStats goals={allItems} />
+
+      <SubscriptionStats
+        subscriptions={allItems}
+        paymentHistory={paymentHistory}
+      />
 
       {/** Header and Controllers */}
       <PageHeader
-        title="Goals"
-        itemCount={processedGoals.length}
+        title="Subscriptions"
+        itemCount={processedSubscriptions.length}
         filterOptions={["all", "active", "completed"]}
         selectedFilter={filter}
         setFilter={setFilter}
@@ -169,7 +155,7 @@ const PlanningGoalsPage = () => {
         view={view}
         setView={setView}
         onNewItem={() => {
-          setGoalToUpdate(null);
+          setSubscriptionToUpdate(null);
           setShowModalCreateUpdate(true);
         }}
       />
@@ -183,28 +169,15 @@ const PlanningGoalsPage = () => {
               : "grid-cols-1"
           }`}
         >
-          {processedGoals.map((goal) => (
-            <GoalItem
-              key={goal.id}
-              title={goal.title}
-              current={goal.current}
-              target={goal.target}
-              dueDate={goal.dueDate}
-              linkGoal={goal.linkGoal}
-              onAddAmount={() => {}}
-              onComplete={() => {}}
-              // Uso de funciones memorizadas en lugar de inline
-              onView={() => handleViewGoal(goal)}
-              onUpdate={() => handleUpdateGoal(goal)}
-              onDelete={() => handleDeleteGoal(goal)}
-            />
+          {processedSubscriptions.map((subscription) => (
+            <SubscriptionItem subscription={subscription} />
           ))}
         </div>
 
-        {selectedGoal && (
-          <GoalDetails
-            goal={selectedGoal}
-            onClose={() => setSelectedGoal(null)}
+        {selectedSubscription && (
+          <SubscriptionDetail
+            subscription={selectedSubscription}
+            onClose={() => setSelectedSubscription(null)}
           />
         )}
       </div>
@@ -214,35 +187,35 @@ const PlanningGoalsPage = () => {
 
       {/** Empty results */}
       <EmptyResults
-        items={processedGoals}
+        items={processedSubscriptions}
         loading={loading}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onClickButton={() => {
-          setGoalToUpdate(null);
+          setSubscriptionToUpdate(null);
           setShowModalCreateUpdate(true);
         }}
       />
 
       {/** Modal para Crear/Editar */}
-      <CreateEditGoalModalProps
+      <CreateEditSubscriptionModal
         isOpen={showModalCreateUpdate}
         onClose={() => setShowModalCreateUpdate(false)}
         onSubmit={handleSubmit}
-        initialData={goalToUpdate}
+        initialData={subscriptionToUpdate}
       />
 
       {/** Modal para Eliminar */}
       <ModalGeneric
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title="Delete Goal"
+        title="Delete Subscription"
       >
         <div className="space-y-4">
           <p className="text-sm text-gray-500">
             Are you sure you want to delete
-            <strong> {goalToDelete?.title} </strong>
-            goal? This action cannot be undone.
+            <strong> {subscriptionToDelete?.name} </strong>
+            subscription? This action cannot be undone.
           </p>
           <div className="flex justify-end gap-3">
             <button
@@ -264,4 +237,4 @@ const PlanningGoalsPage = () => {
   );
 };
 
-export default PlanningGoalsPage;
+export default SubscriptionPage;

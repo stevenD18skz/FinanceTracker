@@ -7,10 +7,11 @@ import Layout from "./components/Layout";
 import LoginForm from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
 
-import WalletPage from "./pages/WalletPage.tsx";
-import TransactionPage from "./pages/TransactionPage.tsx";
-import SubscriptionPage from "./pages/SubscriptionPage.tsx";
-import PlanningGoalsPage from "./pages/PlanningGoalsPage.tsx";
+// CRUDS
+import TransactionPage from "./pages/crud/TransactionPage.tsx";
+import SubscriptionPage from "./pages/crud/SubscriptionPage.tsx";
+import PlanningGoalsPage from "./pages/crud/PlanningGoalsPage.tsx";
+import WalletPage from "./pages/crud/WalletPage.tsx";
 
 import Profile from "./pages/Profile.jsx";
 import Settings from "./pages/Settings.tsx";
