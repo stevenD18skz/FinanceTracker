@@ -3,13 +3,14 @@ import { PackageOpen, ChevronRight } from "lucide-react";
 
 const EmptyResults = ({
   items,
+  loading,
   searchQuery,
   setSearchQuery,
   onClickButton,
 }) => {
   return (
     <>
-      {items.length === 0 && (
+      {items.length === 0 && !loading && (
         <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
           {searchQuery ? (
             <>

@@ -19,10 +19,17 @@ import {
   getGoals,
   updateGoal,
   deleteGoal,
-} from "../utils/ports/PlanningPort";
+} from "../utils/ports/PlanningPort.tsx";
 
 // Tipos
 import { Goal } from "../types/goal";
+
+/**
+ * TODO:
+ * fallback
+ * skeletons
+ * revisar ux
+ */
 
 const PlanningGoalsPage = () => {
   const [view, setView] = useState("grid");
@@ -30,7 +37,7 @@ const PlanningGoalsPage = () => {
   const [sortBy, setSortBy] = useState("progress");
   const [searchQuery, setSearchQuery] = useState("");
   const [allItems, setAllItems] = useState<Goal[]>([]);
-  
+
   // Estados para el manejo de errores y carga
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -113,9 +120,7 @@ const PlanningGoalsPage = () => {
 
   // Manejo del submit para crear o actualizar una meta
   const handleSubmit = useCallback(
-    async (
-      goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">
-    ) => {
+    async (goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">) => {
       setLoading(true);
       setError(null);
       try {
@@ -134,7 +139,7 @@ const PlanningGoalsPage = () => {
         setLoading(false);
       }
     },
-    [goalToUpdate, fetchGoals]
+    [goalToUpdate, fetchGoals],
   );
 
   // Manejo de la eliminación de una meta
@@ -219,9 +224,22 @@ const PlanningGoalsPage = () => {
         )}
       </div>
 
+      {/** Loading */}
+      {loading && (
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
+          <div className="flex items-center space-x-2">
+            <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500"></div>
+            <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500 delay-150"></div>
+            <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500 delay-300"></div>
+          </div>
+          <p className="mt-4 text-sm font-medium text-gray-600">Cargando...</p>
+        </div>
+      )}
+
       {/** Empty results */}
       <EmptyResults
         items={processedGoals}
+        loading={loading}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onClickButton={() => {
