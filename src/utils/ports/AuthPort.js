@@ -1,4 +1,4 @@
-import { auth } from "../firebase/config";
+import { auth } from "../../firebase/config";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";

@@ -10,15 +10,15 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ModalGeneric from "../ui/ModalGeneric";
-import { Goal, Milestone } from "../../types/goal";
+import { Subscription } from "../../types/subscription";
 
 interface CreateEditSubscriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (
-    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
+    goal: Omit<Subscription, "id" | "createdAt" | "updatedAt" | "current">,
   ) => void;
-  initialData?: Goal | null;
+  initialData?: Subscription | null;
 }
 
 const CreateEditSubscriptionModal: React.FC<

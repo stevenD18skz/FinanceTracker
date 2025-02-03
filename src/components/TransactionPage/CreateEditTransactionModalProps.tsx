@@ -10,18 +10,18 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ModalGeneric from "../ui/ModalGeneric";
-import { Goal, Milestone } from "../../types/goal";
+import { Transaction } from "../../types/transaction";
 
 interface CreateEditGoalModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (
-    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">,
+    goal: Omit<Transaction, "id" | "createdAt" | "updatedAt" | "current">,
   ) => void;
-  initialData?: Goal | null;
+  initialData?: Transaction | null;
 }
 
-const CreateEditGoalModal: React.FC<CreateEditGoalModalProps> = ({
+const CreateEditTransactionModalProps: React.FC<CreateEditGoalModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
@@ -378,4 +378,4 @@ const CreateEditGoalModal: React.FC<CreateEditGoalModalProps> = ({
   );
 };
 
-export default CreateEditGoalModal;
+export default CreateEditTransactionModalProps;

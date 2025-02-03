@@ -6,7 +6,7 @@ import { Search, Bell, Menu, Settings, User, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-import { handleLogout } from "../utils/AuthPort";
+import { handleLogout } from "../utils/ports/AuthPort";
 
 import { useNavigate } from "react-router-dom";
 

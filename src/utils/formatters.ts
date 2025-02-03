@@ -1,5 +1,3 @@
-import { Currency, currencies } from "../types/currency";
-
 export const formatCurrency = (
   amount: number,
   currencyCode: string = "USD",

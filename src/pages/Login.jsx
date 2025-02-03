@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 //IMPORTACION DE PUERTOS
-import { handleGoogleSignIn, userWasLogin } from "../utils/AuthPort";
+import { handleGoogleSignIn, userWasLogin } from "../utils/ports/AuthPort";
 
 export default function LoginForm() {
   const navigate = useNavigate();

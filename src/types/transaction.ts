@@ -6,6 +6,6 @@ export interface Transaction {
   name: string;
   date: string;
   amount: number;
-  type: "income" | "expense";
+  type: string; // "income" | "expense";
   cardId: number;
 }
