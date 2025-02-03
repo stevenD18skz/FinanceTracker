@@ -92,31 +92,53 @@ const PlanningGoalsPage = () => {
       }
     });
 
+  // Funciones inline extraídas y memorizadas con useCallback
+
+  // Manejar la acción de ver detalles de la meta
+  const handleViewGoal = useCallback((goal: Goal) => {
+    setSelectedGoal(goal);
+  }, []);
+
+  // Manejar la acción de actualizar la meta
+  const handleUpdateGoal = useCallback((goal: Goal) => {
+    setGoalToUpdate(goal);
+    setShowModalCreateUpdate(true);
+  }, []);
+
+  // Manejar la acción de eliminar la meta
+  const handleDeleteGoal = useCallback((goal: Goal) => {
+    setGoalToDelete(goal);
+    setShowDeleteModal(true);
+  }, []);
+
   // Manejo del submit para crear o actualizar una meta
-  const handleSubmit = async (
-    goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">
-  ) => {
-    setLoading(true);
-    setError(null);
-    try {
-      if (goalToUpdate) {
-        await updateGoal(goalToUpdate.id, goal);
-      } else {
-        await createGoal(goal);
+  const handleSubmit = useCallback(
+    async (
+      goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">
+    ) => {
+      setLoading(true);
+      setError(null);
+      try {
+        if (goalToUpdate) {
+          await updateGoal(goalToUpdate.id, goal);
+        } else {
+          await createGoal(goal);
+        }
+        // Actualizar el estado con la nueva lista de metas
+        await fetchGoals();
+        setShowModalCreateUpdate(false);
+      } catch (err) {
+        console.error("Error al guardar la meta:", err);
+        setError("Error al guardar la meta.");
+      } finally {
+        setLoading(false);
       }
-      // Actualizar el estado con la nueva lista de metas
-      await fetchGoals();
-      setShowModalCreateUpdate(false);
-    } catch (err) {
-      console.error("Error al guardar la meta:", err);
-      setError("Error al guardar la meta.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [goalToUpdate, fetchGoals]
+  );
 
   // Manejo de la eliminación de una meta
-  const confirmDelete = async () => {
+  const confirmDelete = useCallback(async () => {
     if (!goalToDelete) return;
     setLoading(true);
     setError(null);
@@ -132,7 +154,7 @@ const PlanningGoalsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [goalToDelete, fetchGoals]);
 
   return (
     <div className="min-h-screen space-y-8 bg-slate-200 p-8">
@@ -181,15 +203,10 @@ const PlanningGoalsPage = () => {
               linkGoal={goal.linkGoal}
               onAddAmount={() => {}}
               onComplete={() => {}}
-              onView={() => setSelectedGoal(goal)}
-              onUpdate={() => {
-                setGoalToUpdate(goal);
-                setShowModalCreateUpdate(true);
-              }}
-              onDelete={() => {
-                setShowDeleteModal(true);
-                setGoalToDelete(goal);
-              }}
+              // Uso de funciones memorizadas en lugar de inline
+              onView={() => handleViewGoal(goal)}
+              onUpdate={() => handleUpdateGoal(goal)}
+              onDelete={() => handleDeleteGoal(goal)}
             />
           ))}
         </div>
