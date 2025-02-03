@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // IMPORTACIÓN DE COMPONENTES
 import Layout from "./components/Layout";
-
+monk
 // IMPORTACIÓN DE PÁGINAS
 import LoginForm from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
@@ -13,7 +13,7 @@ import SubscriptionPage from "./pages/SubscriptionPage.tsx";
 import PlanningGoalsPage from "./pages/PlanningGoalsPage.tsx";
 
 import Profile from "./pages/Profile.jsx";
-import Settings from "./pages/Settings.jsx";
+import Settings from "./pages/Settings.tsx";
 
 //CONTEXT AND HOOKS
 import { AuthProvider } from "./context/AuthContext.jsx";

@@ -3,12 +3,34 @@ import { Goal } from "../../types/goal";
 import { formatCurrency } from "../../utils/formatters";
 import { TrendingUp, Calendar, DollarSign, Target, Clock } from "lucide-react";
 
+const GoalStatsSkeleton = () => {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div
+          key={index}
+          className="animate-pulse rounded-xl bg-white p-6 shadow-lg"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="h-4 w-24 rounded bg-gray-300"></div>
+              <div className="mt-2 h-6 w-32 rounded bg-gray-300"></div>
+            </div>
+            <div className="h-10 w-10 rounded-full bg-gray-200 p-3"></div>
+          </div>
+          <div className="mt-4 h-4 w-20 rounded bg-gray-300"></div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 interface StatisticsProps {
   goals: Goal[];
 }
 
 const GoalStats: React.FC<StatisticsProps> = ({ goals }) => {
-  if (goals.length === 0) return <p>No goals available.</p>;
+  if (goals.length === 0) return <GoalStatsSkeleton />;
 
   // Meta más cercana
   const closestGoal = goals
