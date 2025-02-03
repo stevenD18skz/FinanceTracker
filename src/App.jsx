@@ -6,15 +6,14 @@ import Layout from "./components/Layout";
 // IMPORTACIÓN DE PÁGINAS
 import LoginForm from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
+import Profile from "./pages/Profile.jsx";
+import Settings from "./pages/Settings.tsx";
 
 // CRUDS
 import TransactionPage from "./pages/crud/TransactionPage.tsx";
 import SubscriptionPage from "./pages/crud/SubscriptionPage.tsx";
 import PlanningGoalsPage from "./pages/crud/PlanningGoalsPage.tsx";
 import WalletPage from "./pages/crud/WalletPage.tsx";
-
-import Profile from "./pages/Profile.jsx";
-import Settings from "./pages/Settings.tsx";
 
 //CONTEXT AND HOOKS
 import { AuthProvider } from "./context/AuthContext.jsx";

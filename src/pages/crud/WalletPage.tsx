@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+
+import { cardData, transactionsData } from "../../utils/Data";
+import { Card, Transaction } from "../../types/wallet";
+
+// Importacion de Iconos
 import {
   CreditCard,
   Plus,
@@ -19,105 +24,6 @@ import {
   Croissant,
   Projector,
 } from "lucide-react";
-
-interface Card {
-  id: number;
-  type: string;
-  balance: number;
-  cardNumber: string;
-  expiryDate: string;
-}
-
-interface Transaction {
-  id: number;
-  icon: JSX.Element;
-  name: string;
-  date: string;
-  amount: number;
-  type: "income" | "expense";
-  cardId: number;
-}
-
-const cardData: Card[] = [
-  {
-    id: 1,
-    type: "visa",
-    balance: 3_300,
-    cardNumber: "5282345678901289",
-    expiryDate: "09/26",
-  },
-  {
-    id: 2,
-    type: "mastercard",
-    balance: 2_000,
-    cardNumber: "5282345678901289",
-    expiryDate: "09/28",
-  },
-  {
-    id: 3,
-    type: "nubank",
-    balance: 200_000,
-    cardNumber: "5282345678901289",
-    expiryDate: "09/28",
-  },
-];
-
-const transactionsData: Transaction[] = [
-  {
-    id: 1,
-    icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
-    name: "YouTube Premium",
-    date: "1 January 2025, 02:25 PM",
-    amount: 796_000,
-    type: "expense",
-    cardId: 1,
-  },
-  {
-    id: 2,
-    icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
-    name: "Spotify Premium",
-    date: "19 January 2025, 02:25 PM",
-    amount: 796_000,
-    type: "expense",
-    cardId: 2,
-  },
-  {
-    id: 3,
-    icon: <ArrowRightLeft className="h-6 w-6 text-[#00B9FF]" />,
-    name: "Transferwise - Received",
-    date: "19 January 2025, 10:15 AM",
-    amount: 4800_000,
-    type: "income",
-    cardId: 3,
-  },
-  {
-    id: 4,
-    icon: <ShoppingBag className="h-6 w-6 text-[#FF0000]" />,
-    name: "H&M Payment",
-    date: "15 January 2025, 06:30 PM",
-    amount: 8800_000,
-    type: "expense",
-    cardId: 1,
-  },
-  {
-    id: 5,
-    icon: <Apple className="h-6 w-6 text-[#424147]" />,
-    name: "iPhone 12 Pro Max",
-    date: "24 January 2025, 01:30 PM",
-    amount: 8800_000,
-    type: "expense",
-    cardId: 2,
-  },
-  {
-    id: 6,
-    icon: <Music2 className="h-6 w-6 text-[#1DB954]" />,
-    name: "Spotify Family",
-    date: "25 January 2025, 02:25 PM",
-    amount: 996_000,
-    type: "expense",
-    cardId: 3,
-  },
-];
 
 const WalletPage = () => {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
