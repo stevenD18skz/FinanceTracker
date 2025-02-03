@@ -7,13 +7,14 @@ import PlanningGoalStats from "../components/PlanningPage/PlanningGoalStats";
 import GoalItem from "../components/PlanningPage/GoalItem";
 import GoalDetails from "../components/PlanningPage/GoalDetails";
 import CreateEditGoalModalProps from "../components/PlanningPage/CreateEditGoalModalProps";
+
+// Componentes UI
+import Loading from "../components/ui/Loading.jsx";
+import EmptyResults from "../components/ui/EmptyResults";
 import ModalGeneric from "../components/ui/ModalGeneric";
 import PageHeader from "../components/ui/HeaderControllers";
 
-// Componente UI
-import EmptyResults from "../components/ui/EmptyResults";
-
-// Puertos (se asume que estas funciones retornan promesas)
+// Puertos
 import {
   createGoal,
   getGoals,
@@ -24,13 +25,6 @@ import {
 // Tipos
 import { Goal } from "../types/goal";
 
-/**
- * TODO:
- * fallback
- * skeletons
- * revisar ux
- */
-
 const PlanningGoalsPage = () => {
   const [view, setView] = useState("grid");
   const [filter, setFilter] = useState("all");
@@ -38,9 +32,8 @@ const PlanningGoalsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allItems, setAllItems] = useState<Goal[]>([]);
 
-  // Estados para el manejo de errores y carga
+  // Estados para el manejo de carga
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // CRUD
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
@@ -52,13 +45,12 @@ const PlanningGoalsPage = () => {
   // Función para obtener metas
   const fetchGoals = useCallback(async () => {
     setLoading(true);
-    setError(null);
+
     try {
       const goals = await getGoals();
       setAllItems(goals);
     } catch (err) {
       console.error("Error al obtener las metas:", err);
-      setError("Error al cargar las metas.");
     } finally {
       setLoading(false);
     }
@@ -122,7 +114,6 @@ const PlanningGoalsPage = () => {
   const handleSubmit = useCallback(
     async (goal: Omit<Goal, "id" | "createdAt" | "updatedAt" | "current">) => {
       setLoading(true);
-      setError(null);
       try {
         if (goalToUpdate) {
           await updateGoal(goalToUpdate.id, goal);
@@ -134,7 +125,6 @@ const PlanningGoalsPage = () => {
         setShowModalCreateUpdate(false);
       } catch (err) {
         console.error("Error al guardar la meta:", err);
-        setError("Error al guardar la meta.");
       } finally {
         setLoading(false);
       }
@@ -146,7 +136,7 @@ const PlanningGoalsPage = () => {
   const confirmDelete = useCallback(async () => {
     if (!goalToDelete) return;
     setLoading(true);
-    setError(null);
+
     try {
       await deleteGoal(goalToDelete.id);
       // Actualizar el estado con la nueva lista de metas
@@ -155,18 +145,13 @@ const PlanningGoalsPage = () => {
       setGoalToDelete(null);
     } catch (err) {
       console.error("Error al eliminar la meta:", err);
-      setError("Error al eliminar la meta.");
     } finally {
       setLoading(false);
     }
   }, [goalToDelete, fetchGoals]);
 
   return (
-    <div className="min-h-screen space-y-8 bg-slate-200 p-8">
-      {/** Mensajes de carga o error */}
-      {loading && <p>Cargando...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-
+    <div className="min-h-screen bg-slate-200 p-8">
       {/** Stats Summary */}
       <PlanningGoalStats goals={allItems} />
 
@@ -225,16 +210,7 @@ const PlanningGoalsPage = () => {
       </div>
 
       {/** Loading */}
-      {loading && (
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-50 py-12">
-          <div className="flex items-center space-x-2">
-            <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500"></div>
-            <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500 delay-150"></div>
-            <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500 delay-300"></div>
-          </div>
-          <p className="mt-4 text-sm font-medium text-gray-600">Cargando...</p>
-        </div>
-      )}
+      <Loading loading={loading}></Loading>
 
       {/** Empty results */}
       <EmptyResults

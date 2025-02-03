@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // IMPORTACIÓN DE COMPONENTES
 import Layout from "./components/Layout";
-monk
+
 // IMPORTACIÓN DE PÁGINAS
 import LoginForm from "./pages/Login";
 import Dashboard from "./pages/Dashboard.jsx";
