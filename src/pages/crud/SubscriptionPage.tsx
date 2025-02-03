@@ -20,7 +20,7 @@ import {
   getSubscriptions,
   updateSubscription,
   deleteSubscription,
-} from "../../utils/ports/Subscription.js";
+} from "../../utils/ports/SubscriptionPort.js";
 import { paymentHistoryData } from "../../utils/Data.jsx";
 
 // Tipos
