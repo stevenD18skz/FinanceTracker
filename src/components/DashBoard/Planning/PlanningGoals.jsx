@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ContainerPlanning.css";
 import { useNavigate } from "react-router-dom";
 
@@ -13,10 +13,14 @@ import {
   Timer,
   MoreHorizontal,
   Pencil,
+  PlusCircle,
   PlusIcon,
+  PackageOpen,
+  ChevronRight,
+  Eye, // Nuevo ícono para "Ver detalles"
 } from "lucide-react";
 
-//COMPONENT IMPORT
+// COMPONENT IMPORT
 import TitleContainer from "../../ui/TitleContainer";
 
 const GoalItem = ({
@@ -68,12 +72,19 @@ const GoalItem = ({
           </div>
 
           <div>
-            <h3
-              className="cursor-pointer text-lg font-medium text-gray-800 hover:text-indigo-600 hover:underline"
-              onClick={onView}
-            >
-              {title}
-            </h3>
+            <div className="mb-1 flex items-center gap-2">
+              <h3
+                className="cursor-pointer text-lg font-semibold text-gray-800 hover:text-indigo-600 hover:underline"
+                onClick={onView}
+              >
+                {title}
+              </h3>
+              <Eye
+                className="h-5 w-5 cursor-pointer text-gray-400 hover:text-indigo-600"
+                onClick={onView}
+                title="View Details"
+              />
+            </div>
 
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-gray-400" />
@@ -90,15 +101,14 @@ const GoalItem = ({
           </div>
         </div>
 
-        {/* Menu de puntos suspensivos */}
+        {/* Menú de puntos suspensivos */}
         <div className="relative">
           <button
-            className="rounded-lg p-2 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="rounded-lg p-2 transition-colors hover:bg-gray-100 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             onClick={toggleMenu}
             aria-label="Open menu"
-            title="Open menu"
           >
-            <MoreHorizontal className="h-5 w-5 text-gray-400" />
+            <MoreHorizontal className="h-5 w-5 text-gray-400 hover:text-indigo-600" />
           </button>
 
           {isMenuOpen && (
@@ -109,26 +119,28 @@ const GoalItem = ({
                     href={linkGoal}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex w-full justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Check Online{" "}
+                    Check Online
                     <ArrowUpRight className="h-4 w-4 text-gray-400" />
                   </a>
                 </li>
                 <li>
                   <button
                     onClick={() => onEdit(id.toLocaleString())}
-                    className="flex w-full justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Edit Item <Pencil className="h-4 w-4 text-gray-400" />
+                    Edit Item
+                    <Pencil className="h-4 w-4 text-gray-400" />
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={() => onAddAmount(id.toLocaleString())}
-                    className="flex w-full justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Add Amount <PlusIcon className="h-4 w-4 text-gray-400" />
+                    Add Amount
+                    <PlusIcon className="h-4 w-4 text-gray-400" />
                   </button>
                 </li>
               </ul>
@@ -177,12 +189,66 @@ const GoalItem = ({
   );
 };
 
-const PlanningGoals = ({ goals }) => {
+const SkeletonGoalItem = () => {
+  return (
+    <div className="animate-pulse rounded-xl bg-gray-100 p-5">
+      <div className="mb-4 flex items-start justify-between">
+        <div className="flex items-center gap-2">
+          <div className="h-12 w-12 rounded-xl bg-gray-300" />
+          <div>
+            <div className="mb-1 h-5 w-32 rounded bg-gray-300" />
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-20 rounded bg-gray-300" />
+              <div className="h-4 w-10 rounded bg-gray-300" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-2">
+        <div className="h-2.5 w-full rounded-full bg-gray-300" />
+      </div>
+
+      <div className="flex items-center justify-between text-sm">
+        <div className="h-4 w-20 rounded bg-gray-300" />
+        <div className="h-4 w-32 rounded bg-gray-300" />
+      </div>
+    </div>
+  );
+};
+
+const PlanningGoals = () => {
   const navigate = useNavigate();
   const [openMenuId, setOpenMenuId] = useState(null);
 
+  const [allItem, setAllItem] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/planning-goals",
+        );
+        const data = await response.json();
+        setAllItem(data);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
   const handleOnView = (goalId) => {
     navigate(`/planning-goals?view=${goalId}`);
+  };
+
+  const handleCreateGoal = () => {
+    navigate(`/planning-goals?create=1`);
   };
 
   const handleEditGoal = (goalId) => {
@@ -193,15 +259,16 @@ const PlanningGoals = ({ goals }) => {
     navigate(`/planning-goals?addAmount=${goalId}`);
   };
 
-  const toggleMenu = (goalId, event) => {
+  const toggleMenu = (goalId) => {
     setOpenMenuId(openMenuId === goalId ? null : goalId);
   };
+
   return (
     <div className="rounded-xl bg-white p-6 shadow-lg">
       <div className="mb-6 flex items-center justify-between">
         <TitleContainer text={"Planning"} />
         <button
-          className="text-sm text-indigo-600 hover:text-indigo-700 hover:underline"
+          className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
           onClick={() => navigate("/planning-goals")}
           title="Go to planning page"
         >
@@ -209,23 +276,43 @@ const PlanningGoals = ({ goals }) => {
         </button>
       </div>
 
-      <div className="planning-list custom-scrollbar px-2">
-        {goals.map((goal) => (
-          <GoalItem
-            key={goal.id}
-            id={goal.id}
-            title={goal.title}
-            current={goal.current}
-            target={goal.target}
-            linkGoal={goal.linkGoal}
-            onView={() => handleOnView(goal.id)}
-            dueDate={goal.dueDate}
-            onEdit={handleEditGoal}
-            onAddAmount={handleAddAmountGoal}
-            isMenuOpen={openMenuId === goal.id}
-            toggleMenu={() => toggleMenu(goal.id)}
-          />
-        ))}
+      <div className="planning-list custom-scrollbar max-h-[600px] overflow-y-auto px-2">
+        {loading ? (
+          Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonGoalItem key={index} />
+          ))
+        ) : allItem.length > 0 ? (
+          allItem.map((goal) => (
+            <GoalItem
+              key={goal.id}
+              id={goal.id}
+              title={goal.title}
+              current={goal.current}
+              target={goal.target}
+              linkGoal={goal.linkGoal}
+              onView={() => handleOnView(goal.id)}
+              dueDate={goal.dueDate}
+              onEdit={handleEditGoal}
+              onAddAmount={handleAddAmountGoal}
+              isMenuOpen={openMenuId === goal.id}
+              toggleMenu={() => toggleMenu(goal.id)}
+            />
+          ))
+        ) : (
+          <div className="my-auto flex flex-col items-center justify-center rounded-2xl py-12">
+            <PackageOpen className="h-24 w-24 text-gray-500" />
+            <p className="text-gray-500">
+              No goals found for the selected filter.
+            </p>
+            <button
+              className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              onClick={handleCreateGoal}
+            >
+              Create your first goal
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
