@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const CreditCardLogo = ({ type }) => {
   const logos = {
@@ -30,6 +31,8 @@ const CreditCard = ({
   expiryDate,
   isDarkMode = true,
 }) => {
+  const navigate = useNavigate();
+
   const cardStyles = {
     visa: isDarkMode
       ? "from-blue-500 via-blue-600 to-blue-700"
@@ -54,9 +57,12 @@ const CreditCard = ({
   };
 
   return (
-    <div className="perspective group">
+    <div
+      className="perspective group cursor-pointer"
+      onClick={() => navigate("/wallets")}
+    >
       <div
-        className={`w-full max-w-md bg-gradient-to-br ${cardStyles[type]} relative mx-auto mt-2 overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl`}
+        className={`w-full max-w-md bg-gradient-to-br ${cardStyles[type]} relative mx-auto mt-2 overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg`}
       >
         {/* Animated background patterns */}
         <div className="absolute inset-0 opacity-10">

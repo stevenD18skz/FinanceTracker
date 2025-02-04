@@ -19,14 +19,14 @@ import {
 
 export default function Dashboard() {
   return (
-    <div className="grid min-h-screen grid-cols-1 gap-4 bg-slate-300 px-12 pt-4 lg:grid-cols-3">
+    <div className="grid min-h-screen grid-cols-1 gap-4 bg-slate-200 p-8 lg:grid-cols-3">
       {/* Left Column */}
       <div className="space-y-4">
         <ContendCards cardData={cardData} />
         <PlanningGoals goals={planningGoalsData} />
       </div>
 
-      {/* Middle and Right Columns */}
+      {/* Right Columns */}
       <div className="col-span-2 space-y-4">
         <TotalBalance {...balanceData} />
 

@@ -4,10 +4,6 @@ const getAllTransactions = () => {
   return transactionsData;
 };
 
-const getTransactionById = (id) => {
-  return transactionsData.find((transaction) => transaction.id === id);
-};
-
 const createTransaction = (newTransaction) => {
   transactionsData.push(newTransaction);
   return newTransaction;
@@ -40,7 +36,6 @@ const deleteTransaction = (id) => {
 
 export {
   getAllTransactions,
-  getTransactionById,
   createTransaction,
   updateTransaction,
   deleteTransaction,

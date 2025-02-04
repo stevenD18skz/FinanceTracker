@@ -2,12 +2,14 @@ import React, { useState } from "react";
 
 // LIBRARY IMPORTS
 import { PlusCircle, ChevronLeft, ChevronRight, Sun, Moon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 //COMPONENTS IMPORT
 import TitleContainer from "../../ui/TitleContainer";
 import CreditCard from "./CreditCard";
 
 const ContendCards = ({ cardData }) => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -29,9 +31,9 @@ const ContendCards = ({ cardData }) => {
 
   return (
     <div
-      className={`rounded-xl ${isDarkMode ? "bg-slate-800" : "bg-white"} p-6 transition-colors duration-300`}
+      className={`rounded-xl ${isDarkMode ? "bg-slate-800" : "bg-white"} p-4 transition-colors duration-300`}
     >
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <button
           onClick={prevSlide}
           disabled={currentSlide === 0}
@@ -89,7 +91,8 @@ const ContendCards = ({ cardData }) => {
             style={{ minWidth: "100%" }}
           >
             <button
-              className={`group flex h-64 w-full items-center justify-center rounded-3xl border-2 border-dashed ${
+              onClick={() => navigate("/wallets")}
+              className={`group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed ${
                 isDarkMode
                   ? "border-slate-600 bg-slate-700/20 hover:border-slate-500 hover:bg-slate-700/30"
                   : "border-gray-300 bg-gray-100/50 hover:border-gray-400 hover:bg-gray-100"
@@ -110,7 +113,7 @@ const ContendCards = ({ cardData }) => {
         </div>
 
         {/* Progress indicators */}
-        <div className="mt-6 flex justify-center space-x-2">
+        <div className="mt-4 flex justify-center space-x-2">
           {[...Array(cardData.length + 1)].map((_, index) => (
             <button
               key={index}

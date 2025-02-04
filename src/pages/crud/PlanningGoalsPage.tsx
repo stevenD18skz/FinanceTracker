@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { differenceInDays } from "date-fns";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Componentes internos
 import PlanningGoalStats from "../../components/PlanningGoalPage/PlanningGoalStats.tsx";
@@ -26,6 +27,11 @@ import {
 import { Goal } from "../../types/goal.ts";
 
 const PlanningGoalsPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const editGoalId = queryParams.get("edit");
+
   const [view, setView] = useState("grid");
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("progress");
@@ -45,7 +51,6 @@ const PlanningGoalsPage = () => {
   // Función para obtener metas
   const fetchGoals = useCallback(async () => {
     setLoading(true);
-
     try {
       const goals = await getGoals();
       setAllItems(goals);
@@ -60,6 +65,24 @@ const PlanningGoalsPage = () => {
   useEffect(() => {
     fetchGoals();
   }, [fetchGoals]);
+
+  useEffect(() => {
+    if (editGoalId) {
+      const goalToEdit = allItems.find(
+        (goal) => goal.id === Number(editGoalId),
+      );
+      if (goalToEdit) {
+        setGoalToUpdate(goalToEdit);
+        setShowModalCreateUpdate(true);
+      }
+    }
+  }, [editGoalId, allItems]);
+
+  const handleCloseModal = () => {
+    setShowModalCreateUpdate(false);
+    setGoalToUpdate(null);
+    navigate("/goals", { replace: true });
+  };
 
   // Lógica para filtrar y ordenar las metas
   const processedGoals: Goal[] = allItems
@@ -233,7 +256,7 @@ const PlanningGoalsPage = () => {
       {/** Modal para Eliminar */}
       <ModalGeneric
         isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
+        onClose={handleCloseModal}
         title="Delete Goal"
       >
         <div className="space-y-4">
