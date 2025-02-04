@@ -170,7 +170,10 @@ const SubscriptionPage = () => {
           }`}
         >
           {processedSubscriptions.map((subscription) => (
-            <SubscriptionItem subscription={subscription} />
+            <SubscriptionItem
+              key={subscription.id}
+              subscription={subscription}
+            />
           ))}
         </div>
 

@@ -95,7 +95,7 @@ const TransactionHistory = ({ dataTransaction }) => {
         className={`transaction-list ${filteredTransactions.length > 4 ? "custom-scrollbar" : ""}`}
       >
         {filteredTransactions.map((transaction) => (
-          <TransactionItem transaction={transaction} />
+          <TransactionItem key={transaction.id} transaction={transaction} />
         ))}
       </div>
     </div>

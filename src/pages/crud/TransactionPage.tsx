@@ -159,6 +159,7 @@ const TransactionPage = () => {
         >
           {processedTransactions.map((transaction) => (
             <TransactionItem
+              key={transaction.id}
               {...transaction}
               onView={handleViewTransaction}
               onUpdate={handleUpdateTransaction}

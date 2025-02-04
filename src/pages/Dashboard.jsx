@@ -14,7 +14,6 @@ import {
   cardData,
   transactionsData,
   subscriptionsData,
-  planningGoalsData,
 } from "../utils/Data";
 
 export default function Dashboard() {
@@ -23,7 +22,7 @@ export default function Dashboard() {
       {/* Left Column */}
       <div className="space-y-4">
         <ContendCards cardData={cardData} />
-        <PlanningGoals goals={planningGoalsData} />
+        <PlanningGoals />
       </div>
 
       {/* Right Columns */}
