@@ -1,12 +1,11 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
-import { differenceInDays } from "date-fns";
 
 // Componentes internos
 import TransactionStats from "../../components/TransactionPage/TransactionStats.tsx";
 import TransactionItem from "../../components/TransactionPage/TransactionItem.jsx";
 import TransactionDetails from "../../components/TransactionPage/TransactionDetails.jsx";
-import CreateEditTransactionModalProps from "../../components/TransactionPage/CreateEditTransactionModalProps.tsx";
+import TransactionModal from "../../components/TransactionPage/TransactionModal.tsx";
 
 // Componentes UI
 import Loading from "../../components/ui/Loading.jsx";
@@ -18,7 +17,6 @@ import PageHeader from "../../components/ui/HeaderControllers.tsx";
 import {
   createTransaction,
   getAllTransactions,
-  getTransactionById,
   updateTransaction,
   deleteTransaction,
 } from "../../utils/ports/TransactionPort.js";
@@ -39,9 +37,11 @@ const TransactionPage = () => {
   // CRUD
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+
   const [showModalCreateUpdate, setShowModalCreateUpdate] = useState(false);
   const [transactionToUpdate, setTransactionToUpdate] =
     useState<Transaction | null>(null);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [transactionToDelete, setTransactionToDelete] =
     useState<Transaction | null>(null);
@@ -49,7 +49,6 @@ const TransactionPage = () => {
   // Función para obtener metas
   const fetchTransactions = useCallback(async () => {
     setLoading(true);
-
     try {
       const transactions = await getAllTransactions();
       setAllItems(transactions);
@@ -87,12 +86,7 @@ const TransactionPage = () => {
 
   // Manejo del submit para crear o actualizar una meta
   const handleSubmit = useCallback(
-    async (
-      transaction: Omit<
-        Transaction,
-        "id" | "createdAt" | "updatedAt" | "current"
-      >,
-    ) => {
+    async (transaction: Omit<Transaction, "id">) => {
       setLoading(true);
       try {
         if (transactionToUpdate) {
@@ -133,7 +127,7 @@ const TransactionPage = () => {
   return (
     <div className="min-h-screen bg-slate-200 p-8">
       {/** Stats Summary */}
-      <TransactionStats goals={allItems} />
+      <TransactionStats transactions={allItems} />
 
       {/** Header and Controllers */}
       <PageHeader
@@ -165,22 +159,17 @@ const TransactionPage = () => {
         >
           {processedTransactions.map((transaction) => (
             <TransactionItem
-              icon={transaction.icon}
-              name={transaction.name}
-              date={transaction.date}
-              amount={transaction.amount}
-              type={transaction.type}
-              cardId={transaction.cardId}
-              onClick={() => {
-                console.log("ola");
-              }}
+              {...transaction}
+              onView={handleViewTransaction}
+              onUpdate={handleUpdateTransaction}
+              onDelete={handleDeleteTransaction}
             />
           ))}
         </div>
 
         {selectedTransaction && (
           <TransactionDetails
-            goal={selectedTransaction}
+            transaction={selectedTransaction}
             onClose={() => setSelectedTransaction(null)}
           />
         )}
@@ -202,7 +191,7 @@ const TransactionPage = () => {
       />
 
       {/** Modal para Crear/Editar */}
-      <CreateEditTransactionModalProps
+      <TransactionModal
         isOpen={showModalCreateUpdate}
         onClose={() => setShowModalCreateUpdate(false)}
         onSubmit={handleSubmit}

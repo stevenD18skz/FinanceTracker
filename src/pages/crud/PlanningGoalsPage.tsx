@@ -3,10 +3,10 @@ import { useState, useEffect, useCallback } from "react";
 import { differenceInDays } from "date-fns";
 
 // Componentes internos
-import PlanningGoalStats from "../../components/PlanningPage/PlanningGoalStats.tsx";
-import GoalItem from "../../components/PlanningPage/GoalItem.jsx";
-import GoalDetails from "../../components/PlanningPage/GoalDetails.jsx";
-import CreateEditGoalModalProps from "../../components/PlanningPage/CreateEditGoalModalProps.tsx";
+import PlanningGoalStats from "../../components/PlanningGoalPage/PlanningGoalStats.tsx";
+import GoalItem from "../../components/PlanningGoalPage/GoalItem.jsx";
+import GoalDetails from "../../components/PlanningGoalPage/GoalDetails.jsx";
+import CreateEditGoalModalProps from "../../components/PlanningGoalPage/CreateEditGoalModalProps.tsx";
 
 // Componentes UI
 import Loading from "../../components/ui/Loading.jsx";
@@ -20,7 +20,7 @@ import {
   getGoals,
   updateGoal,
   deleteGoal,
-} from "../../utils/ports/PlanningPort.tsx";
+} from "../../utils/ports/PlanningGoalPort.tsx";
 
 // Tipos
 import { Goal } from "../../types/goal.ts";
