@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./TransactionContainer.css";
+import { Zap } from "lucide-react";
 
 // LIBRARY IMPORTS
 import { FaCalendarAlt } from "react-icons/fa";
@@ -18,7 +19,7 @@ const TransactionItem = ({ transaction }) => {
     >
       <div className="flex items-center space-x-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
-          {transaction.icon}
+          <Zap className="text-blue-600"></Zap>
         </div>
         <div className="flex flex-col">
           <span className="text-base font-medium text-gray-800">

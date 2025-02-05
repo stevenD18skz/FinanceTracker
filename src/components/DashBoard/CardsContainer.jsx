@@ -138,6 +138,10 @@ const CardsContainer = ({ cardData }) => {
     navigate(`/wallets/?view=${id}`);
   };
 
+  const handleCreateGoal = () => {
+    navigate(`/wallets?create=1`);
+  };
+
   return (
     <div
       className={`rounded-xl ${isDarkMode ? "bg-slate-800" : "bg-white"} p-4 transition-colors duration-300`}
@@ -146,10 +150,10 @@ const CardsContainer = ({ cardData }) => {
         <button
           onClick={prevSlide}
           disabled={currentSlide === 0}
-          className={`group rounded-full ${isDarkMode ? "bg-slate-700/50 hover:bg-slate-600" : "bg-gray-200 hover:bg-gray-300"} p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
+          className={`group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
         >
           <ChevronLeft
-            className={`h-5 w-5 ${isDarkMode ? "text-white" : "text-gray-600"} transition-transform group-hover:-translate-x-0.5`}
+            className={`h-5 w-5 ${isDarkMode ? "text-white" : "text-gray-600"} transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
           />
         </button>
 
@@ -172,10 +176,10 @@ const CardsContainer = ({ cardData }) => {
         <button
           onClick={nextSlide}
           disabled={currentSlide === cardData.length}
-          className={`group rounded-full ${isDarkMode ? "bg-slate-700/50 hover:bg-slate-600" : "bg-gray-200 hover:bg-gray-300"} p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
+          className={`group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
         >
           <ChevronRight
-            className={`h-5 w-5 ${isDarkMode ? "text-white" : "text-gray-600"} transition-transform group-hover:translate-x-0.5`}
+            className={`h-5 w-5 ${isDarkMode ? "text-white" : "text-gray-600"} transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
           />
         </button>
       </div>
@@ -204,7 +208,7 @@ const CardsContainer = ({ cardData }) => {
             style={{ minWidth: "100%" }}
           >
             <button
-              onClick={() => navigate("/wallets")}
+              onClick={handleCreateGoal}
               className={`group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed ${
                 isDarkMode
                   ? "border-slate-600 bg-slate-700/20 hover:border-slate-500 hover:bg-slate-700/30"

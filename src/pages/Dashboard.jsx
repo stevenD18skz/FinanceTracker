@@ -6,6 +6,8 @@ import TransactionContainer from "../components/DashBoard/TransactionContainer";
 import CardsContainer from "../components/DashBoard/CardsContainer";
 import BalanceContainer from "../components/DashBoard/BalanceContainer";
 
+import FinancialChart from "../components/DashBoard/FinancialChart.tsx";
+
 // Skeleton Loader
 const SkeletonDashboard = () => (
   <div className="grid min-h-screen grid-cols-1 gap-4 bg-slate-200 p-8 lg:grid-cols-3">
@@ -26,6 +28,16 @@ const SkeletonDashboard = () => (
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const weekFinances = {
+    "day-1": { income: 100, expense: 50, saving: 50 },
+    "day-2": { income: 120, expense: 60, saving: 60 },
+    "day-3": { income: 90, expense: 40, saving: 50 },
+    "day-4": { income: 110, expense: 70, saving: 40 },
+    "day-5": { income: 130, expense: 80, saving: 50 },
+    "day-6": { income: 95, expense: 55, saving: 40 },
+    "day-7": { income: 105, expense: 65, saving: 40 },
+  };
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -75,6 +87,7 @@ export default function Dashboard() {
   return (
     <div className="grid grid-cols-1 gap-4 bg-slate-200 p-8 lg:grid-cols-3">
       {/* Left Column */}
+
       <div className="space-y-4">
         <CardsContainer cardData={data.cards} />
         <PlanningGoalsContainer planningGoalsData={data.planning} />
@@ -88,6 +101,10 @@ export default function Dashboard() {
           <TransactionContainer transactionData={data.transactions} />
           <SubscriptionContainer subscriptionData={data.subscriptions} />
         </div>
+      </div>
+
+      <div className="col-span-3">
+        <FinancialChart data={weekFinances} />
       </div>
     </div>
   );
