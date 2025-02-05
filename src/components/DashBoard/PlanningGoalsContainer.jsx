@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./ContainerPlanning.css";
+import "./PlanningGoalsContainer.css";
 import { useNavigate } from "react-router-dom";
 
 // LIBRARY IMPORTS
@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 // COMPONENT IMPORT
-import TitleContainer from "../../ui/TitleContainer";
+import TitleContainer from "../ui/TitleContainer";
 
 const GoalItem = ({
   id,
@@ -217,7 +217,7 @@ const SkeletonGoalItem = () => {
   );
 };
 
-const PlanningGoals = () => {
+const PlanningGoalsContainer = ({ planningGoalsData = [] }) => {
   const navigate = useNavigate();
   const [openMenuId, setOpenMenuId] = useState(null);
 
@@ -226,6 +226,7 @@ const PlanningGoals = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
+      console.log("Fetching planning goals data...");
       setLoading(true);
       try {
         const response = await fetch(
@@ -240,7 +241,11 @@ const PlanningGoals = () => {
       }
     };
 
-    fetchItems();
+    if (!planningGoalsData) {
+      fetchItems();
+    } else {
+      setAllItem(planningGoalsData);
+    }
   }, []);
 
   const handleOnView = (goalId) => {
@@ -318,4 +323,4 @@ const PlanningGoals = () => {
   );
 };
 
-export default PlanningGoals;
+export default PlanningGoalsContainer;

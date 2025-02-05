@@ -4,12 +4,12 @@ import React from "react";
 import { ArrowUpRight, ArrowDownRight, Wallet, Receipt } from "lucide-react";
 
 //COMPONENTS IMPORT
-import TitleContainer from "../../ui/TitleContainer";
+import TitleContainer from "../ui/TitleContainer";
 
 //UTILS IMPORT
-import { formatCurrency } from "../../../utils/formatters";
+import { formatCurrency } from "../../utils/formatters";
 
-const TotalBalance = ({ income, expense }) => {
+const BalanceContainer = ({ balanceData }) => {
   const data = [
     { title: "Employee", amount: "1,000.00", percentage: 40, color: "#f472b6" },
     { title: "Bills", amount: "1,000.00", percentage: 40, color: "#a78bfa" },
@@ -27,7 +27,7 @@ const TotalBalance = ({ income, expense }) => {
             <div>
               <p className="mb-1 text-gray-500">Total Income</p>
               <h2 className="text-5xl font-semibold tracking-tighter">
-                {formatCurrency(income)}
+                {formatCurrency(balanceData.income)}
               </h2>
             </div>
             <div className="rounded-xl bg-blue-100 p-3">
@@ -72,7 +72,7 @@ const TotalBalance = ({ income, expense }) => {
             <div>
               <p className="mb-1 text-gray-500">Total Expense</p>
               <h2 className="text-5xl font-semibold tracking-tighter">
-                {formatCurrency(expense)}
+                {formatCurrency(balanceData.expense)}
               </h2>
             </div>
             <div className="rounded-xl bg-red-100 p-3">
@@ -136,4 +136,4 @@ const TotalBalance = ({ income, expense }) => {
   );
 };
 
-export default TotalBalance;
+export default BalanceContainer;

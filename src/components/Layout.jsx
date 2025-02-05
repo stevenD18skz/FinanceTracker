@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom"; // Importa Outlet
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const Layout = () => {
   return (
@@ -11,6 +12,7 @@ const Layout = () => {
           <Outlet /> {/* Aquí se renderizan las rutas hijas */}
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

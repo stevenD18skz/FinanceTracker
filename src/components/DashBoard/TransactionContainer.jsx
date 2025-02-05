@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import "./TransactionHistory.css";
+import "./TransactionContainer.css";
 
 // LIBRARY IMPORTS
 import { FaCalendarAlt } from "react-icons/fa";
 
 //COMPONETS IMPORT
-import TitleContainer from "../../ui/TitleContainer";
+import TitleContainer from "../ui/TitleContainer";
 
 //UTILS IMPORT
-import { formatCurrency } from "../../../utils/formatters";
+import { formatCurrency } from "../../utils/formatters";
 
 const TransactionItem = ({ transaction }) => {
   return (
@@ -40,14 +40,14 @@ const TransactionItem = ({ transaction }) => {
   );
 };
 
-const TransactionHistory = ({ dataTransaction }) => {
+const TransactionContainer = ({ transactionData }) => {
   const [filter, setFilter] = useState("7");
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
 
-  const filteredTransactions = dataTransaction
+  const filteredTransactions = transactionData
     .filter((transaction) => {
       const transactionDate = new Date(transaction.date);
       const today = new Date();
@@ -102,4 +102,4 @@ const TransactionHistory = ({ dataTransaction }) => {
   );
 };
 
-export default TransactionHistory;
+export default TransactionContainer;
