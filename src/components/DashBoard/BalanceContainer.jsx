@@ -1,110 +1,148 @@
 import React from "react";
-
-// LIBRARY IMPORTS
-import { ArrowUpRight, ArrowDownRight, Wallet, Receipt } from "lucide-react";
-
-//COMPONENTS IMPORT
+import { ArrowUpRight, Wallet, Receipt, PiggyBank } from "lucide-react";
 import TitleContainer from "../ui/TitleContainer";
-
-//UTILS IMPORT
 import { formatCurrency } from "../../utils/formatters";
 
 const BalanceContainer = ({ balanceData }) => {
-  const data = [
-    { title: "Employee", amount: "1,000.00", percentage: 40, color: "#f472b6" },
-    { title: "Bills", amount: "1,000.00", percentage: 40, color: "#a78bfa" },
-    { title: "Other", amount: "456.00", percentage: 20, color: "#93c5fd" },
+  // Suma total para el cálculo de porcentajes
+  const total = balanceData.income + balanceData.expense + balanceData.saving;
+
+  // Datos para las tarjetas y analytics
+  const summaryData = [
+    {
+      title: "Total Income",
+      amount: balanceData.income,
+      percentage: total ? (balanceData.income * 100) / total : 0,
+      color: "#10B981", // emerald-500
+      bgColor: "bg-emerald-100",
+      icon: <Wallet className="h-6 w-6 text-emerald-600" />,
+      change: "+12.1 %",
+      changeText: "from last week",
+      extraInfo: "used from $10,000.00",
+    },
+    {
+      title: "Total Expenses",
+      amount: balanceData.expense,
+      percentage: total ? (balanceData.expense * 100) / total : 0,
+      color: "#EF4444", // red-500
+      bgColor: "bg-red-100",
+      icon: <Receipt className="h-6 w-6 text-red-600" />,
+      change: "+8.5 %",
+      changeText: "from last week",
+      extraInfo: "used from $8,000.00",
+    },
+    {
+      title: "Total Savings",
+      amount: balanceData.saving,
+      percentage: total ? (balanceData.saving * 100) / total : 0,
+      color: "#3B82F6", // blue-500
+      bgColor: "bg-blue-100",
+      icon: <PiggyBank className="h-6 w-6 text-blue-600" />,
+      change: "+5.2 %",
+      changeText: "from last week",
+      extraInfo: "used from $5,000.00",
+    },
   ];
 
   return (
     <div className="rounded-xl bg-white p-6 shadow-lg">
       <TitleContainer text={"Summary Balance"} />
+      {/* Opcional: podrías mostrar el total general */}
+      {/* <div className="mb-4 text-xl font-bold">{formatCurrency(total)}</div> */}
 
       <div className="grid grid-cols-2">
-        {/* Total Income Card */}
-        <div className="border-b-2 border-r-2 bg-white p-6">
+        {/* Primer row: Income y Expenses */}
+        {summaryData.slice(0, 2).map((item, index) => (
+          <div key={index} className="border-b-2 border-r-2 p-6">
+            <div className="mb-4 flex items-start justify-between">
+              <div>
+                <p className="mb-1 text-gray-500">{item.title}</p>
+                <h2 className="text-5xl font-semibold tracking-tighter">
+                  {formatCurrency(item.amount)}
+                </h2>
+              </div>
+              <div className={`rounded-xl ${item.bgColor} p-3`}>
+                {item.icon}
+              </div>
+            </div>
+
+            <div>
+              <div className="h-2 w-full rounded-full bg-gray-200">
+                <div
+                  className="h-2 rounded-full"
+                  style={{
+                    backgroundColor: item.color,
+                    width: `${item.percentage.toFixed(2)}%`,
+                  }}
+                ></div>
+              </div>
+              <div className="mt-2 flex items-center justify-between">
+                <div className="flex items-center text-gray-700">
+                  <ArrowUpRight className="mr-1 h-4 w-4" />
+                  <span className="font-medium">{item.change}</span>
+                  <span className="ml-1 text-sm text-gray-500">
+                    {item.changeText}
+                  </span>
+                </div>
+                <span className="text-gray-500">{item.extraInfo}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Segunda row, primera columna: Savings */}
+        <div className="border-r-2 p-6">
           <div className="mb-4 flex items-start justify-between">
             <div>
-              <p className="mb-1 text-gray-500">Total Income</p>
+              <p className="mb-1 text-gray-500">{summaryData[2].title}</p>
               <h2 className="text-5xl font-semibold tracking-tighter">
-                {formatCurrency(balanceData.income)}
+                {formatCurrency(summaryData[2].amount)}
               </h2>
             </div>
-            <div className="rounded-xl bg-blue-100 p-3">
-              <Wallet className="h-6 w-6 text-blue-600" />
+            <div className={`rounded-xl ${summaryData[2].bgColor} p-3`}>
+              {summaryData[2].icon}
             </div>
           </div>
 
-          <div className="flex items-center text-emerald-500">
-            <ArrowUpRight className="mr-1 h-4 w-4" />
-            <span className="font-medium">+12.1 %</span>
-            <span className="ml-1 text-sm text-gray-500">from last weeks</span>
-          </div>
-        </div>
-
-        {/* Spending Limit Card */}
-        <div className="border-b-2 bg-white p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-gray-500">Spending limit</p>
-            <select className="rounded-md border px-2 py-1 text-sm text-gray-500">
-              <option>Weeks</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <div className="mb-2 flex justify-between">
-              <span className="text-3xl font-semibold tracking-tighter">
-                $2,456.00
-              </span>
-              <span className="text-gray-500">used from $10,000.00</span>
-            </div>
+          <div>
             <div className="h-2 w-full rounded-full bg-gray-200">
               <div
-                className="h-2 rounded-full bg-blue-600"
-                style={{ width: "24.56%" }}
+                className="h-2 rounded-full"
+                style={{
+                  backgroundColor: summaryData[2].color,
+                  width: `${summaryData[2].percentage.toFixed(2)}%`,
+                }}
               ></div>
             </div>
+            <div className="mt-2 flex items-center justify-between">
+              <div className="flex items-center text-gray-700">
+                <ArrowUpRight className="mr-1 h-4 w-4" />
+                <span className="font-medium">{summaryData[2].change}</span>
+                <span className="ml-1 text-sm text-gray-500">
+                  {summaryData[2].changeText}
+                </span>
+              </div>
+              <span className="text-gray-500">{summaryData[2].extraInfo}</span>
+            </div>
           </div>
         </div>
 
-        {/* Total Expense Card */}
-        <div className="border-r-2 bg-white p-6">
-          <div className="mb-4 flex items-start justify-between">
-            <div>
-              <p className="mb-1 text-gray-500">Total Expense</p>
-              <h2 className="text-5xl font-semibold tracking-tighter">
-                {formatCurrency(balanceData.expense)}
-              </h2>
-            </div>
-            <div className="rounded-xl bg-red-100 p-3">
-              <Receipt className="h-6 w-6 text-red-600" />
-            </div>
-          </div>
-          <div className="flex items-center text-red-500">
-            <ArrowDownRight className="mr-1 h-4 w-4" />
-            <span className="font-medium">-2.5 %</span>
-            <span className="ml-1 text-sm text-gray-500">from last weeks</span>
-          </div>
-        </div>
-
-        {/* Expenses Analytics Card */}
+        {/* Expenses Analytics Card: ocupa las dos columnas de la segunda row */}
         <div className="bg-white p-6">
           <div className="mb-6 flex items-center justify-between">
             <p className="text-gray-500">Expenses Analytics</p>
-            <select className="rounded-md border px-2 py-1 text-sm text-gray-500">
-              <option>Weeks</option>
-            </select>
           </div>
 
           <div className="mb-4">
             <div className="relative h-2 w-full rounded-full bg-gray-200">
-              {data.map((item, index) => (
+              {summaryData.map((item, index) => (
                 <div
                   key={index}
                   className="absolute top-0 h-full rounded-full"
                   style={{
                     backgroundColor: item.color,
-                    width: `${item.percentage}%`,
-                    left: `${data
+                    width: `${item.percentage.toFixed(2)}%`,
+                    left: `${summaryData
                       .slice(0, index)
                       .reduce((acc, curr) => acc + curr.percentage, 0)}%`,
                   }}
@@ -114,18 +152,19 @@ const BalanceContainer = ({ balanceData }) => {
           </div>
 
           <div className="flex justify-between">
-            {data.map((item, index) => (
-              <div key={index} className=" ">
+            {summaryData.map((item, index) => (
+              <div key={index}>
                 <div className="flex items-center">
                   <div
                     className="h-3 w-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   ></div>
-                  <span className="text-sm text-gray-600">{item.title}</span>
+                  <span className="ml-2 text-sm text-gray-600">
+                    {item.title}
+                  </span>
                 </div>
-
                 <span className="text-sm font-semibold text-gray-800">
-                  ${item.amount}
+                  {formatCurrency(item.amount)}
                 </span>
               </div>
             ))}

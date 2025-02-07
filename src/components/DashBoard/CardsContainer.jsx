@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 // LIBRARY IMPORTS
-import { PlusCircle, ChevronLeft, ChevronRight, Sun, Moon } from "lucide-react";
+import { PlusCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-//COMPONENTS IMPORT
+// COMPONENTS IMPORT
 import TitleContainer from "../ui/TitleContainer";
 
 const CreditCardLogo = ({ type }) => {
@@ -27,7 +28,19 @@ const CreditCardLogo = ({ type }) => {
     ),
   };
 
-  return <div className="text-white">{logos[type]}</div>;
+  return (
+    <div className="text-white">
+      {logos[type] || (
+        <div className="flex items-center font-bold text-white">
+          <span className="text-2xl tracking-tighter">CARD</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+CreditCardLogo.propTypes = {
+  type: PropTypes.string.isRequired,
 };
 
 const CreditCard = ({
@@ -45,7 +58,6 @@ const CreditCard = ({
   };
 
   const formatCardNumber = (number) => {
-    console.log(cardNumber);
     return number.match(/.{1,4}/g)?.join(" ") || number;
   };
 
@@ -56,13 +68,22 @@ const CreditCard = ({
     }).format(amount);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      onSelect(id);
+    }
+  };
+
   return (
-    <div
-      className="perspective group cursor-pointer"
-      onClick={() => onSelect(id)}
-    >
+    <div className="perspective group">
       <div
-        className={`w-full max-w-md bg-gradient-to-br ${cardStyles[type]} relative mx-auto mt-2 overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg`}
+        className={`w-full max-w-md bg-gradient-to-br ${
+          cardStyles[type] || "bg-gray-500"
+        } relative mx-auto mt-2 overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg`}
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelect(id)}
+        onKeyDown={handleKeyDown}
       >
         {/* Animated background patterns */}
         <div className="absolute inset-0 opacity-10">
@@ -106,6 +127,15 @@ const CreditCard = ({
   );
 };
 
+CreditCard.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  type: PropTypes.string.isRequired,
+  balance: PropTypes.number.isRequired,
+  cardNumber: PropTypes.string.isRequired,
+  expiryDate: PropTypes.string.isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
+
 const CardsContainer = ({ cardData }) => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -131,16 +161,15 @@ const CardsContainer = ({ cardData }) => {
   };
 
   return (
-    <div className={`rounded-xl bg-white p-4 transition-colors duration-300`}>
+    <div className="rounded-xl bg-white p-4 transition-colors duration-300">
       <div className="mb-2 flex items-center justify-between">
         <button
           onClick={prevSlide}
           disabled={currentSlide === 0}
-          className={`group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
+          aria-label="Previous Slide"
+          className="group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30"
         >
-          <ChevronLeft
-            className={`h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
-          />
+          <ChevronLeft className="h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600" />
         </button>
 
         <TitleContainer text={"My Cards"} />
@@ -148,11 +177,10 @@ const CardsContainer = ({ cardData }) => {
         <button
           onClick={nextSlide}
           disabled={currentSlide === cardData.length}
-          className={`group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
+          aria-label="Next Slide"
+          className="group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30"
         >
-          <ChevronRight
-            className={`h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
-          />
+          <ChevronRight className="h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600" />
         </button>
       </div>
 
@@ -161,7 +189,7 @@ const CardsContainer = ({ cardData }) => {
           className="flex transition-all duration-500 ease-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {cardData.map((card, index) => (
+          {cardData.map((card) => (
             <div
               key={card.cardNumber}
               className="w-full flex-shrink-0 px-2"
@@ -177,11 +205,9 @@ const CardsContainer = ({ cardData }) => {
           >
             <button
               onClick={handleCreateGoal}
-              className={`"border-gray-300 hover:bg-gray-100" group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed bg-gray-100/50 p-4 transition-all hover:border-gray-400`}
+              className="group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed border-gray-300 bg-gray-100/50 p-4 transition-all hover:border-gray-400 hover:bg-gray-100"
             >
-              <div
-                className={`flex flex-col items-center text-gray-400 transition-colors group-hover:text-gray-600`}
-              >
+              <div className="flex flex-col items-center text-gray-400 transition-colors group-hover:text-gray-600">
                 <PlusCircle className="mb-2 h-8 w-8 transition-transform group-hover:scale-110" />
                 <span className="text-sm font-medium">Add New Card</span>
               </div>
@@ -194,8 +220,9 @@ const CardsContainer = ({ cardData }) => {
           {[...Array(cardData.length + 1)].map((_, index) => (
             <button
               key={index}
+              aria-label={`Slide ${index + 1}`}
               className={`h-1.5 rounded-full transition-all ${
-                currentSlide === index ? `w-4 bg-gray-800` : `w-1.5 bg-gray-300`
+                currentSlide === index ? "w-4 bg-gray-800" : "w-1.5 bg-gray-300"
               }`}
               onClick={() => setCurrentSlide(index)}
             />
@@ -204,6 +231,18 @@ const CardsContainer = ({ cardData }) => {
       </div>
     </div>
   );
+};
+
+CardsContainer.propTypes = {
+  cardData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      type: PropTypes.string.isRequired,
+      balance: PropTypes.number.isRequired,
+      cardNumber: PropTypes.string.isRequired,
+      expiryDate: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default CardsContainer;

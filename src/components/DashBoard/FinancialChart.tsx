@@ -106,20 +106,20 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
     },
     plugins: {
       legend: {
-        position: "top" as const,
+        position: "top",
         labels: {
-          padding: 20,
+          padding: 15,
           usePointStyle: true,
           pointStyle: "circle",
           font: {
             size: 12,
             family: "'Inter', sans-serif",
           },
-          color: "#3386ff",
+          color: "#4B5563", // text-gray-700
         },
       },
       tooltip: {
-        backgroundColor: "rgba(17, 24, 39, 0.8)",
+        backgroundColor: "rgba(31, 41, 55, 0.9)", // dark gray
         titleFont: {
           size: 13,
           family: "'Inter', sans-serif",
@@ -144,11 +144,11 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
     scales: {
       x: {
         grid: {
-          color: "rgba(255, 255, 255, 0.1)",
+          color: "rgba(229, 231, 235, 0.5)", // light gray with transparency
           drawBorder: false,
         },
         ticks: {
-          color: "#9ca3af",
+          color: "#6B7280", // text-gray-500
           font: {
             size: 12,
             family: "'Inter', sans-serif",
@@ -158,21 +158,21 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
         title: {
           display: true,
           text: "Days",
-          color: "#3386ff",
+          color: "#4B5563", // text-gray-700
           font: {
             size: 14,
             family: "'Inter', sans-serif",
           },
-          padding: { top: 20 },
+          padding: { top: 15 },
         },
       },
       y: {
         grid: {
-          color: "rgba(255, 255, 255, 0.1)",
+          color: "rgba(229, 231, 235, 0.5)",
           drawBorder: false,
         },
         ticks: {
-          color: "#9ca3af",
+          color: "#6B7280",
           font: {
             size: 12,
             family: "'Inter', sans-serif",
@@ -185,12 +185,12 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
         title: {
           display: true,
           text: "Amount ($)",
-          color: "#3386ff",
+          color: "#4B5563",
           font: {
             size: 14,
             family: "'Inter', sans-serif",
           },
-          padding: { bottom: 20 },
+          padding: { bottom: 15 },
         },
         beginAtZero: true,
       },
@@ -207,7 +207,7 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
 
   return (
     <div className="rounded-xl bg-white p-6 shadow-lg">
-      <h2 className="mb-6 text-xl font-semibold text-red-500">
+      <h2 className="mb-6 text-xl font-semibold text-gray-800">
         Financial Overview
       </h2>
       <div className="h-[400px]">

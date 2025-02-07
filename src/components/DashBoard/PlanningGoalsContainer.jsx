@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import "./PlanningGoalsContainer.css";
 import { useNavigate } from "react-router-dom";
 
@@ -13,11 +14,10 @@ import {
   Timer,
   MoreHorizontal,
   Pencil,
-  PlusCircle,
   PlusIcon,
   PackageOpen,
   ChevronRight,
-  Eye, // Nuevo ícono para "Ver detalles"
+  Eye,
 } from "lucide-react";
 
 // COMPONENT IMPORT
@@ -36,52 +36,83 @@ const GoalItem = ({
   isMenuOpen,
   toggleMenu,
 }) => {
+  const [showMenu, setShowMenu] = useState(isMenuOpen);
+
+  // Cuando la prop isMenuOpen cambie, gestionamos el estado local para el renderizado del menú.
+  useEffect(() => {
+    if (isMenuOpen) {
+      setShowMenu(true);
+    } else {
+      // Esperamos 300ms (duración de la animación) antes de ocultar el menú
+      const timeout = setTimeout(() => setShowMenu(false), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [isMenuOpen]);
+
   const progress = (current / target) * 100;
   const remaining = target - current;
   const isCompleted = progress >= 100;
 
-  const getProgressColor = (progress) => {
-    if (progress >= 100) return "bg-green-500";
-    if (progress >= 75) return "bg-blue-500";
-    if (progress >= 50) return "bg-yellow-500";
+  const getProgressColor = (progressValue) => {
+    if (progressValue >= 100) return "bg-green-500";
+    if (progressValue >= 75) return "bg-blue-500";
+    if (progressValue >= 50) return "bg-yellow-500";
     return "bg-indigo-500";
   };
 
-  const getMotivationalIcon = (progress) => {
-    if (progress >= 100) return <Trophy className="h-5 w-5 text-yellow-500" />;
-    if (progress >= 75) return <Award className="h-5 w-5 text-blue-500" />;
-    if (progress >= 50) return <Rocket className="h-5 w-5 text-purple-500" />;
-    if (progress >= 25) return <Target className="h-5 w-5 text-indigo-500" />;
+  const getMotivationalIcon = (progressValue) => {
+    if (progressValue >= 100)
+      return <Trophy className="h-5 w-5 text-yellow-500" />;
+    if (progressValue >= 75) return <Award className="h-5 w-5 text-blue-500" />;
+    if (progressValue >= 50)
+      return <Rocket className="h-5 w-5 text-purple-500" />;
+    if (progressValue >= 25)
+      return <Target className="h-5 w-5 text-indigo-500" />;
     return <Timer className="h-5 w-5 text-gray-500" />;
   };
 
-  const getMotivationalMessage = (progress) => {
-    if (progress >= 100) return "Amazing achievement! 🎉";
-    if (progress >= 75) return "Almost there! 🚀";
-    if (progress >= 50) return "Halfway there! 💪";
-    if (progress >= 25) return "Great start! 👏";
+  const getMotivationalMessage = (progressValue) => {
+    if (progressValue >= 100) return "Amazing achievement! 🎉";
+    if (progressValue >= 75) return "Almost there! 🚀";
+    if (progressValue >= 50) return "Halfway there! 💪";
+    if (progressValue >= 25) return "Great start! 👏";
     return "Let's get started! 🎯";
   };
 
+  const handleKeyDownView = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      onView();
+    }
+  };
+
   return (
-    <div className="group relative rounded-xl p-5 transition-all duration-300 hover:bg-gray-50 hover:shadow-lg">
+    <div className="group relative rounded-xl p-5 shadow-md hover:bg-gray-50 hover:shadow-lg">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100"
+            aria-hidden="true"
+          >
             🚗
           </div>
 
           <div>
             <div className="mb-1 flex items-center gap-2">
               <h3
-                className="cursor-pointer text-lg font-semibold text-gray-800 hover:text-indigo-600 hover:underline"
+                role="button"
+                tabIndex={0}
+                className="cursor-pointer text-lg font-semibold text-gray-800 transition-all duration-300 hover:text-indigo-600 hover:underline"
                 onClick={onView}
+                onKeyDown={handleKeyDownView}
               >
                 {title}
               </h3>
               <Eye
-                className="h-5 w-5 cursor-pointer text-gray-400 hover:text-indigo-600"
+                role="button"
+                tabIndex={0}
+                className="h-5 w-5 cursor-pointer text-gray-400 transition-all duration-300 hover:text-indigo-600"
                 onClick={onView}
+                onKeyDown={handleKeyDownView}
                 title="View Details"
               />
             </div>
@@ -108,11 +139,15 @@ const GoalItem = ({
             onClick={toggleMenu}
             aria-label="Open menu"
           >
-            <MoreHorizontal className="h-5 w-5 text-gray-400 hover:text-indigo-600" />
+            <MoreHorizontal className="h-5 w-5 text-gray-400 transition-all duration-300 hover:text-indigo-600" />
           </button>
 
-          {isMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+          {showMenu && (
+            <div
+              className={`absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 ${
+                isMenuOpen ? "animate-fadeInScale" : "animate-fadeOutScale"
+              }`}
+            >
               <ul className="py-1">
                 <li>
                   <a
@@ -127,7 +162,7 @@ const GoalItem = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onEdit(id.toLocaleString())}
+                    onClick={() => onEdit(id.toString())}
                     className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Edit Item
@@ -136,7 +171,7 @@ const GoalItem = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onAddAmount(id.toLocaleString())}
+                    onClick={() => onAddAmount(id.toString())}
                     className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Add Amount
@@ -189,6 +224,20 @@ const GoalItem = ({
   );
 };
 
+GoalItem.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  title: PropTypes.string.isRequired,
+  current: PropTypes.number.isRequired,
+  target: PropTypes.number.isRequired,
+  dueDate: PropTypes.string,
+  linkGoal: PropTypes.string,
+  onView: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onAddAmount: PropTypes.func.isRequired,
+  isMenuOpen: PropTypes.bool.isRequired,
+  toggleMenu: PropTypes.func.isRequired,
+};
+
 const PlanningGoalsContainer = ({ planningGoalsData }) => {
   const navigate = useNavigate();
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -210,7 +259,7 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
   };
 
   const toggleMenu = (goalId) => {
-    setOpenMenuId(openMenuId === goalId ? null : goalId);
+    setOpenMenuId((prevId) => (prevId === goalId ? null : goalId));
   };
 
   return (
@@ -218,7 +267,7 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
       <div className="mb-6 flex items-center justify-between">
         <TitleContainer text={"Planning"} />
         <button
-          className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
+          className="text-sm font-semibold text-indigo-600 transition-all duration-300 hover:text-indigo-700 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           onClick={() => navigate("/planning-goals")}
           title="Go to planning page"
         >
@@ -226,8 +275,8 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
         </button>
       </div>
 
-      <div className="planning-list custom-scrollbar max-h-[600px] overflow-y-auto px-2">
-        {planningGoalsData.length > 0 ? (
+      <div className="planning-list custom-scrollbar max-h-[600px] overflow-y-auto px-6">
+        {planningGoalsData && planningGoalsData.length > 0 ? (
           planningGoalsData.map((goal) => (
             <GoalItem
               key={goal.id}
@@ -251,7 +300,7 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
               No goals found for the selected filter.
             </p>
             <button
-              className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 transition-all duration-300 hover:text-indigo-700"
               onClick={handleCreateGoal}
             >
               Create your first goal
@@ -262,6 +311,19 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
       </div>
     </div>
   );
+};
+
+PlanningGoalsContainer.propTypes = {
+  planningGoalsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      title: PropTypes.string.isRequired,
+      current: PropTypes.number.isRequired,
+      target: PropTypes.number.isRequired,
+      dueDate: PropTypes.string,
+      linkGoal: PropTypes.string,
+    }),
+  ).isRequired,
 };
 
 export default PlanningGoalsContainer;
