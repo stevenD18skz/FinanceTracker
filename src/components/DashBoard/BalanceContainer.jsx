@@ -18,7 +18,7 @@ const BalanceContainer = ({ balanceData }) => {
       icon: <Wallet className="h-6 w-6 text-emerald-600" />,
       change: "+12.1 %",
       changeText: "from last week",
-      extraInfo: "used from $10,000.00",
+      extraInfo: `gain from ${formatCurrency(balanceData.goalMonthlyIncome)}`,
     },
     {
       title: "Total Expenses",
@@ -29,7 +29,7 @@ const BalanceContainer = ({ balanceData }) => {
       icon: <Receipt className="h-6 w-6 text-red-600" />,
       change: "+8.5 %",
       changeText: "from last week",
-      extraInfo: "used from $8,000.00",
+      extraInfo: `used from ${formatCurrency(balanceData.goalMonthlyExpense)}`,
     },
     {
       title: "Total Savings",
@@ -40,7 +40,7 @@ const BalanceContainer = ({ balanceData }) => {
       icon: <PiggyBank className="h-6 w-6 text-blue-600" />,
       change: "+5.2 %",
       changeText: "from last week",
-      extraInfo: "used from $5,000.00",
+      extraInfo: `saving from ${formatCurrency(balanceData.goalMonthlySaving)}`,
     },
   ];
 
