@@ -189,64 +189,9 @@ const GoalItem = ({
   );
 };
 
-const SkeletonGoalItem = () => {
-  return (
-    <div className="animate-pulse rounded-xl bg-gray-100 p-5">
-      <div className="mb-4 flex items-start justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-12 w-12 rounded-xl bg-gray-300" />
-          <div>
-            <div className="mb-1 h-5 w-32 rounded bg-gray-300" />
-            <div className="flex items-center gap-2">
-              <div className="h-4 w-20 rounded bg-gray-300" />
-              <div className="h-4 w-10 rounded bg-gray-300" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-2">
-        <div className="h-2.5 w-full rounded-full bg-gray-300" />
-      </div>
-
-      <div className="flex items-center justify-between text-sm">
-        <div className="h-4 w-20 rounded bg-gray-300" />
-        <div className="h-4 w-32 rounded bg-gray-300" />
-      </div>
-    </div>
-  );
-};
-
-const PlanningGoalsContainer = ({ planningGoalsData = [] }) => {
+const PlanningGoalsContainer = ({ planningGoalsData }) => {
   const navigate = useNavigate();
   const [openMenuId, setOpenMenuId] = useState(null);
-
-  const [allItem, setAllItem] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchItems = async () => {
-      console.log("Fetching planning goals data...");
-      setLoading(true);
-      try {
-        const response = await fetch(
-          "http://localhost:3000/api/planning-goals",
-        );
-        const data = await response.json();
-        setAllItem(data);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (!planningGoalsData) {
-      fetchItems();
-    } else {
-      setAllItem(planningGoalsData);
-    }
-  }, []);
 
   const handleOnView = (goalId) => {
     navigate(`/planning-goals?view=${goalId}`);
@@ -282,12 +227,8 @@ const PlanningGoalsContainer = ({ planningGoalsData = [] }) => {
       </div>
 
       <div className="planning-list custom-scrollbar max-h-[600px] overflow-y-auto px-2">
-        {loading ? (
-          Array.from({ length: 3 }).map((_, index) => (
-            <SkeletonGoalItem key={index} />
-          ))
-        ) : allItem.length > 0 ? (
-          allItem.map((goal) => (
+        {planningGoalsData.length > 0 ? (
+          planningGoalsData.map((goal) => (
             <GoalItem
               key={goal.id}
               id={goal.id}

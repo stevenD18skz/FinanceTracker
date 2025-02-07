@@ -36,19 +36,12 @@ const CreditCard = ({
   balance,
   cardNumber,
   expiryDate,
-  isDarkMode = true,
   onSelect,
 }) => {
   const cardStyles = {
-    visa: isDarkMode
-      ? "from-blue-500 via-blue-600 to-blue-700"
-      : "from-blue-400 via-blue-500 to-blue-600",
-    mastercard: isDarkMode
-      ? "from-zinc-700 via-zinc-800 to-zinc-900"
-      : "from-zinc-600 via-zinc-700 to-zinc-800",
-    nubank: isDarkMode
-      ? "from-purple-500 via-purple-600 to-purple-700"
-      : "from-purple-400 via-purple-500 to-purple-600",
+    visa: "from-blue-400 via-blue-500 to-blue-600",
+    mastercard: "from-zinc-600 via-zinc-700 to-zinc-800",
+    nubank: "from-purple-400 via-purple-500 to-purple-600",
   };
 
   const formatCardNumber = (number) => {
@@ -116,7 +109,6 @@ const CreditCard = ({
 const CardsContainer = ({ cardData }) => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const nextSlide = () => {
     if (currentSlide < cardData.length) {
@@ -130,10 +122,6 @@ const CardsContainer = ({ cardData }) => {
     }
   };
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   const handleSelect = (id) => {
     navigate(`/wallets/?view=${id}`);
   };
@@ -143,9 +131,7 @@ const CardsContainer = ({ cardData }) => {
   };
 
   return (
-    <div
-      className={`rounded-xl ${isDarkMode ? "bg-slate-800" : "bg-white"} p-4 transition-colors duration-300`}
-    >
+    <div className={`rounded-xl bg-white p-4 transition-colors duration-300`}>
       <div className="mb-2 flex items-center justify-between">
         <button
           onClick={prevSlide}
@@ -153,25 +139,11 @@ const CardsContainer = ({ cardData }) => {
           className={`group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
         >
           <ChevronLeft
-            className={`h-5 w-5 ${isDarkMode ? "text-white" : "text-gray-600"} transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
+            className={`h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
           />
         </button>
 
-        <div className="flex items-center gap-4">
-          <TitleContainer text={"My Cards"} />
-          {/*  
-          <button
-            onClick={toggleTheme}
-            className={`rounded-full ${isDarkMode ? "bg-slate-700/50 hover:bg-slate-600" : "bg-gray-200 hover:bg-gray-300"} p-2 transition-all`}
-          >
-            {isDarkMode ? (
-              <Sun className="h-5 w-5 text-white" />
-            ) : (
-              <Moon className="h-5 w-5 text-gray-600" />
-            )}
-          </button>
-          */}
-        </div>
+        <TitleContainer text={"My Cards"} />
 
         <button
           onClick={nextSlide}
@@ -179,7 +151,7 @@ const CardsContainer = ({ cardData }) => {
           className={`group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30`}
         >
           <ChevronRight
-            className={`h-5 w-5 ${isDarkMode ? "text-white" : "text-gray-600"} transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
+            className={`h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600`}
           />
         </button>
       </div>
@@ -195,11 +167,7 @@ const CardsContainer = ({ cardData }) => {
               className="w-full flex-shrink-0 px-2"
               style={{ minWidth: "100%" }}
             >
-              <CreditCard
-                {...card}
-                isDarkMode={isDarkMode}
-                onSelect={handleSelect}
-              />
+              <CreditCard {...card} onSelect={handleSelect} />
             </div>
           ))}
 
@@ -209,18 +177,10 @@ const CardsContainer = ({ cardData }) => {
           >
             <button
               onClick={handleCreateGoal}
-              className={`group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed ${
-                isDarkMode
-                  ? "border-slate-600 bg-slate-700/20 hover:border-slate-500 hover:bg-slate-700/30"
-                  : "border-gray-300 bg-gray-100/50 hover:border-gray-400 hover:bg-gray-100"
-              } p-4 transition-all`}
+              className={`"border-gray-300 hover:bg-gray-100" group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed bg-gray-100/50 p-4 transition-all hover:border-gray-400`}
             >
               <div
-                className={`flex flex-col items-center ${
-                  isDarkMode
-                    ? "text-slate-400 group-hover:text-slate-300"
-                    : "text-gray-400 group-hover:text-gray-600"
-                } transition-colors`}
+                className={`flex flex-col items-center text-gray-400 transition-colors group-hover:text-gray-600`}
               >
                 <PlusCircle className="mb-2 h-8 w-8 transition-transform group-hover:scale-110" />
                 <span className="text-sm font-medium">Add New Card</span>
@@ -235,9 +195,7 @@ const CardsContainer = ({ cardData }) => {
             <button
               key={index}
               className={`h-1.5 rounded-full transition-all ${
-                currentSlide === index
-                  ? `w-4 ${isDarkMode ? "bg-white" : "bg-gray-800"}`
-                  : `w-1.5 ${isDarkMode ? "bg-slate-600" : "bg-gray-300"}`
+                currentSlide === index ? `w-4 bg-gray-800` : `w-1.5 bg-gray-300`
               }`}
               onClick={() => setCurrentSlide(index)}
             />

@@ -115,7 +115,7 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
             size: 12,
             family: "'Inter', sans-serif",
           },
-          color: "#fff",
+          color: "#3386ff",
         },
       },
       tooltip: {
@@ -158,7 +158,7 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
         title: {
           display: true,
           text: "Days",
-          color: "#fff",
+          color: "#3386ff",
           font: {
             size: 14,
             family: "'Inter', sans-serif",
@@ -185,7 +185,7 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
         title: {
           display: true,
           text: "Amount ($)",
-          color: "#fff",
+          color: "#3386ff",
           font: {
             size: 14,
             family: "'Inter', sans-serif",
@@ -206,8 +206,8 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="rounded-xl bg-[#262b38] p-6">
-      <h2 className="mb-6 text-xl font-semibold text-white">
+    <div className="rounded-xl bg-white p-6 shadow-lg">
+      <h2 className="mb-6 text-xl font-semibold text-red-500">
         Financial Overview
       </h2>
       <div className="h-[400px]">
