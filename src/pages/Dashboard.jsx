@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import PlanningGoalsContainer from "../components/DashBoard/PlanningGoalsContainer";
 import SubscriptionContainer from "../components/DashBoard/SubscriptionContainer";
@@ -72,7 +72,7 @@ export default function Dashboard() {
             res.json(),
           ),
           fetch("http://localhost:3000/api/wallets").then((res) => res.json()),
-          fetch("http://localhost:3000/api/users").then((res) => res.json()),
+          fetch("http://localhost:3000/api/user").then((res) => res.json()),
         ]);
 
         // Guardar los datos en el estado
