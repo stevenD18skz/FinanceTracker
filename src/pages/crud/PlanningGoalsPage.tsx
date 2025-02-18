@@ -172,7 +172,7 @@ const PlanningGoalsPage = () => {
   }, [goalToDelete, fetchGoals]);
 
   return (
-    <div className="min-h-screen bg-slate-200 p-8">
+    <div className="min-h-screen space-y-8 bg-slate-200 p-8">
       {/** Stats Summary */}
       <PlanningGoalStats goals={allItems} />
 
@@ -245,42 +245,45 @@ const PlanningGoalsPage = () => {
         }}
       />
 
-      {/** Modal para Crear/Editar */}
-      <CreateEditGoalModalProps
-        isOpen={showModalCreateUpdate}
-        onClose={() => setShowModalCreateUpdate(false)}
-        onSubmit={handleSubmit}
-        initialData={goalToUpdate}
-      />
+      <div className="absolue">
+        <CreateEditGoalModalProps
+          isOpen={showModalCreateUpdate}
+          onClose={() => setShowModalCreateUpdate(false)}
+          onSubmit={handleSubmit}
+          initialData={goalToUpdate}
+        />
 
-      {/** Modal para Eliminar */}
-      <ModalGeneric
-        isOpen={showDeleteModal}
-        onClose={handleCloseModal}
-        title="Delete Goal"
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-gray-500">
-            Are you sure you want to delete
-            <strong> {goalToDelete?.title} </strong>
-            goal? This action cannot be undone.
-          </p>
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={() => setShowDeleteModal(false)}
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={confirmDelete}
-              className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-            >
-              Delete
-            </button>
+        {/** Modal para Eliminar */}
+        <ModalGeneric
+          isOpen={showDeleteModal}
+          onClose={handleCloseModal}
+          title="Delete Goal"
+        >
+          <div className="space-y-4">
+            <p className="text-sm text-gray-500">
+              Are you sure you want to delete
+              <strong> {goalToDelete?.title} </strong>
+              goal? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
           </div>
-        </div>
-      </ModalGeneric>
+        </ModalGeneric>
+      </div>
+
+      {/** Modal para Crear/Editar */}
     </div>
   );
 };

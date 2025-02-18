@@ -1,7 +1,7 @@
-import React from "react";
 import { ArrowUpRight, Wallet, Receipt, PiggyBank } from "lucide-react";
 import TitleContainer from "../ui/TitleContainer";
 import { formatCurrency } from "../../utils/formatters";
+import PropTypes from "prop-types";
 
 const BalanceContainer = ({ balanceData }) => {
   // Suma total para el cálculo de porcentajes
@@ -16,8 +16,10 @@ const BalanceContainer = ({ balanceData }) => {
       color: "#10B981", // emerald-500
       bgColor: "bg-emerald-100",
       icon: <Wallet className="h-6 w-6 text-emerald-600" />,
-      change: "+12.1 %",
-      changeText: "from last week",
+      change: formatCurrency(
+        balanceData.goalMonthlyIncome - balanceData.income,
+      ),
+      changeText: "to complete the objective",
       extraInfo: `gain from ${formatCurrency(balanceData.goalMonthlyIncome)}`,
     },
     {
@@ -27,8 +29,10 @@ const BalanceContainer = ({ balanceData }) => {
       color: "#EF4444", // red-500
       bgColor: "bg-red-100",
       icon: <Receipt className="h-6 w-6 text-red-600" />,
-      change: "+8.5 %",
-      changeText: "from last week",
+      change: formatCurrency(
+        balanceData.goalMonthlyExpense - balanceData.expense,
+      ),
+      changeText: "to complete the objective",
       extraInfo: `used from ${formatCurrency(balanceData.goalMonthlyExpense)}`,
     },
     {
@@ -38,8 +42,10 @@ const BalanceContainer = ({ balanceData }) => {
       color: "#3B82F6", // blue-500
       bgColor: "bg-blue-100",
       icon: <PiggyBank className="h-6 w-6 text-blue-600" />,
-      change: "+5.2 %",
-      changeText: "from last week",
+      change: formatCurrency(
+        balanceData.goalMonthlySaving - balanceData.saving,
+      ),
+      changeText: "to complete the objective",
       extraInfo: `saving from ${formatCurrency(balanceData.goalMonthlySaving)}`,
     },
   ];
@@ -47,8 +53,6 @@ const BalanceContainer = ({ balanceData }) => {
   return (
     <div className="rounded-xl bg-white p-6 shadow-lg">
       <TitleContainer text={"Summary Balance"} />
-      {/* Opcional: podrías mostrar el total general */}
-      {/* <div className="mb-4 text-xl font-bold">{formatCurrency(total)}</div> */}
 
       <div className="grid grid-cols-2">
         {/* Primer row: Income y Expenses */}
@@ -131,6 +135,9 @@ const BalanceContainer = ({ balanceData }) => {
         <div className="bg-white p-6">
           <div className="mb-6 flex items-center justify-between">
             <p className="text-gray-500">Expenses Analytics</p>
+            <div className="mb-4 text-xl font-bold">
+              {formatCurrency(total)}
+            </div>
           </div>
 
           <div className="mb-4">
@@ -173,6 +180,17 @@ const BalanceContainer = ({ balanceData }) => {
       </div>
     </div>
   );
+};
+
+BalanceContainer.propTypes = {
+  balanceData: PropTypes.shape({
+    income: PropTypes.number.isRequired,
+    expense: PropTypes.number.isRequired,
+    saving: PropTypes.number.isRequired,
+    goalMonthlyIncome: PropTypes.number.isRequired,
+    goalMonthlyExpense: PropTypes.number.isRequired,
+    goalMonthlySaving: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default BalanceContainer;
