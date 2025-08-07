@@ -22,3 +22,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Ignorar node_modules
+node_modules/
+
+# Ignorar archivos de entorno
+.env
+
+# Ignorar archivos de configuración local
+.DS_Store
+
+# Ignorar logs
+*.log
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
