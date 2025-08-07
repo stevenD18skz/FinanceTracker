@@ -5,12 +5,7 @@ import { Search, Bell, Menu, Settings, User, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-import { handleLogout } from "../utils/ports/AuthPort";
-
-import { useNavigate } from "react-router-dom";
-
 const Navbar = () => {
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const location = useLocation();
@@ -117,7 +112,7 @@ const Navbar = () => {
                     </Link>
                     <div className="my-1 border-t border-gray-700"></div>
                     <button
-                      onClick={() => handleLogout(navigate)}
+                      onClick={() => console.log("Sign out")}
                       className="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-[#1a1f2e] hover:text-white"
                     >
                       <LogOut className="mr-3 h-4 w-4" />

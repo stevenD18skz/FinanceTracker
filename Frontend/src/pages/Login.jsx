@@ -1,28 +1,17 @@
 //importacion de librerias
 import { useState, useEffect } from "react";
 
-//firebase
-import { auth } from "../firebase/config";
-import { onAuthStateChanged } from "firebase/auth";
-
 //contextos y hooks
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-
-//IMPORTACION DE PUERTOS
-import { handleGoogleSignIn, userWasLogin } from "../utils/ports/AuthPort";
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const { setUser, setUserDocData } = useAuth();
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    onAuthStateChanged(auth, (user) =>
-      userWasLogin(user, setUser, setUserDocData, navigate, setLoading),
-    );
-  }, [navigate, setUser, setUserDocData]);
+  }, [navigate]);
 
   if (loading)
     return (
@@ -50,9 +39,7 @@ export default function LoginForm() {
 
         <div className="mt-6 text-center">
           <button
-            onClick={() =>
-              handleGoogleSignIn(setUser, setUserDocData, navigate)
-            }
+            onClick={() => console.log("Iniciar sesión con Google")}
             className="mt-3 w-full rounded-md bg-red-500 py-3 text-base font-bold text-gray-200 transition-all duration-300 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
           >
             Iniciar sesión con Google
