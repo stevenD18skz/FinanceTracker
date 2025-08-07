@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export default function TitleContainer({
   text,
   size = "text-3xl",
@@ -5,3 +7,9 @@ export default function TitleContainer({
 }) {
   return <h3 className={`${size} font-semibold ${color}`}>{text}</h3>;
 }
+
+TitleContainer.propTypes = {
+  text: PropTypes.string.isRequired,
+  size: PropTypes.string,
+  color: PropTypes.string,
+};

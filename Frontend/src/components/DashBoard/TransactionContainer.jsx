@@ -1,11 +1,9 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./TransactionContainer.css";
 import { Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // LIBRARY IMPORTS
-import { FaCalendarAlt } from "react-icons/fa";
 
 // COMPONENTS IMPORT
 import TitleContainer from "../ui/TitleContainer";

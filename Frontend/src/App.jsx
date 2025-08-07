@@ -19,9 +19,15 @@ import WalletPage from "./pages/crud/WalletPage.tsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 
+import PropTypes from "prop-types";
+
 const PrivateRoute = ({ element }) => {
   const { user } = useAuth();
   return user ? element : <Navigate to="/login" />;
+};
+
+PrivateRoute.propTypes = {
+  element: PropTypes.element.isRequired,
 };
 
 function App() {

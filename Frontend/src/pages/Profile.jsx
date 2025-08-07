@@ -1,5 +1,3 @@
-import React from "react";
-
 // Importacion de Iconos
 import {
   User,

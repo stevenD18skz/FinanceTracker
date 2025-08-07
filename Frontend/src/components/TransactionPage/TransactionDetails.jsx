@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { X, DollarSign } from "lucide-react";
 
 const TransactionDetails = ({ transaction, onClose }) => {
@@ -54,6 +55,18 @@ const TransactionDetails = ({ transaction, onClose }) => {
       </div>
     </aside>
   );
+};
+
+TransactionDetails.propTypes = {
+  transaction: PropTypes.shape({
+    icon: PropTypes.element.isRequired,
+    name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+    type: PropTypes.oneOf(["income", "expense"]).isRequired,
+    cardId: PropTypes.string.isRequired,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default TransactionDetails;

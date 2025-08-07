@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   // Iconos de acciones
   CheckCircle,
@@ -78,7 +79,7 @@ const GoalItem = ({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={(e) => {
+            onClick={() => {
               if (linkGoal) {
                 window.open(linkGoal, "_blank"); // Abre el enlace en una nueva pestaña
               } else {
@@ -181,6 +182,19 @@ const GoalItem = ({
       </div>
     </div>
   );
+};
+
+GoalItem.propTypes = {
+  title: PropTypes.string.isRequired,
+  current: PropTypes.number.isRequired,
+  target: PropTypes.number.isRequired,
+  dueDate: PropTypes.string,
+  linkGoal: PropTypes.string,
+  onView: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onAddAmount: PropTypes.func.isRequired,
+  onComplete: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default GoalItem;

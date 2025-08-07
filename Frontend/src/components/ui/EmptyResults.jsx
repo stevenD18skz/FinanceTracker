@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import { PackageOpen, ChevronRight } from "lucide-react";
 
 const EmptyResults = ({
@@ -16,7 +16,7 @@ const EmptyResults = ({
             <>
               <PackageOpen className="h-24 w-24 text-gray-500" />
               <p className="text-gray-500">
-                No goals found matching "{searchQuery}"
+                No goals found matching &apos;{searchQuery}&apos;
               </p>
               <button
                 onClick={() => setSearchQuery("")}
@@ -45,6 +45,14 @@ const EmptyResults = ({
       )}
     </>
   );
+};
+
+EmptyResults.propTypes = {
+  items: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  onClickButton: PropTypes.func.isRequired,
 };
 
 export default EmptyResults;

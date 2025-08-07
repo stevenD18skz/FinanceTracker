@@ -23,6 +23,10 @@ app.use("/api/wallets", walletRoutes);
 app.use("/api/user", userRoutes);
 
 // Iniciar servidor
+app.get("/", (req, res) => {
+  res.send("¡Servidor Express funcionando!");
+});
+
 app.listen(PORT, () => {
   console.log(`server listening on port http://localhost:${PORT}`);
 });

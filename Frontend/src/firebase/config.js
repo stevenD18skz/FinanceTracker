@@ -1,25 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import {
-  getStorage,
-  uploadBytes,
-  ref,
-  getDownloadURL,
-  getBytes,
-} from "firebase/storage";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDoc,
-  doc,
-  //getDoc,
-  query,
-  where,
-  setDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APIKEY,

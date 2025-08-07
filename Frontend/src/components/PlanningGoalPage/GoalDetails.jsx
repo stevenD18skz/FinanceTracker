@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { X, TrendingUp, Trophy } from "lucide-react";
 
 const GoalDetails = ({ goal, onClose }) => {
@@ -93,6 +94,24 @@ const GoalDetails = ({ goal, onClose }) => {
       </div>
     </div>
   );
+};
+
+GoalDetails.propTypes = {
+  goal: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    current: PropTypes.number.isRequired,
+    target: PropTypes.number.isRequired,
+    dueDate: PropTypes.string,
+    description: PropTypes.string.isRequired,
+    milestones: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        completed: PropTypes.bool.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default GoalDetails;

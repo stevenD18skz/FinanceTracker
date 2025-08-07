@@ -1,5 +1,5 @@
 //importacion de librerias
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 //firebase
 import { auth } from "../firebase/config";
@@ -22,7 +22,7 @@ export default function LoginForm() {
     onAuthStateChanged(auth, (user) =>
       userWasLogin(user, setUser, setUserDocData, navigate, setLoading),
     );
-  }, []);
+  }, [navigate, setUser, setUserDocData]);
 
   if (loading)
     return (

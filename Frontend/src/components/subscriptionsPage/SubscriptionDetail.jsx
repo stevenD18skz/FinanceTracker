@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { X, TrendingUp, Trophy } from "lucide-react";
 
 const SubscriptionDetail = ({ subscription, onClose }) => {
@@ -38,14 +39,7 @@ const SubscriptionDetail = ({ subscription, onClose }) => {
             </span>
           )}
         </div>
-        <div className="h-3 overflow-hidden rounded-full bg-gray-100">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ease-out ${getProgressColor(
-              progress,
-            )}`}
-            style={{ width: `${Math.min(progress, 100)}%` }}
-          />
-        </div>
+        <div className="h-3 overflow-hidden rounded-full bg-gray-100"></div>
       </div>
 
       <div className="mb-8">
@@ -87,6 +81,24 @@ const SubscriptionDetail = ({ subscription, onClose }) => {
       </div>
     </div>
   );
+};
+
+SubscriptionDetail.propTypes = {
+  subscription: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    current: PropTypes.number.isRequired,
+    target: PropTypes.number.isRequired,
+    dueDate: PropTypes.string,
+    description: PropTypes.string.isRequired,
+    milestones: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        completed: PropTypes.bool.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default SubscriptionDetail;
