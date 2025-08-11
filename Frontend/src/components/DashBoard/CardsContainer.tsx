@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { PlusCircle, ChevronLeft, ChevronRight } from "lucide-react";
 
-import { userData } from "../../utils/Data";
-import { convertAndFormat } from "../../utils/formatters";
-
 //Types
 import { Wallet } from "../../types/wallet";
+
+//Utils
+import { convertAndFormat } from "../../utils/formatters";
+
+//Data
+import { userData } from "../../utils/Data";
 
 type CreditCardProps = {
   card: Wallet;

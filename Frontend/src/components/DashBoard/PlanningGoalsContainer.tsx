@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import {
   ArrowUpRight,
   TrendingUp,
@@ -13,34 +14,21 @@ import {
   PlusIcon,
   PackageOpen,
   ChevronRight,
-  Eye,
 } from "lucide-react";
 
 // Types
 import { Goal } from "../../types/goal";
 
-// COMPONENT IMPORT
-import TitleContainer from "../ui/TitleContainer";
-
+// Styles
 import "./PlanningGoalsContainer.css";
 
 type GoalItemProps = {
   goal: Goal;
-  onView: (id: number) => void;
-  onEdit: (id: number) => void;
-  onAddAmount: (id: number) => void;
   isMenuOpen: boolean;
   toggleMenu: (id: number) => void;
 };
 
-const GoalItem = ({
-  goal,
-  onView,
-  onEdit,
-  onAddAmount,
-  isMenuOpen,
-  toggleMenu,
-}: GoalItemProps) => {
+const GoalItem = ({ goal, isMenuOpen, toggleMenu }: GoalItemProps) => {
   const [showMenu, setShowMenu] = useState(isMenuOpen);
 
   // Cuando la prop isMenuOpen cambie, gestionamos el estado local para el renderizado del menú.
@@ -58,14 +46,14 @@ const GoalItem = ({
   const remaining = goal.target - goal.current;
   const isCompleted = progress >= 100;
 
-  const getProgressColor = (progressValue) => {
+  const getProgressColor = (progressValue: number) => {
     if (progressValue >= 100) return "bg-green-500";
     if (progressValue >= 75) return "bg-blue-500";
     if (progressValue >= 50) return "bg-yellow-500";
     return "bg-indigo-500";
   };
 
-  const getMotivationalIcon = (progressValue) => {
+  const getMotivationalIcon = (progressValue: number) => {
     if (progressValue >= 100)
       return <Trophy className="h-5 w-5 text-yellow-500" />;
     if (progressValue >= 75) return <Award className="h-5 w-5 text-blue-500" />;
@@ -76,7 +64,7 @@ const GoalItem = ({
     return <Timer className="h-5 w-5 text-gray-500" />;
   };
 
-  const getMotivationalMessage = (progressValue) => {
+  const getMotivationalMessage = (progressValue: number) => {
     if (progressValue >= 100) return "Amazing achievement! 🎉";
     if (progressValue >= 75) return "Almost there! 🚀";
     if (progressValue >= 50) return "Halfway there! 💪";
@@ -84,14 +72,8 @@ const GoalItem = ({
     return "Let's get started! 🎯";
   };
 
-  const handleKeyDownView = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      onView(goal.id);
-    }
-  };
-
   return (
-    <div className="group relative rounded-xl p-5 shadow-md hover:bg-gray-50 hover:shadow-lg">
+    <div className="group relative rounded-2xl p-[--spacing-medium] shadow-md transition-all duration-[--duration-standard] hover:bg-gray-200 hover:shadow-lg  ">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <div
@@ -103,23 +85,12 @@ const GoalItem = ({
 
           <div>
             <div className="mb-1 flex items-center gap-2">
-              <button
-                role="button"
-                tabIndex={0}
+              <Link
+                to={`/goals/${goal.id}`}
                 className="cursor-pointer text-lg font-semibold text-gray-800 transition-all duration-300 hover:text-indigo-600 hover:underline"
-                onClick={() => onView(goal.id)}
-                onKeyDown={handleKeyDownView}
               >
                 {goal.title}
-              </button>
-              <button title="View Details">
-                <Eye
-                  tabIndex={0}
-                  className="h-5 w-5 cursor-pointer text-gray-400 transition-all duration-300 hover:text-indigo-600"
-                  onClick={() => onView(goal.id)}
-                  onKeyDown={handleKeyDownView}
-                />
-              </button>
+              </Link>
             </div>
 
             <div className="flex items-center gap-2">
@@ -166,22 +137,22 @@ const GoalItem = ({
                   </a>
                 </li>
                 <li>
-                  <button
-                    onClick={() => onEdit(goal.id)}
+                  <Link
+                    to={`/goals/${goal.id}/edit`}
                     className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Edit Item
                     <Pencil className="h-4 w-4 text-gray-400" />
-                  </button>
+                  </Link>
                 </li>
                 <li>
-                  <button
-                    onClick={() => onAddAmount(goal.id)}
+                  <Link
+                    to={`/goals/${goal.id}/add-amount`}
                     className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Add Amount
                     <PlusIcon className="h-4 w-4 text-gray-400" />
-                  </button>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -238,68 +209,52 @@ type PlanningGoalsContainerProps = {
 const PlanningGoalsContainer = ({
   planningGoalsData,
 }: PlanningGoalsContainerProps) => {
-  const navigate = useNavigate();
-  const [openMenuId, setOpenMenuId] = useState(null);
-
-  const handleOnView = (goalId: number) => {
-    navigate(`/planning-goals?view=${goalId}`);
-  };
-
-  const handleCreateGoal = () => {
-    navigate(`/planning-goals?create=1`);
-  };
-
-  const handleEditGoal = (goalId: number) => {
-    navigate(`/planning-goals?edit=${goalId}`);
-  };
-
-  const handleAddAmountGoal = (goalId: number) => {
-    navigate(`/planning-goals?addAmount=${goalId}`);
-  };
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
   const toggleMenu = (goalId: number) => {
-    setOpenMenuId((prevId) => (prevId === goalId ? goalId : null));
+    if (openMenuId === goalId) {
+      setOpenMenuId(null);
+    } else {
+      setOpenMenuId(goalId);
+    }
   };
 
   return (
-    <section className="rounded-xl bg-[var(--section-dashboard)] p-4">
-      <div className="mb-6 flex items-center justify-between">
-        <TitleContainer text={"Planning"} />
-        <button
-          className="text-sm font-semibold text-indigo-600 transition-all duration-300 hover:text-indigo-700 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          onClick={() => navigate("/planning-goals")}
-          title="Go to planning page"
+    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+      <div className="flex items-center justify-between">
+        <h2 className="text-4xl font-bold text-[--text-title]">My Goals</h2>
+        <Link
+          to="/planning-goals"
+          className="text-base font-semibold text-[--button-primary] transition-all duration-[--duration-standard] hover:underline"
         >
           View All
-        </button>
+        </Link>
       </div>
 
-      <div className="planning-list custom-scrollbar max-h-[600px] overflow-y-auto px-6">
+      <div className="planning-list custom-scrollbar">
         {planningGoalsData && planningGoalsData.length > 0 ? (
           planningGoalsData.map((goal) => (
             <GoalItem
               key={goal.id}
               goal={goal}
-              onView={() => handleOnView(goal.id)}
-              onEdit={handleEditGoal}
-              onAddAmount={handleAddAmountGoal}
               isMenuOpen={openMenuId === goal.id}
-              toggleMenu={() => toggleMenu(goal.id)}
+              toggleMenu={toggleMenu}
             />
           ))
         ) : (
-          <div className="my-auto flex flex-col items-center justify-center rounded-2xl py-12">
-            <PackageOpen className="h-24 w-24 text-gray-500" />
-            <p className="text-gray-500">
+          <div className="flex flex-col items-center justify-center my-auto text-[--text-primary]">
+            <PackageOpen className="h-24 w-24" />
+            <p className="text-[--text-primary] text-lg font-semibold">
               No goals found for the selected filter.
             </p>
-            <button
-              className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 transition-all duration-300 hover:text-indigo-700"
-              onClick={handleCreateGoal}
+            <Link
+              to="/planning-goals?create=1"
+              className="flex items-center text-base font-medium text-[--button-primary]
+              transition-all duration-[--duration-standard] hover:underline"
             >
               Create your first goal
               <ChevronRight className="h-4 w-4" />
-            </button>
+            </Link>
           </div>
         )}
       </div>

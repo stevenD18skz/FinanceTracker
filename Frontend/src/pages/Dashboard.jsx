@@ -17,7 +17,7 @@ import { mockFetch, weekFinancesData } from "../utils/mockServices.js";
 const ErrorState = ({ onRetry }) => {
   return (
     <div className="grid min-h-screen place-content-center bg-slate-200 p-8 text-center">
-      <div className="flex flex-col items-center gap-4 rounded-xl bg-white p-12 shadow-lg">
+      <div className="flex flex-col items-center gap-[--spacing-big] rounded-xl bg-white p-12 shadow-lg">
         <CircleAlert className="h-16 w-16 text-red-600" />
         <h2 className="text-2xl font-bold text-slate-800">
           ¡Oops! Algo salió mal
@@ -28,7 +28,7 @@ const ErrorState = ({ onRetry }) => {
         </p>
         <button
           onClick={onRetry}
-          className="mt-4 rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="mt-[--spacing-big] rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Volver a intentar
         </button>
@@ -43,28 +43,28 @@ ErrorState.propTypes = {
 
 // Skeleton Loader mejorado
 const SkeletonDashboard = () => (
-  <div className="grid min-h-screen grid-cols-1 gap-4 bg-slate-200 p-8 lg:grid-cols-3">
+  <div className="grid min-h-screen grid-cols-1 gap-[--spacing-big] bg-[--background-page] p-8 lg:grid-cols-3">
     {/* Columna Izquierda */}
-    <div className="space-y-4">
+    <div className="space-y-[--spacing-big]">
       {/* Skeleton para CardsContainer */}
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
       {/* Skeleton para PlanningGoalsContainer */}
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
     </div>
     {/* Columna Derecha */}
-    <div className="col-span-2 space-y-4">
+    <div className="col-span-2 space-y-[--spacing-big]">
       {/* Skeleton para BalanceContainer */}
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+      <div className="grid grid-cols-2 gap-[--spacing-big]">
         {/* Skeleton para TransactionContainer */}
-        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
+        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
         {/* Skeleton para SubscriptionContainer */}
-        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
+        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
       </div>
     </div>
     {/* Skeleton para FinancialChart */}
     <div className="col-span-3">
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
     </div>
   </div>
 );
@@ -138,7 +138,6 @@ export default function Dashboard() {
 
   // 1. Muestra el Skeleton mientras carga
   if (loading) return <SkeletonDashboard />;
-
 
   // 2. Si hay un error, muestra el componente de error
   if (error) return <ErrorState onRetry={fetchAllData} />;
