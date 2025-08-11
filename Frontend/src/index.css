@@ -4,26 +4,38 @@
 
 :root {
   /* Colors background */
-  --background-page: #f5f5f5;
-  --section-dashboard: #97c2dd;
+  --background-page: #DEEFE7;
+  --section-dashboard: #F2F2F2;
 
   /* Textos */
   --text-title: #333333;
-  --text-subtitle: #666666;
+  --text-subtitle: #a59e9e;
   --text-primary: #191919;
-  --text-secondary: #999999;
+  --text-secondary: #dde1df;
 
-  --text-hover: #4f46e5;
+  /* Textos 
+  --text-title: 4xl;
+  --text-subtitle: 2xl;
+  --text-primary: lg;
+  --text-secondary: base;
+  */
 
   /* Buttons */
-  --button-primary: #726bf0;
-  --button-primary-hover: #4338ca;
-  --button-primary-active: #3730a3;
+  --button-primary: #8a86ca;
+  --button-primary-hover: #655eb8;
+  --button-primary-active: #4f45b9;
 
-  --button-secondary: #f5f5f5;
-  --button-secondary-hover: #e5e5e5;
-  --button-secondary-active: #d4d4d4;
+  --button-primary-text: #f5f4ff;
+  --button-primary-text-hover: #f5f4ff;
+  --button-primary-text-active: #eae6ff;
 
+  --button-secondary: #f7faff;
+  --button-secondary-hover: #eef6ff;
+  --button-secondary-active: #e1eeff;
+
+  --button-secondary-text: #0b2545;
+  --button-secondary-text-hover: #063718;
+  --button-secondary-text-active: #04172a;
 
   /* Espaciados */
   --spacing-big: 1rem;

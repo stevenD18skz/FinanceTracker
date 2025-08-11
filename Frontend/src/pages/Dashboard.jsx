@@ -47,24 +47,24 @@ const SkeletonDashboard = () => (
     {/* Columna Izquierda */}
     <div className="space-y-4">
       {/* Skeleton para CardsContainer */}
-      <div className="h-80 w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
       {/* Skeleton para PlanningGoalsContainer */}
-      <div className="h-96 w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
     </div>
     {/* Columna Derecha */}
     <div className="col-span-2 space-y-4">
       {/* Skeleton para BalanceContainer */}
-      <div className="h-80 w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
       <div className="grid grid-cols-2 gap-4">
         {/* Skeleton para TransactionContainer */}
-        <div className="h-96 w-full animate-pulse rounded-xl bg-gray-300" />
+        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
         {/* Skeleton para SubscriptionContainer */}
-        <div className="h-96 w-full animate-pulse rounded-xl bg-gray-300" />
+        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
       </div>
     </div>
     {/* Skeleton para FinancialChart */}
     <div className="col-span-3">
-      <div className="h-96 w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-gray-300" />
     </div>
   </div>
 );
@@ -138,6 +138,7 @@ export default function Dashboard() {
 
   // 1. Muestra el Skeleton mientras carga
   if (loading) return <SkeletonDashboard />;
+
 
   // 2. Si hay un error, muestra el componente de error
   if (error) return <ErrorState onRetry={fetchAllData} />;

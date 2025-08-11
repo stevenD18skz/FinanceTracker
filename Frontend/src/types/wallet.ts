@@ -6,6 +6,7 @@ export interface Money {
 
 export interface Wallet {
   id: number;
+  bank: string;
   type: string;
   balance: Money;
   cardNumber: string;
