@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 
 // Componentes internos
@@ -19,7 +18,7 @@ import {
   getAllTransactions,
   updateTransaction,
   deleteTransaction,
-} from "../../utils/ports/TransactionPort.js";
+} from "../../lib/TransactionPort.js";
 
 // Tipos
 import { Transaction } from "../../types/transaction.ts";
@@ -170,7 +169,7 @@ const TransactionPage = () => {
 
         {selectedTransaction && (
           <TransactionDetails
-            transaction={selectedTransaction}
+            transaction={selectedTransaction as any}
             onClose={() => setSelectedTransaction(null)}
           />
         )}

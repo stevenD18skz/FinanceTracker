@@ -8,14 +8,19 @@ const BalanceContainer = ({ balanceData }) => {
   const total = balanceData.income + balanceData.expense + balanceData.saving;
 
   // Datos para las tarjetas y analytics
+  const iconMap = {
+    income: <Wallet className="h-6 w-6 text-emerald-600" />,
+    expense: <Receipt className="h-6 w-6 text-red-600" />,
+    saving: <PiggyBank className="h-6 w-6 text-blue-600" />,
+  };
   const summaryData = [
     {
       title: "Total Income",
       amount: balanceData.income,
       percentage: total ? (balanceData.income * 100) / total : 0,
-      color: "#10B981", // emerald-500
+      color: "#10B981",
       bgColor: "bg-emerald-100",
-      icon: <Wallet className="h-6 w-6 text-emerald-600" />,
+      icon: iconMap["income"],
       change: formatCurrency(
         balanceData.goalMonthlyIncome - balanceData.income,
       ),
@@ -26,9 +31,9 @@ const BalanceContainer = ({ balanceData }) => {
       title: "Total Expenses",
       amount: balanceData.expense,
       percentage: total ? (balanceData.expense * 100) / total : 0,
-      color: "#EF4444", // red-500
+      color: "#EF4444",
       bgColor: "bg-red-100",
-      icon: <Receipt className="h-6 w-6 text-red-600" />,
+      icon: iconMap["expense"],
       change: formatCurrency(
         balanceData.goalMonthlyExpense - balanceData.expense,
       ),
@@ -39,9 +44,9 @@ const BalanceContainer = ({ balanceData }) => {
       title: "Total Savings",
       amount: balanceData.saving,
       percentage: total ? (balanceData.saving * 100) / total : 0,
-      color: "#3B82F6", // blue-500
+      color: "#3B82F6",
       bgColor: "bg-blue-100",
-      icon: <PiggyBank className="h-6 w-6 text-blue-600" />,
+      icon: iconMap["saving"],
       change: formatCurrency(
         balanceData.goalMonthlySaving - balanceData.saving,
       ),

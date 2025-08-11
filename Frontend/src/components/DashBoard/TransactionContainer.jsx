@@ -67,7 +67,7 @@ const TransactionContainer = ({ transactionData }) => {
     const currentDate = new Date();
     const timeDifference = currentDate - transactionDate;
     const daysDifference = timeDifference / (1000 * 3600 * 24);
-    return daysDifference <= 3;
+    return daysDifference <= 30000;
   });
 
   return (

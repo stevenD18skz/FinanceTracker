@@ -1,4 +1,4 @@
-import { transactionsData } from "../Data";
+import { transactionsData } from "../utils/Data.js";
 
 const getAllTransactions = () => {
   return transactionsData;

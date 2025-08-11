@@ -59,7 +59,7 @@ const TransactionDetails = ({ transaction, onClose }) => {
 
 TransactionDetails.propTypes = {
   transaction: PropTypes.shape({
-    icon: PropTypes.element.isRequired,
+    icon: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     amount: PropTypes.number.isRequired,

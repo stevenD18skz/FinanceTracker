@@ -1,18 +1,19 @@
 import { useEffect, useState, useCallback } from "react";
-
-import PlanningGoalsContainer from "../components/DashBoard/PlanningGoalsContainer";
-import SubscriptionContainer from "../components/DashBoard/SubscriptionContainer";
-import TransactionContainer from "../components/DashBoard/TransactionContainer";
-import CardsContainer from "../components/DashBoard/CardsContainer";
-import BalanceContainer from "../components/DashBoard/BalanceContainer";
-import FinancialChart from "../components/DashBoard/FinancialChart.tsx";
-
-// components/DashBoard/ErrorState.tsx
+import PropTypes from "prop-types";
 import { CircleAlert } from "lucide-react";
 
-// Importa un ícono para hacerlo más visual. Puedes usar react-icons o un SVG.
-import PropTypes from "prop-types";
+// Importacion de componentes
+import CardsContainer from "../components/DashBoard/CardsContainer.tsx";
+import BalanceContainer from "../components/DashBoard/BalanceContainer";
+import PlanningGoalsContainer from "../components/DashBoard/PlanningGoalsContainer.tsx";
+import TransactionContainer from "../components/DashBoard/TransactionContainer";
+import SubscriptionContainer from "../components/DashBoard/SubscriptionContainer";
+import FinancialChart from "../components/DashBoard/FinancialChart.tsx";
 
+// Importacion de datos
+import { mockFetch, weekFinancesData } from "../utils/mockServices.js";
+
+// Manejar error de carga de datos
 const ErrorState = ({ onRetry }) => {
   return (
     <div className="grid min-h-screen place-content-center bg-slate-200 p-8 text-center">
@@ -53,12 +54,12 @@ const SkeletonDashboard = () => (
     {/* Columna Derecha */}
     <div className="col-span-2 space-y-4">
       {/* Skeleton para BalanceContainer */}
-      <div className="h-40 w-full animate-pulse rounded-xl bg-gray-300" />
+      <div className="h-80 w-full animate-pulse rounded-xl bg-gray-300" />
       <div className="grid grid-cols-2 gap-4">
         {/* Skeleton para TransactionContainer */}
-        <div className="h-80 w-full animate-pulse rounded-xl bg-gray-300" />
+        <div className="h-96 w-full animate-pulse rounded-xl bg-gray-300" />
         {/* Skeleton para SubscriptionContainer */}
-        <div className="h-80 w-full animate-pulse rounded-xl bg-gray-300" />
+        <div className="h-96 w-full animate-pulse rounded-xl bg-gray-300" />
       </div>
     </div>
     {/* Skeleton para FinancialChart */}
@@ -73,17 +74,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // Nuevo estado para el error
 
-  // Datos para el FinancialChart (puedes reemplazarlo por datos reales)
-  const weekFinances = {
-    "day-1": { income: 100, expense: 50, saving: 50 },
-    "day-2": { income: 120, expense: 60, saving: 60 },
-    "day-3": { income: 90, expense: 40, saving: 50 },
-    "day-4": { income: 110, expense: 70, saving: 40 },
-    "day-5": { income: 130, expense: 80, saving: 50 },
-    "day-6": { income: 95, expense: 55, saving: 40 },
-    "day-7": { income: 105, expense: 65, saving: 40 },
-  };
-
   // Usamos useCallback para que la función no se recree en cada render
   const fetchAllData = useCallback(async () => {
     // Al reintentar, reseteamos el error y mostramos el loader
@@ -91,12 +81,13 @@ export default function Dashboard() {
     setLoading(true);
 
     try {
+      // Usar mockFetch que automáticamente decide entre datos mock o API real
       const responses = await Promise.all([
-        fetch("http://localhost:3000/api/planning-goals"),
-        fetch("http://localhost:3000/api/subscriptions"),
-        fetch("http://localhost:3000/api/transactions"),
-        fetch("http://localhost:3000/api/wallets"),
-        fetch("http://localhost:3000/api/user"),
+        mockFetch("http://localhost:3000/api/planning-goals"),
+        mockFetch("http://localhost:3000/api/subscriptions"),
+        mockFetch("http://localhost:3000/api/transactions"),
+        mockFetch("http://localhost:3000/api/wallets"),
+        mockFetch("http://localhost:3000/api/user"),
       ]);
 
       // Verificamos si alguna de las respuestas no fue exitosa (status no es 2xx)
@@ -123,6 +114,7 @@ export default function Dashboard() {
         planning: planningResponse,
         transactions: transactionsResponse,
         subscriptions: subscriptionsResponse,
+        weekFinances: weekFinancesData,
       });
     } catch (err) {
       console.error("Error fetching dashboard data:", err);
@@ -150,30 +142,30 @@ export default function Dashboard() {
   // 2. Si hay un error, muestra el componente de error
   if (error) return <ErrorState onRetry={fetchAllData} />;
 
-  // 3. Si todo está bien, muestra el Dashboard
+  // 3. Si no hay error y hay datos, muestra el Dashboard
   // (Añadimos una comprobación por si `data` aún es nulo por alguna razón)
   if (!data) return null;
 
   return (
-    <div className="grid grid-cols-1 gap-4 bg-slate-200 p-8 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-[--spacing-big] bg-[--background-page] p-[--spacing-big] lg:grid-cols-3">
       {/* Columna Izquierda */}
-      <div className="space-y-4">
+      <div className="space-y-[--spacing-big] lg:col-span-1">
         <CardsContainer cardData={data.cards} />
         <PlanningGoalsContainer planningGoalsData={data.planning} />
       </div>
 
       {/* Columna Derecha */}
-      <div className="col-span-2 space-y-4">
+      <div className="space-y-[--spacing-big] lg:col-span-2">
         <BalanceContainer balanceData={data.balance} />
-        <div className="grid grid-cols-2 rounded-xl bg-white">
+        <div className="grid grid-cols-1 gap-[--spacing-big] rounded-xl lg:grid-cols-2">
           <TransactionContainer transactionData={data.transactions} />
           <SubscriptionContainer subscriptionData={data.subscriptions} />
         </div>
       </div>
 
       {/* Sección de FinancialChart */}
-      <div className="col-span-3">
-        <FinancialChart data={weekFinances} />
+      <div className="col-span-1 lg:col-span-3">
+        <FinancialChart data={data.weekFinances} />
       </div>
     </div>
   );

@@ -1,8 +1,6 @@
-import { ReactNode } from "react";
-
 export interface Transaction {
   id: number;
-  icon: ReactNode;
+  icon: string;
   name: string;
   date: string;
   amount: number;

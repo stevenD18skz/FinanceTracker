@@ -1,17 +1,13 @@
-export interface Card {
-  id: number;
-  type: string;
-  balance: number;
-  cardNumber: string;
-  expiryDate: string;
+export interface Money {
+  // amount en la unidad menor (enteros): centavos para USD/EUR/GBP, pesos para COP
+  amount: number;
+  currency: string; // ISO 4217, ej "COP", "USD"
 }
 
-export interface Transaction {
+export interface Wallet {
   id: number;
-  icon: JSX.Element;
-  name: string;
-  date: string;
-  amount: number;
-  type: "income" | "expense";
-  cardId: number;
+  type: string;
+  balance: Money;
+  cardNumber: string;
+  expiryDate: string;
 }

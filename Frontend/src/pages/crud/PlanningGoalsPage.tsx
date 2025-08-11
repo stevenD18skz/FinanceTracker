@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { differenceInDays } from "date-fns";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -21,7 +20,9 @@ import {
   getGoals,
   updateGoal,
   deleteGoal,
-} from "../../utils/ports/PlanningGoalPort.tsx";
+} from "../../lib/PlanningGoalPort.tsx";
+
+import { planningGoalsData } from "../../utils/Data.js";
 
 // Tipos
 import { Goal } from "../../types/goal.ts";
@@ -51,14 +52,8 @@ const PlanningGoalsPage = () => {
   // Función para obtener metas
   const fetchGoals = useCallback(async () => {
     setLoading(true);
-    try {
-      const goals = await getGoals();
-      setAllItems(goals);
-    } catch (err) {
-      console.error("Error al obtener las metas:", err);
-    } finally {
-      setLoading(false);
-    }
+    setAllItems(planningGoalsData);
+    setLoading(false);
   }, []);
 
   // useEffect con dependencias adecuadas
@@ -245,7 +240,7 @@ const PlanningGoalsPage = () => {
         }}
       />
 
-      <div className="absolue">
+      <div className="">
         <CreateEditGoalModalProps
           isOpen={showModalCreateUpdate}
           onClose={() => setShowModalCreateUpdate(false)}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Goal } from "../../types/goal";
 import { formatCurrency } from "../../utils/formatters";
-import { TrendingUp, Calendar, DollarSign, Target, Clock } from "lucide-react";
+import {  Calendar, DollarSign, Target, Clock } from "lucide-react";
 
 const GoalStatsSkeleton = () => {
   return (

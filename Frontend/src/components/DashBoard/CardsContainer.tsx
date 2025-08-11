@@ -1,15 +1,24 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
-
-// LIBRARY IMPORTS
-import { PlusCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PlusCircle, ChevronLeft, ChevronRight } from "lucide-react";
 
-// COMPONENTS IMPORT
-import TitleContainer from "../ui/TitleContainer";
+import { userData } from "../../utils/Data";
+import { convertAndFormat } from "../../utils/formatters";
 
-const CreditCardLogo = ({ type }) => {
+//Types
+import { Wallet } from "../../types/wallet";
+
+type CreditCardLogoProps = {
+  typeCard: string;
+};
+
+const CreditCardLogo = ({ typeCard }: CreditCardLogoProps) => {
   const logos = {
+    bancoColombia: (
+      <div className="flex items-center font-bold text-white">
+        <span className="text-2xl tracking-tighter">BANCO</span>
+      </div>
+    ),
     visa: (
       <div className="flex items-center font-bold text-white">
         <span className="text-2xl tracking-tighter">VISA</span>
@@ -30,7 +39,7 @@ const CreditCardLogo = ({ type }) => {
 
   return (
     <div className="text-white">
-      {logos[type] || (
+      {logos[typeCard] || (
         <div className="flex items-center font-bold text-white">
           <span className="text-2xl tracking-tighter">CARD</span>
         </div>
@@ -39,51 +48,54 @@ const CreditCardLogo = ({ type }) => {
   );
 };
 
-CreditCardLogo.propTypes = {
-  type: PropTypes.string.isRequired,
+type CreditCardProps = {
+  card: Wallet;
+  onSelect: (id: number) => void;
 };
 
-const CreditCard = ({
-  id,
-  type,
-  balance,
-  cardNumber,
-  expiryDate,
-  onSelect,
-}) => {
+const CreditCard = ({ card, onSelect }: CreditCardProps) => {
+  const [formattedBalance, setFormattedBalance] = useState("");
+
   const cardStyles = {
+    bancoColombia: "from-yellow-400 via-yellow-500 to-yellow-600",
     visa: "from-blue-400 via-blue-500 to-blue-600",
     mastercard: "from-zinc-600 via-zinc-700 to-zinc-800",
     nubank: "from-purple-400 via-purple-500 to-purple-600",
   };
 
-  const formatCardNumber = (number) => {
+  const formatCardNumber = (number: string) => {
     return number.match(/.{1,4}/g)?.join(" ") || number;
   };
 
-  const formatBalance = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
+  useEffect(() => {
+    const formatBalance = async () => {
+      const formatted = await convertAndFormat(
+        card.balance,
+        userData.currency.code,
+      );
 
-  const handleKeyDown = (e) => {
+      console.log(formatted);
+      setFormattedBalance(formatted);
+    };
+    formatBalance();
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
-      onSelect(id);
+      onSelect(card.id);
     }
   };
 
   return (
-    <div className="perspective group">
+    <div className=" ">
       <div
         className={`w-full max-w-md bg-gradient-to-br ${
-          cardStyles[type] || "bg-gray-500"
-        } relative mx-auto mt-2 overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg`}
+          cardStyles[card.type] || "bg-gray-500"
+        } relative mx-auto mt-2 overflow-hidden rounded-3xl p-6  duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg`}
         role="button"
         tabIndex={0}
-        onClick={() => onSelect(id)}
-        onKeyDown={handleKeyDown}
+        onClick={() => onSelect(card.id)}
+        onKeyDown={(e) => handleKeyDown(e)}
       >
         {/* Animated background patterns */}
         <div className="absolute inset-0 opacity-10">
@@ -100,24 +112,24 @@ const CreditCard = ({
         {/* Content */}
         <div className="relative z-10">
           <div className="mb-12 flex items-start justify-end">
-            <CreditCardLogo type={type} />
+            <CreditCardLogo typeCard={card.type} />
           </div>
 
           <div className="mt-auto space-y-6">
             <p className="font-mono text-xl tracking-wider text-white/90">
-              {formatCardNumber(cardNumber)}
+              {formatCardNumber(card.cardNumber)}
             </p>
 
             <div className="flex items-end justify-between">
               <div>
                 <p className="text-xs text-white/60">Current Balance</p>
                 <p className="text-2xl font-bold text-white">
-                  {formatBalance(balance)}
+                  {formattedBalance}
                 </p>
               </div>
               <div>
                 <p className="text-xs text-white/60">Valid Thru</p>
-                <p className="font-mono text-white">{expiryDate}</p>
+                <p className="font-mono text-white">{card.expiryDate}</p>
               </div>
             </div>
           </div>
@@ -127,16 +139,13 @@ const CreditCard = ({
   );
 };
 
-CreditCard.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  type: PropTypes.string.isRequired,
-  balance: PropTypes.number.isRequired,
-  cardNumber: PropTypes.string.isRequired,
-  expiryDate: PropTypes.string.isRequired,
-  onSelect: PropTypes.func.isRequired,
+type CardsContainerProps = {
+  cardData: Wallet[];
 };
 
-const CardsContainer = ({ cardData }) => {
+export default function CardsContainer({
+  cardData,
+}: Readonly<CardsContainerProps>) {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -152,7 +161,7 @@ const CardsContainer = ({ cardData }) => {
     }
   };
 
-  const handleSelect = (id) => {
+  const handleSelect = (id: number) => {
     navigate(`/wallets/?view=${id}`);
   };
 
@@ -161,32 +170,33 @@ const CardsContainer = ({ cardData }) => {
   };
 
   return (
-    <div className="rounded-xl bg-white p-4 transition-colors duration-300">
-      <div className="mb-2 flex items-center justify-between">
+    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+      <div className="flex items-center justify-between">
         <button
           onClick={prevSlide}
           disabled={currentSlide === 0}
           aria-label="Previous Slide"
-          className="group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30"
+          className="group p-[--spacing-big] disabled:cursor-not-allowed disabled:opacity-30"
         >
-          <ChevronLeft className="h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600" />
+          <ChevronLeft className="h-5 w-5 text-[--button-primary] group-hover:scale-150 group-hover:text-[--button-primary-hover] transition-transform duration-[--duration-standard]" />
         </button>
 
-        <TitleContainer text={"My Cards"} />
+        <h2 className="text-2xl font-bold text-[--text-title]">My Cards</h2>
 
         <button
           onClick={nextSlide}
           disabled={currentSlide === cardData.length}
           aria-label="Next Slide"
-          className="group p-3 transition-all disabled:cursor-not-allowed disabled:opacity-30"
+          className="group p-[--spacing-big] disabled:cursor-not-allowed disabled:opacity-30"
         >
-          <ChevronRight className="h-5 w-5 text-gray-600 transition-transform group-hover:translate-x-1 group-hover:scale-150 group-hover:text-indigo-600" />
+          <ChevronRight className="h-5 w-5 text-[--button-primary] group-hover:scale-150 group-hover:text-[--button-primary-hover] transition-transform duration-[--duration-standard]" />
         </button>
       </div>
 
+      {/* Cards indicators */}
       <div className="relative overflow-hidden">
         <div
-          className="flex transition-all duration-500 ease-out"
+          className="flex transition-transform duration-[--duration-slow]"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {cardData.map((card) => (
@@ -195,7 +205,7 @@ const CardsContainer = ({ cardData }) => {
               className="w-full flex-shrink-0 px-2"
               style={{ minWidth: "100%" }}
             >
-              <CreditCard {...card} onSelect={handleSelect} />
+              <CreditCard card={card} onSelect={handleSelect} />
             </div>
           ))}
 
@@ -205,7 +215,7 @@ const CardsContainer = ({ cardData }) => {
           >
             <button
               onClick={handleCreateGoal}
-              className="group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed border-gray-300 bg-gray-100/50 p-4 transition-all hover:border-gray-400 hover:bg-gray-100"
+              className="group flex h-56 w-full items-center justify-center rounded-3xl border-2 border-dashed border-gray-300 bg-gray-100/50 p-4  hover:border-gray-400 hover:bg-gray-100"
             >
               <div className="flex flex-col items-center text-gray-400 transition-colors group-hover:text-gray-600">
                 <PlusCircle className="mb-2 h-8 w-8 transition-transform group-hover:scale-110" />
@@ -214,36 +224,32 @@ const CardsContainer = ({ cardData }) => {
             </button>
           </div>
         </div>
-
-        {/* Progress indicators */}
-        <div className="mt-4 flex justify-center space-x-2">
-          {[...Array(cardData.length + 1)].map((_, index) => (
-            <button
-              key={index}
-              aria-label={`Slide ${index + 1}`}
-              className={`h-1.5 rounded-full transition-all ${
-                currentSlide === index ? "w-4 bg-gray-800" : "w-1.5 bg-gray-300"
-              }`}
-              onClick={() => setCurrentSlide(index)}
-            />
-          ))}
-        </div>
-        
       </div>
-    </div>
+
+      {/* Progress indicators */}
+      <div className=" flex justify-center items-center gap-[--spacing-medium]">
+        {cardData.map((card, index) => (
+          <button
+            key={card.id}
+            aria-label={`Slide ${index + 1}`}
+            className={`h-2 rounded-full  ${
+              currentSlide === index
+                ? "w-4 bg-[--button-primary-active] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
+                : "w-2 bg-[--button-primary] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
+            }`}
+            onClick={() => setCurrentSlide(index)}
+          />
+        ))}
+        <button
+          aria-label={`Slide ${cardData.length + 1}`}
+          className={`h-2 rounded-full  ${
+            currentSlide === cardData.length
+              ? "w-4 bg-[--button-primary-active] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
+              : "w-2 bg-[--button-primary] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
+          }`}
+          onClick={() => setCurrentSlide(cardData.length)}
+        />
+      </div>
+    </section>
   );
-};
-
-CardsContainer.propTypes = {
-  cardData: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      type: PropTypes.string.isRequired,
-      balance: PropTypes.number.isRequired,
-      cardNumber: PropTypes.string.isRequired,
-      expiryDate: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-};
-
-export default CardsContainer;
+}

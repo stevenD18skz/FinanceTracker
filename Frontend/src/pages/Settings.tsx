@@ -22,7 +22,7 @@ import {
   Info,
 } from "lucide-react";
 
-const Settings = () => {
+export default function Settings() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -271,6 +271,4 @@ const Settings = () => {
       </div>
     </div>
   );
-};
-
-export default Settings;
+}

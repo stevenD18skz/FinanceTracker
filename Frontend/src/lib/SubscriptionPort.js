@@ -1,4 +1,4 @@
-import { subscriptionsData } from "../Data";
+import { subscriptionsData } from "../utils/Data";
 
 export function createSubscription(newSubscription) {
   subscriptionsData.push(newSubscription);

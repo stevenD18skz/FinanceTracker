@@ -12,10 +12,10 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Dashboard", to: "/dashboard" },
+    { name: "Cards", to: "/wallets" },
     { name: "Transactions", to: "/transactions" },
     { name: "Subscriptions", to: "/subscriptions" },
     { name: "planning-goals", to: "/planning-goals" },
-    { name: "Wallets", to: "/wallets" },
   ];
 
   const handleProfileClick = () => {

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import { cardData, transactionsData } from "../../utils/Data";
-import { Card, Transaction } from "../../types/wallet";
+// Importacion utils
+import { cardData, transactionsData } from "../../utils/Data.js";
 
 // Importacion de Iconos
 import {
-  CreditCard,
   Plus,
   ChevronDown,
   ChevronUp,
@@ -15,14 +14,6 @@ import {
   EyeOff,
   ArrowUpRight,
   ArrowDownRight,
-  Music2,
-  ArrowRightLeft,
-  ShoppingBag,
-  Apple,
-  Coffee,
-  Gamepad,
-  Croissant,
-  Projector,
 } from "lucide-react";
 
 const WalletPage = () => {

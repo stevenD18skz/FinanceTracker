@@ -1,4 +1,4 @@
-import { Currency, currencies } from "./currency";
+import { Currency } from "./currency";
 
 export type SubscriptionCategory =
   | "streaming"

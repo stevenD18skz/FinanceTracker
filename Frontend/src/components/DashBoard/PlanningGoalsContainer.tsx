@@ -1,9 +1,5 @@
-import  { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import "./PlanningGoalsContainer.css";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-// LIBRARY IMPORTS
 import {
   ArrowUpRight,
   TrendingUp,
@@ -20,22 +16,31 @@ import {
   Eye,
 } from "lucide-react";
 
+// Types
+import { Goal } from "../../types/goal";
+
 // COMPONENT IMPORT
 import TitleContainer from "../ui/TitleContainer";
 
+import "./PlanningGoalsContainer.css";
+
+type GoalItemProps = {
+  goal: Goal;
+  onView: (id: number) => void;
+  onEdit: (id: number) => void;
+  onAddAmount: (id: number) => void;
+  isMenuOpen: boolean;
+  toggleMenu: (id: number) => void;
+};
+
 const GoalItem = ({
-  id,
-  title,
-  current,
-  target,
-  dueDate,
-  linkGoal,
+  goal,
   onView,
   onEdit,
   onAddAmount,
   isMenuOpen,
   toggleMenu,
-}) => {
+}: GoalItemProps) => {
   const [showMenu, setShowMenu] = useState(isMenuOpen);
 
   // Cuando la prop isMenuOpen cambie, gestionamos el estado local para el renderizado del menú.
@@ -49,8 +54,8 @@ const GoalItem = ({
     }
   }, [isMenuOpen]);
 
-  const progress = (current / target) * 100;
-  const remaining = target - current;
+  const progress = (goal.current / goal.target) * 100;
+  const remaining = goal.target - goal.current;
   const isCompleted = progress >= 100;
 
   const getProgressColor = (progressValue) => {
@@ -81,7 +86,7 @@ const GoalItem = ({
 
   const handleKeyDownView = (e) => {
     if (e.key === "Enter" || e.key === " ") {
-      onView();
+      onView(goal.id);
     }
   };
 
@@ -98,34 +103,34 @@ const GoalItem = ({
 
           <div>
             <div className="mb-1 flex items-center gap-2">
-              <h3
+              <button
                 role="button"
                 tabIndex={0}
                 className="cursor-pointer text-lg font-semibold text-gray-800 transition-all duration-300 hover:text-indigo-600 hover:underline"
-                onClick={onView}
+                onClick={() => onView(goal.id)}
                 onKeyDown={handleKeyDownView}
               >
-                {title}
-              </h3>
-              <Eye
-                role="button"
-                tabIndex={0}
-                className="h-5 w-5 cursor-pointer text-gray-400 transition-all duration-300 hover:text-indigo-600"
-                onClick={onView}
-                onKeyDown={handleKeyDownView}
-                title="View Details"
-              />
+                {goal.title}
+              </button>
+              <button title="View Details">
+                <Eye
+                  tabIndex={0}
+                  className="h-5 w-5 cursor-pointer text-gray-400 transition-all duration-300 hover:text-indigo-600"
+                  onClick={() => onView(goal.id)}
+                  onKeyDown={handleKeyDownView}
+                />
+              </button>
             </div>
 
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-gray-400" />
               <p className="text-sm text-gray-500">
                 <span className="font-medium text-gray-700">
-                  ${current.toLocaleString()}
+                  ${goal.current.toLocaleString()}
                 </span>
                 {" / "}
                 <span className="text-gray-500">
-                  ${target.toLocaleString()}
+                  ${goal.target.toLocaleString()}
                 </span>
               </p>
             </div>
@@ -136,7 +141,7 @@ const GoalItem = ({
         <div className="relative">
           <button
             className="rounded-lg p-2 transition-colors hover:bg-gray-100 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            onClick={toggleMenu}
+            onClick={() => toggleMenu(goal.id)}
             aria-label="Open menu"
           >
             <MoreHorizontal className="h-5 w-5 text-gray-400 transition-all duration-300 hover:text-indigo-600" />
@@ -151,7 +156,7 @@ const GoalItem = ({
               <ul className="py-1">
                 <li>
                   <a
-                    href={linkGoal}
+                    href={goal.linkGoal}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -162,7 +167,7 @@ const GoalItem = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onEdit(id.toString())}
+                    onClick={() => onEdit(goal.id)}
                     className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Edit Item
@@ -171,7 +176,7 @@ const GoalItem = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onAddAmount(id.toString())}
+                    onClick={() => onAddAmount(goal.id)}
                     className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Add Amount
@@ -192,7 +197,9 @@ const GoalItem = ({
               {progress.toFixed(1)}% Complete
             </span>
           </div>
-          {dueDate && <span className="text-gray-500">Due {dueDate}</span>}
+          {goal.dueDate && (
+            <span className="text-gray-500">Due {goal.dueDate}</span>
+          )}
         </div>
         <div className="h-2.5 overflow-hidden rounded-full bg-gray-100">
           <div
@@ -224,25 +231,17 @@ const GoalItem = ({
   );
 };
 
-GoalItem.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  title: PropTypes.string.isRequired,
-  current: PropTypes.number.isRequired,
-  target: PropTypes.number.isRequired,
-  dueDate: PropTypes.string,
-  linkGoal: PropTypes.string,
-  onView: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onAddAmount: PropTypes.func.isRequired,
-  isMenuOpen: PropTypes.bool.isRequired,
-  toggleMenu: PropTypes.func.isRequired,
+type PlanningGoalsContainerProps = {
+  planningGoalsData: Goal[];
 };
 
-const PlanningGoalsContainer = ({ planningGoalsData }) => {
+const PlanningGoalsContainer = ({
+  planningGoalsData,
+}: PlanningGoalsContainerProps) => {
   const navigate = useNavigate();
   const [openMenuId, setOpenMenuId] = useState(null);
 
-  const handleOnView = (goalId) => {
+  const handleOnView = (goalId: number) => {
     navigate(`/planning-goals?view=${goalId}`);
   };
 
@@ -250,20 +249,20 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
     navigate(`/planning-goals?create=1`);
   };
 
-  const handleEditGoal = (goalId) => {
+  const handleEditGoal = (goalId: number) => {
     navigate(`/planning-goals?edit=${goalId}`);
   };
 
-  const handleAddAmountGoal = (goalId) => {
+  const handleAddAmountGoal = (goalId: number) => {
     navigate(`/planning-goals?addAmount=${goalId}`);
   };
 
-  const toggleMenu = (goalId) => {
-    setOpenMenuId((prevId) => (prevId === goalId ? null : goalId));
+  const toggleMenu = (goalId: number) => {
+    setOpenMenuId((prevId) => (prevId === goalId ? goalId : null));
   };
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-lg">
+    <section className="rounded-xl bg-[var(--section-dashboard)] p-4">
       <div className="mb-6 flex items-center justify-between">
         <TitleContainer text={"Planning"} />
         <button
@@ -280,13 +279,8 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
           planningGoalsData.map((goal) => (
             <GoalItem
               key={goal.id}
-              id={goal.id}
-              title={goal.title}
-              current={goal.current}
-              target={goal.target}
-              linkGoal={goal.linkGoal}
+              goal={goal}
               onView={() => handleOnView(goal.id)}
-              dueDate={goal.dueDate}
               onEdit={handleEditGoal}
               onAddAmount={handleAddAmountGoal}
               isMenuOpen={openMenuId === goal.id}
@@ -309,21 +303,8 @@ const PlanningGoalsContainer = ({ planningGoalsData }) => {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
-};
-
-PlanningGoalsContainer.propTypes = {
-  planningGoalsData: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      title: PropTypes.string.isRequired,
-      current: PropTypes.number.isRequired,
-      target: PropTypes.number.isRequired,
-      dueDate: PropTypes.string,
-      linkGoal: PropTypes.string,
-    }),
-  ).isRequired,
 };
 
 export default PlanningGoalsContainer;
