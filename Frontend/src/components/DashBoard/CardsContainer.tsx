@@ -120,6 +120,7 @@ export default function CardsContainer({
 
   return (
     <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+      
       <div className="flex items-center justify-between">
         <button
           onClick={prevSlide}

@@ -4,14 +4,32 @@
 
 :root {
   /* Colors background */
-  --background-page: #DEEFE7;
-  --section-dashboard: #F2F2F2;
+  --background-page: #b3b3b3;
+  --section-dashboard: #fff;
+
+  --background-card: #eee;
+  --background-card-hover: #fff;
+
+  --background-layout: #1a1f2e;
+
 
   /* Textos */
   --text-title: #333333;
   --text-subtitle: #a59e9e;
   --text-primary: #191919;
-  --text-secondary: #dde1df;
+  --text-secondary: #6b7280;
+
+  --red: #ef4444; /* red-500 */
+  --orange: #f59e0b; /* amber-500 / orange */
+  --yellow: #fbbf24; /* yellow-400 (usarlo con cuidado) */
+  --green: #10b981; /* green-500 */
+  --green-strong: #064a34; /* green-600 (para 100%) */
+
+  --blue: #3b82f6; /* blue-500 */
+  --indigo: #6366f1; /* indigo-500 */
+  --purple: #9333ea; /* purple-500 */
+
+
 
   /* Textos 
   --text-title: 4xl;

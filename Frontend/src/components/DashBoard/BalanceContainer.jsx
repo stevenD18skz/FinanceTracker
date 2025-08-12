@@ -1,25 +1,23 @@
 import { ArrowUpRight, Wallet, Receipt, PiggyBank } from "lucide-react";
-import TitleContainer from "../ui/TitleContainer";
 import { formatCurrency } from "../../utils/formatters";
 import PropTypes from "prop-types";
 
 const BalanceContainer = ({ balanceData }) => {
-  // Suma total para el cálculo de porcentajes
   const total = balanceData.income + balanceData.expense + balanceData.saving;
 
-  // Datos para las tarjetas y analytics
   const iconMap = {
-    income: <Wallet className="h-6 w-6 text-emerald-600" />,
-    expense: <Receipt className="h-6 w-6 text-red-600" />,
-    saving: <PiggyBank className="h-6 w-6 text-blue-600" />,
+    income: <Wallet className="h-6 w-6 text-[--green]" />,
+    expense: <Receipt className="h-6 w-6 text-[--red]" />,
+    saving: <PiggyBank className="h-6 w-6 text-[--blue]" />,
   };
+
   const summaryData = [
     {
       title: "Total Income",
       amount: balanceData.income,
       percentage: total ? (balanceData.income * 100) / total : 0,
-      color: "#10B981",
-      bgColor: "bg-emerald-100",
+      color: "var(--green)",
+      bgColor: "var(--background-card-hover)",
       icon: iconMap["income"],
       change: formatCurrency(
         balanceData.goalMonthlyIncome - balanceData.income,
@@ -31,8 +29,8 @@ const BalanceContainer = ({ balanceData }) => {
       title: "Total Expenses",
       amount: balanceData.expense,
       percentage: total ? (balanceData.expense * 100) / total : 0,
-      color: "#EF4444",
-      bgColor: "bg-red-100",
+      color: "var(--red)",
+      bgColor: "var(--background-card-hover)",
       icon: iconMap["expense"],
       change: formatCurrency(
         balanceData.goalMonthlyExpense - balanceData.expense,
@@ -44,8 +42,8 @@ const BalanceContainer = ({ balanceData }) => {
       title: "Total Savings",
       amount: balanceData.saving,
       percentage: total ? (balanceData.saving * 100) / total : 0,
-      color: "#3B82F6",
-      bgColor: "bg-blue-100",
+      color: "var(--blue)",
+      bgColor: "var(--background-card-hover)",
       icon: iconMap["saving"],
       change: formatCurrency(
         balanceData.goalMonthlySaving - balanceData.saving,
@@ -56,29 +54,48 @@ const BalanceContainer = ({ balanceData }) => {
   ];
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-lg">
-      <TitleContainer text={"Summary Balance"} />
+    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+      <h2 className="text-4xl font-bold text-[--text-title]">
+        Summary Balance
+      </h2>
 
       <div className="grid grid-cols-2">
-        {/* Primer row: Income y Expenses */}
-        {summaryData.slice(0, 2).map((item, index) => (
-          <div key={index} className="border-b-2 border-r-2 p-6">
+        {summaryData.slice(0, 2).map((item) => (
+          <div key={item.title} className="p-[--spacing-big]">
             <div className="mb-4 flex items-start justify-between">
               <div>
-                <p className="mb-1 text-gray-500">{item.title}</p>
-                <h2 className="text-5xl font-semibold tracking-tighter">
+                <p style={{ color: "var(--text-secondary)" }}>{item.title}</p>
+                <h2
+                  style={{
+                    fontSize: "2.5rem",
+                    fontWeight: "600",
+                    color: "var(--text-primary)",
+                  }}
+                >
                   {formatCurrency(item.amount)}
                 </h2>
               </div>
-              <div className={`rounded-xl ${item.bgColor} p-3`}>
+              <div
+                className="rounded-xl p-3"
+                style={{
+                  backgroundColor: item.bgColor,
+                  transition: `background-color var(--duration-standard) ease-in-out`,
+                }}
+              >
                 {item.icon}
               </div>
             </div>
 
             <div>
-              <div className="h-2 w-full rounded-full bg-gray-200">
+              <div
+                className="w-full rounded-full"
+                style={{
+                  backgroundColor: "var(--background-card)",
+                  height: "0.5rem",
+                }}
+              >
                 <div
-                  className="h-2 rounded-full"
+                  className="h-full rounded-full"
                   style={{
                     backgroundColor: item.color,
                     width: `${item.percentage.toFixed(2)}%`,
@@ -86,37 +103,67 @@ const BalanceContainer = ({ balanceData }) => {
                 ></div>
               </div>
               <div className="mt-2 flex items-center justify-between">
-                <div className="flex items-center text-gray-700">
+                <div
+                  className="flex items-center"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   <ArrowUpRight className="mr-1 h-4 w-4" />
                   <span className="font-medium">{item.change}</span>
-                  <span className="ml-1 text-sm text-gray-500">
+                  <span
+                    style={{
+                      marginLeft: "0.25rem",
+                      fontSize: "0.875rem",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
                     {item.changeText}
                   </span>
                 </div>
-                <span className="text-gray-500">{item.extraInfo}</span>
+                <span style={{ color: "var(--text-secondary)" }}>
+                  {item.extraInfo}
+                </span>
               </div>
             </div>
           </div>
         ))}
 
-        {/* Segunda row, primera columna: Savings */}
-        <div className="border-r-2 p-6">
+        <div className="p-[--spacing-big]">
           <div className="mb-4 flex items-start justify-between">
             <div>
-              <p className="mb-1 text-gray-500">{summaryData[2].title}</p>
-              <h2 className="text-5xl font-semibold tracking-tighter">
+              <p style={{ color: "var(--text-secondary)" }}>
+                {summaryData[2].title}
+              </p>
+              <h2
+                style={{
+                  fontSize: "2.5rem",
+                  fontWeight: "600",
+                  color: "var(--text-primary)",
+                }}
+              >
                 {formatCurrency(summaryData[2].amount)}
               </h2>
             </div>
-            <div className={`rounded-xl ${summaryData[2].bgColor} p-3`}>
+            <div
+              className="rounded-xl p-3"
+              style={{
+                backgroundColor: summaryData[2].bgColor,
+                transition: `background-color var(--duration-standard) ease-in-out`,
+              }}
+            >
               {summaryData[2].icon}
             </div>
           </div>
 
           <div>
-            <div className="h-2 w-full rounded-full bg-gray-200">
+            <div
+              className="w-full rounded-full"
+              style={{
+                backgroundColor: "var(--background-card)",
+                height: "0.5rem",
+              }}
+            >
               <div
-                className="h-2 rounded-full"
+                className="h-full rounded-full"
                 style={{
                   backgroundColor: summaryData[2].color,
                   width: `${summaryData[2].percentage.toFixed(2)}%`,
@@ -124,32 +171,59 @@ const BalanceContainer = ({ balanceData }) => {
               ></div>
             </div>
             <div className="mt-2 flex items-center justify-between">
-              <div className="flex items-center text-gray-700">
+              <div
+                className="flex items-center"
+                style={{ color: "var(--text-primary)" }}
+              >
                 <ArrowUpRight className="mr-1 h-4 w-4" />
                 <span className="font-medium">{summaryData[2].change}</span>
-                <span className="ml-1 text-sm text-gray-500">
+                <span
+                  style={{
+                    marginLeft: "0.25rem",
+                    fontSize: "0.875rem",
+                    color: "var(--text-secondary)",
+                  }}
+                >
                   {summaryData[2].changeText}
                 </span>
               </div>
-              <span className="text-gray-500">{summaryData[2].extraInfo}</span>
+              <span style={{ color: "var(--text-secondary)" }}>
+                {summaryData[2].extraInfo}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Expenses Analytics Card: ocupa las dos columnas de la segunda row */}
-        <div className="bg-white p-6">
+        <div
+          style={{
+            backgroundColor: "var(--section-dashboard)",
+            padding: "var(--spacing-big)",
+          }}
+        >
           <div className="mb-6 flex items-center justify-between">
-            <p className="text-gray-500">Expenses Analytics</p>
-            <div className="mb-4 text-xl font-bold">
+            <p style={{ color: "var(--text-secondary)" }}>Expenses Analytics</p>
+            <div
+              style={{
+                fontSize: "1.25rem",
+                fontWeight: "bold",
+                color: "var(--text-primary)",
+              }}
+            >
               {formatCurrency(total)}
             </div>
           </div>
 
           <div className="mb-4">
-            <div className="relative h-2 w-full rounded-full bg-gray-200">
+            <div
+              className="relative w-full rounded-full"
+              style={{
+                backgroundColor: "var(--background-card)",
+                height: "0.5rem",
+              }}
+            >
               {summaryData.map((item, index) => (
                 <div
-                  key={index}
+                  key={item.title}
                   className="absolute top-0 h-full rounded-full"
                   style={{
                     backgroundColor: item.color,
@@ -164,18 +238,30 @@ const BalanceContainer = ({ balanceData }) => {
           </div>
 
           <div className="flex justify-between">
-            {summaryData.map((item, index) => (
-              <div key={index}>
+            {summaryData.map((item) => (
+              <div key={item.title}>
                 <div className="flex items-center">
                   <div
                     className="h-3 w-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   ></div>
-                  <span className="ml-2 text-sm text-gray-600">
+                  <span
+                    style={{
+                      marginLeft: "0.5rem",
+                      fontSize: "0.875rem",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
                     {item.title}
                   </span>
                 </div>
-                <span className="text-sm font-semibold text-gray-800">
+                <span
+                  style={{
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                    color: "var(--text-primary)",
+                  }}
+                >
                   {formatCurrency(item.amount)}
                 </span>
               </div>
@@ -183,7 +269,7 @@ const BalanceContainer = ({ balanceData }) => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

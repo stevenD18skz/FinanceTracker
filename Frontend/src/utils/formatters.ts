@@ -94,7 +94,7 @@ export async function convertAndFormat(
     USD: 2,
     EUR: 2,
     GBP: 2,
-    COP: 2, // normalmente se usa 2, aunque en práctica COP no suele mostrar centavos
+    COP: 0, // normalmente se usa 2, aunque en práctica COP no suele mostrar centavos
   };
 
   const fractionDigits = fractionDigitsMap[sourceCurrency] ?? 2;

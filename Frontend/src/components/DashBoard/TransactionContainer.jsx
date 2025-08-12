@@ -3,11 +3,6 @@ import "./TransactionContainer.css";
 import { Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// LIBRARY IMPORTS
-
-// COMPONENTS IMPORT
-import TitleContainer from "../ui/TitleContainer";
-
 // UTILS IMPORT
 import { formatCurrency } from "../../utils/formatters";
 
@@ -61,7 +56,6 @@ TransactionItem.propTypes = {
 };
 
 const TransactionContainer = ({ transactionData }) => {
-
   const filteredTransactions = transactionData.filter((transaction) => {
     const transactionDate = new Date(transaction.date);
     const currentDate = new Date();
@@ -71,10 +65,10 @@ const TransactionContainer = ({ transactionData }) => {
   });
 
   return (
-    <div className="rounded-xl bg-white p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <TitleContainer text={"Recent Transactions"} />
-      </div>
+    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+      <h2 className="text-4xl font-bold text-[--text-title]">
+        Recent Transactions
+      </h2>
 
       <div
         className={`transaction-list ${
@@ -85,7 +79,7 @@ const TransactionContainer = ({ transactionData }) => {
           <TransactionItem key={transaction.id} transaction={transaction} />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -4,6 +4,6 @@ export interface Transaction {
   name: string;
   date: string;
   amount: number;
-  type: string; // "income" | "expense";
+  type: string;
   cardId: number;
 }

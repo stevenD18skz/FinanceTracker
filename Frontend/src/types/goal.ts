@@ -1,4 +1,7 @@
 // Definición de la interfaz Goal
+
+import { Money } from "./wallet";
+
 export interface Milestone {
   title: string;
   completed: boolean;
@@ -7,10 +10,10 @@ export interface Milestone {
 export interface Goal {
   id: number;
   title: string;
-  current: number;
-  target: number;
-  status: string; // "active" | "inactive"; // Definiendo posibles estados
-  priority: string; //"low" | "medium" | "high"; // Definiendo niveles de prioridad
+  current: Money;
+  target: Money;
+  status: string;
+  priority: string;
   createdAt: string; // Formato ISO 8601
   updatedAt: string; // Formato ISO 8601
   dueDate: string; // Fecha límite como string, podría usarse un objeto Date si prefieres

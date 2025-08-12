@@ -36,7 +36,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="top-0 z-50 w-full bg-[#1a1f2e] text-white">
+    <nav className="top-0 z-50 w-full bg-[--background-layout] text-white">
       {/* Main navbar container */}
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">

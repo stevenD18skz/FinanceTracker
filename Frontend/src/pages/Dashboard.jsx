@@ -45,14 +45,14 @@ ErrorState.propTypes = {
 const SkeletonDashboard = () => (
   <div className="grid min-h-screen grid-cols-1 gap-[--spacing-big] bg-[--background-page] p-8 lg:grid-cols-3">
     {/* Columna Izquierda */}
-    <div className="space-y-[--spacing-big]">
+    <div className="space-y-[--spacing-big] lg:col-span-1">
       {/* Skeleton para CardsContainer */}
       <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
       {/* Skeleton para PlanningGoalsContainer */}
       <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
     </div>
     {/* Columna Derecha */}
-    <div className="col-span-2 space-y-[--spacing-big]">
+      <div className="space-y-[--spacing-big] lg:col-span-2">
       {/* Skeleton para BalanceContainer */}
       <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
       <div className="grid grid-cols-2 gap-[--spacing-big]">

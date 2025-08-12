@@ -416,8 +416,14 @@ const planningGoalsData = [
   {
     id: 1,
     title: "Buy a car",
-    current: 25000000,
-    target: 47000000,
+    current: {
+      amount: 25000000,
+      currency: "COP",
+    },
+    target: {
+      amount: 47000000,
+      currency: "COP",
+    },
     status: "active",
     priority: "high",
     createdAt: "2024-03-10T10:00:00Z",
@@ -425,6 +431,7 @@ const planningGoalsData = [
     dueDate: "Dec 2025",
     description: "Saving to buy a new car for personal use.",
     linkGoal: "https://www.ford.com.co/performance/mustang/",
+    icon: "car",
     milestones: [
       { title: "Research car models", completed: true },
       { title: "Save 50% of target amount", completed: false },
@@ -434,8 +441,14 @@ const planningGoalsData = [
   {
     id: 2,
     title: "Motorola Edge 50 Fusion",
-    current: 15000000,
-    target: 50000000,
+    current: {
+      amount: 15000000,
+      currency: "COP",
+    },
+    target: {
+      amount: 50000000,
+      currency: "COP",
+    },
     status: "active",
     priority: "medium",
     createdAt: "2024-03-10T10:00:00Z",
@@ -444,6 +457,7 @@ const planningGoalsData = [
     description: "Saving to purchase the latest Motorola smartphone.",
     linkGoal:
       "https://www.ktronix.com/celular-motorola-edge-50-fusion-256gb-verde/p/840023261879",
+    icon: "phone",
     milestones: [
       { title: "Research phone models", completed: true },
       { title: "Save 30% of target amount", completed: false },
@@ -453,8 +467,14 @@ const planningGoalsData = [
   {
     id: 3,
     title: "Buy LED lights",
-    current: 1500000,
-    target: 1500000,
+    current: {
+      amount: 1500000,
+      currency: "COP",
+    },
+    target: {
+      amount: 1500000,
+      currency: "COP",
+    },
     status: "completed",
     priority: "medium",
     createdAt: "2025-01-27T10:00:00Z",
@@ -462,6 +482,8 @@ const planningGoalsData = [
     dueDate: "Jun 2025",
     description: "Saving to purchase LED lights for home decoration.",
     linkGoal: "https://www.philips.com/c-m-li/led-lights",
+    icon: "light",
+
     milestones: [
       { title: "Measure the areas for installation", completed: true },
       { title: "Save 100% of target amount", completed: true },
@@ -471,8 +493,14 @@ const planningGoalsData = [
   {
     id: 4,
     title: "MousePad Logitech G240",
-    current: 0,
-    target: 56000,
+    current: {
+      amount: 2000,
+      currency: "COP",
+    },
+    target: {
+      amount: 56000,
+      currency: "COP",
+    },
     status: "active",
     priority: "low",
     createdAt: "2025-01-27T10:00:00Z",
@@ -481,6 +509,7 @@ const planningGoalsData = [
     description: "Saving to purchase a gaming mousepad for better performance.",
     linkGoal:
       "https://www.apcomputadores.com/producto/pad-mouse-logitech-g240/",
+    icon: "setup",
     milestones: [
       { title: "Research gaming mousepads", completed: true },
       { title: "Save 50% of target amount", completed: false },
@@ -490,8 +519,14 @@ const planningGoalsData = [
   {
     id: 5,
     title: "Vacation to Europe",
-    current: 8500000,
-    target: 15000000,
+    current: {
+      amount: 12000000,
+      currency: "COP",
+    },
+    target: {
+      amount: 15000000,
+      currency: "COP",
+    },
     status: "active",
     priority: "high",
     createdAt: "2024-01-15T10:00:00Z",
@@ -499,6 +534,7 @@ const planningGoalsData = [
     dueDate: "Jul 2025",
     description: "Saving for a 2-week vacation trip to Europe.",
     linkGoal: "https://www.booking.com/",
+    icon: "plane",
     milestones: [
       { title: "Research destinations", completed: true },
       { title: "Save 50% of target amount", completed: true },
@@ -507,6 +543,8 @@ const planningGoalsData = [
     ],
   },
 ];
+
+
 
 const cardData = [
   {
