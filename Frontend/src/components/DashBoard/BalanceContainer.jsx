@@ -1,57 +1,129 @@
 import { ArrowUpRight, Wallet, Receipt, PiggyBank } from "lucide-react";
-import { formatCurrency } from "../../utils/formatters";
+import { convertAndFormat } from "../../utils/formatters";
 import PropTypes from "prop-types";
+import { useCurrency } from "../../context/CurrencyContext";
+import { useState, useEffect } from "react";
 
 const BalanceContainer = ({ balanceData }) => {
-  const total = balanceData.income + balanceData.expense + balanceData.saving;
+  const { selectedCurrency } = useCurrency(); // 👈 Usa el contexto para obtener la moneda
+  const [summaryData, setSummaryData] = useState(null);
 
-  const iconMap = {
-    income: <Wallet className="h-6 w-6 text-[--green]" />,
-    expense: <Receipt className="h-6 w-6 text-[--red]" />,
-    saving: <PiggyBank className="h-6 w-6 text-[--blue]" />,
-  };
+  const [totalFormatted, setTotalFormatted] = useState(null);
 
-  const summaryData = [
-    {
-      title: "Total Income",
-      amount: balanceData.income,
-      percentage: total ? (balanceData.income * 100) / total : 0,
-      color: "var(--green)",
-      bgColor: "var(--background-card-hover)",
-      icon: iconMap["income"],
-      change: formatCurrency(
-        balanceData.goalMonthlyIncome - balanceData.income,
-      ),
-      changeText: "to complete the objective",
-      extraInfo: `gain from ${formatCurrency(balanceData.goalMonthlyIncome)}`,
-    },
-    {
-      title: "Total Expenses",
-      amount: balanceData.expense,
-      percentage: total ? (balanceData.expense * 100) / total : 0,
-      color: "var(--red)",
-      bgColor: "var(--background-card-hover)",
-      icon: iconMap["expense"],
-      change: formatCurrency(
-        balanceData.goalMonthlyExpense - balanceData.expense,
-      ),
-      changeText: "to complete the objective",
-      extraInfo: `used from ${formatCurrency(balanceData.goalMonthlyExpense)}`,
-    },
-    {
-      title: "Total Savings",
-      amount: balanceData.saving,
-      percentage: total ? (balanceData.saving * 100) / total : 0,
-      color: "var(--blue)",
-      bgColor: "var(--background-card-hover)",
-      icon: iconMap["saving"],
-      change: formatCurrency(
-        balanceData.goalMonthlySaving - balanceData.saving,
-      ),
-      changeText: "to complete the objective",
-      extraInfo: `saving from ${formatCurrency(balanceData.goalMonthlySaving)}`,
-    },
-  ];
+  useEffect(() => {
+    const formatData = async () => {
+      const total =
+        balanceData.income + balanceData.expense + balanceData.saving;
+
+      const iconMap = {
+        income: <Wallet className="h-6 w-6 text-[--green]" />,
+        expense: <Receipt className="h-6 w-6 text-[--red]" />,
+        saving: <PiggyBank className="h-6 w-6 text-[--blue]" />,
+      };
+
+      const newSummaryData = await Promise.all(
+        [
+          {
+            key: "income",
+            title: "Total Income",
+            rawAmount: balanceData.income,
+            goal: balanceData.goalMonthlyIncome,
+            color: "var(--green)",
+            icon: iconMap["income"],
+          },
+          {
+            key: "expense",
+            title: "Total Expenses",
+            rawAmount: balanceData.expense,
+            goal: balanceData.goalMonthlyExpense,
+            color: "var(--red)",
+            icon: iconMap["expense"],
+          },
+          {
+            key: "saving",
+            title: "Total Savings",
+            rawAmount: balanceData.saving,
+            goal: balanceData.goalMonthlySaving,
+            color: "var(--blue)",
+            icon: iconMap["saving"],
+          },
+        ].map(async (item) => {
+          const formattedAmount = await convertAndFormat(
+            { amount: item.rawAmount, currency: "COP" },
+            selectedCurrency.code,
+          );
+          const formattedChange = await convertAndFormat(
+            {
+              amount: item.goal - item.rawAmount,
+              currency: "COP",
+            },
+            selectedCurrency.code,
+          );
+          const formattedGoal = await convertAndFormat(
+            { amount: item.goal, currency: "COP" },
+            selectedCurrency.code,
+          );
+
+          return {
+            title: item.title,
+            amount: formattedAmount,
+            percentage: total ? (item.rawAmount * 100) / total : 0,
+            color: item.color,
+            bgColor: "var(--background-card-hover)",
+            icon: item.icon,
+            change: formattedChange,
+            changeText: "to complete the objective",
+            extraInfo: `goal: ${formattedGoal}`,
+          };
+        }),
+      );
+
+      setSummaryData(newSummaryData);
+
+      const calculatedTotal = {
+        amount: balanceData.income + balanceData.expense + balanceData.saving,
+        currency: "COP",
+      };
+
+      const totalFormatted = await convertAndFormat(
+        calculatedTotal,
+        selectedCurrency.code,
+      );
+      setTotalFormatted(totalFormatted);
+    };
+
+    formatData();
+  }, [balanceData, selectedCurrency]);
+
+  if (!summaryData || !totalFormatted) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <svg
+          className="animate-spin h-8 w-8 text-[--blue] mb-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v8z"
+          ></path>
+        </svg>
+        <span className="text-[--text-subtitle] text-lg font-medium">
+          Cargando balance...
+        </span>
+      </div>
+    );
+  }
 
   return (
     <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
@@ -72,7 +144,7 @@ const BalanceContainer = ({ balanceData }) => {
                     color: "var(--text-primary)",
                   }}
                 >
-                  {formatCurrency(item.amount)}
+                  {item.amount}
                 </h2>
               </div>
               <div
@@ -127,6 +199,7 @@ const BalanceContainer = ({ balanceData }) => {
           </div>
         ))}
 
+        {/* Tercer item */}
         <div className="p-[--spacing-big]">
           <div className="mb-4 flex items-start justify-between">
             <div>
@@ -140,7 +213,7 @@ const BalanceContainer = ({ balanceData }) => {
                   color: "var(--text-primary)",
                 }}
               >
-                {formatCurrency(summaryData[2].amount)}
+                {summaryData[2].amount}
               </h2>
             </div>
             <div
@@ -194,6 +267,7 @@ const BalanceContainer = ({ balanceData }) => {
           </div>
         </div>
 
+        {/* Expenses Analytics */}
         <div
           style={{
             backgroundColor: "var(--section-dashboard)",
@@ -209,7 +283,7 @@ const BalanceContainer = ({ balanceData }) => {
                 color: "var(--text-primary)",
               }}
             >
-              {formatCurrency(total)}
+              {totalFormatted}
             </div>
           </div>
 
@@ -262,7 +336,7 @@ const BalanceContainer = ({ balanceData }) => {
                     color: "var(--text-primary)",
                   }}
                 >
-                  {formatCurrency(item.amount)}
+                  {item.amount}
                 </span>
               </div>
             ))}

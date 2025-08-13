@@ -11,8 +11,8 @@ const userData = {
 const balanceData = {
   balance: 3000000,
   income: 10456000,
-  expense: 32000,
-  saving: 80000,
+  expense: 80_00_000,
+  saving: 3_200_000,
   goalMonthlyIncome: 12000000,
   goalMonthlyExpense: 50000,
   goalMonthlySaving: 100000,

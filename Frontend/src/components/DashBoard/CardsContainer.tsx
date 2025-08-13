@@ -9,7 +9,6 @@ import { Wallet } from "../../types/wallet";
 import { convertAndFormat } from "../../utils/formatters";
 
 //Data
-import { userData } from "../../utils/Data";
 import { useCurrency } from "../../context/CurrencyContext.jsx";
 
 type CreditCardProps = {
@@ -21,7 +20,6 @@ const CreditCard = ({ card }: CreditCardProps) => {
   const { selectedCurrency } = useCurrency(); // 👈 Usa el contexto para obtener la moneda
 
   useEffect(() => {
-    console.log("aaaaaaaaaaaaaa");
     const formatBalance = async () => {
       const formatted = await convertAndFormat(
         card.balance,
