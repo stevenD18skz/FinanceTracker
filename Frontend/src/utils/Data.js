@@ -519,7 +519,7 @@ const planningGoalsData = [
   },
   {
     id: 5,
-    title: "Vacation to Europe",
+    title: "Hero Hunk 160r 4V",
     current: {
       amount: 12000000,
       currency: "COP",
@@ -534,7 +534,34 @@ const planningGoalsData = [
     updatedAt: "2024-01-15T10:00:00Z",
     dueDate: "Jul 2025",
     description: "Saving for a 2-week vacation trip to Europe.",
-    linkGoal: "https://www.booking.com/",
+    linkGoal: "https://heromotos.com.co/urbanas/hunk-160r-4v/",
+    icon: "plane",
+    milestones: [
+      { title: "Research destinations", completed: true },
+      { title: "Save 50% of target amount", completed: true },
+      { title: "Book flights", completed: false },
+      { title: "Book accommodations", completed: false },
+    ],
+  },
+  {
+    id: 6,
+    title: "chair",
+    current: {
+      amount: 120_000,
+      currency: "COP",
+    },
+    target: {
+      amount: 800_000,
+      currency: "COP",
+    },
+    status: "active",
+    priority: "high",
+    createdAt: "2024-01-15T10:00:00Z",
+    updatedAt: "2024-01-15T10:00:00Z",
+    dueDate: "Jul 2025",
+    description: "Saving for a 2-week vacation trip to Europe.",
+    linkGoal:
+      "https://www.ikea.com/co/es/p/matchspel-silla-gamer-bomstad-gris-claro-90571528/",
     icon: "plane",
     milestones: [
       { title: "Research destinations", completed: true },
