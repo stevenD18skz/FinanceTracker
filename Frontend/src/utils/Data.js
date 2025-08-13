@@ -1,3 +1,4 @@
+//Data.js
 import { currencies } from "../types/currency";
 
 const userData = {
@@ -543,8 +544,6 @@ const planningGoalsData = [
     ],
   },
 ];
-
-
 
 const cardData = [
   {

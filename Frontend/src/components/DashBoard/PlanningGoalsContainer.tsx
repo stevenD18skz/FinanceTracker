@@ -26,6 +26,7 @@ import { convertAndFormat } from "../../utils/formatters";
 
 // Styles
 import "./PlanningGoalsContainer.css";
+import { useCurrency } from "../../context/CurrencyContext.jsx"; // 👈 Importa el hook
 
 type GoalItemProps = {
   goal: Goal;
@@ -39,29 +40,31 @@ const GoalItem = ({ goal, isMenuOpen, toggleMenu }: GoalItemProps) => {
   const [formattedTarget, setFormattedTarget] = useState("");
   const [formattedRemaining, setFormattedRemaining] = useState("");
 
+  const { selectedCurrency } = useCurrency();
+
   useEffect(() => {
     const formatBalance = async () => {
       const formatted = await convertAndFormat(
         goal.current,
-        userData.currency.code,
+        selectedCurrency.code,
       );
-      setFormattedBalance(formatted);
       const formattedTarget = await convertAndFormat(
         goal.target,
-        userData.currency.code,
+        selectedCurrency.code,
       );
-      setFormattedTarget(formattedTarget);
       const formattedRemaining = await convertAndFormat(
         {
           amount: goal.target.amount - goal.current.amount,
           currency: goal.target.currency,
         },
-        userData.currency.code,
+        selectedCurrency.code,
       );
+      setFormattedTarget(formattedTarget);
+      setFormattedBalance(formatted);
       setFormattedRemaining(formattedRemaining);
     };
     formatBalance();
-  }, []);
+  }, [selectedCurrency]);
 
   // Cuando la prop isMenuOpen cambie, gestionamos el estado local para el renderizado del menú.
   useEffect(() => {

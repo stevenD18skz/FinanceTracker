@@ -10,6 +10,7 @@ import { convertAndFormat } from "../../utils/formatters";
 
 //Data
 import { userData } from "../../utils/Data";
+import { useCurrency } from "../../context/CurrencyContext.jsx";
 
 type CreditCardProps = {
   card: Wallet;
@@ -17,17 +18,19 @@ type CreditCardProps = {
 
 const CreditCard = ({ card }: CreditCardProps) => {
   const [formattedBalance, setFormattedBalance] = useState("");
+  const { selectedCurrency } = useCurrency(); // 👈 Usa el contexto para obtener la moneda
 
   useEffect(() => {
+    console.log("aaaaaaaaaaaaaa");
     const formatBalance = async () => {
       const formatted = await convertAndFormat(
         card.balance,
-        userData.currency.code,
+        selectedCurrency.code,
       );
       setFormattedBalance(formatted);
     };
     formatBalance();
-  }, []);
+  }, [card.balance, selectedCurrency]);
 
   const bankStyles = {
     Bancolombia: "from-yellow-400 via-yellow-500 to-yellow-600",
@@ -120,7 +123,6 @@ export default function CardsContainer({
 
   return (
     <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
-      
       <div className="flex items-center justify-between">
         <button
           onClick={prevSlide}

@@ -16,6 +16,7 @@ import PlanningGoalsPage from "./pages/crud/PlanningGoalsPage.tsx";
 import WalletPage from "./pages/crud/WalletPage.tsx";
 
 //CONTEXT AND HOOKS
+import { CurrencyProvider } from "./context/CurrencyContext.jsx";
 
 import PropTypes from "prop-types";
 
@@ -30,52 +31,54 @@ PrivateRoute.propTypes = {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Redirección inicial */}
-        <Route path="/" element={<Navigate to="/Dashboard" />} />
+    <CurrencyProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Redirección inicial */}
+          <Route path="/" element={<Navigate to="/Dashboard" />} />
 
-        {/* Página de inicio de sesión */}
-        <Route path="login" element={<LoginForm />} />
+          {/* Página de inicio de sesión */}
+          <Route path="login" element={<LoginForm />} />
 
-        {/* Rutas protegidas */}
-        <Route path="/" element={<Layout />}>
-          {/* Página principal */}
-          <Route
-            path="Dashboard"
-            element={<PrivateRoute element={<Dashboard />} />}
-          />
+          {/* Rutas protegidas */}
+          <Route path="/" element={<Layout />}>
+            {/* Página principal */}
+            <Route
+              path="Dashboard"
+              element={<PrivateRoute element={<Dashboard />} />}
+            />
 
-          {/* Páginas Individuales*/}
-          <Route
-            path="wallets"
-            element={<PrivateRoute element={<WalletPage />} />}
-          />
-          <Route
-            path="transactions"
-            element={<PrivateRoute element={<TransactionPage />} />}
-          />
-          <Route
-            path="subscriptions"
-            element={<PrivateRoute element={<SubscriptionPage />} />}
-          />
-          <Route
-            path="planning-goals"
-            element={<PrivateRoute element={<PlanningGoalsPage />} />}
-          />
+            {/* Páginas Individuales*/}
+            <Route
+              path="wallets"
+              element={<PrivateRoute element={<WalletPage />} />}
+            />
+            <Route
+              path="transactions"
+              element={<PrivateRoute element={<TransactionPage />} />}
+            />
+            <Route
+              path="subscriptions"
+              element={<PrivateRoute element={<SubscriptionPage />} />}
+            />
+            <Route
+              path="planning-goals"
+              element={<PrivateRoute element={<PlanningGoalsPage />} />}
+            />
 
-          {/* Páginas Usuario*/}
-          <Route
-            path="profile"
-            element={<PrivateRoute element={<Profile />} />}
-          />
-          <Route
-            path="settings"
-            element={<PrivateRoute element={<Settings />} />}
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            {/* Páginas Usuario*/}
+            <Route
+              path="profile"
+              element={<PrivateRoute element={<Profile />} />}
+            />
+            <Route
+              path="settings"
+              element={<PrivateRoute element={<Settings />} />}
+            />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </CurrencyProvider>
   );
 }
 

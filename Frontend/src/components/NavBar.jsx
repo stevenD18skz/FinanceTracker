@@ -1,13 +1,32 @@
 import { useState } from "react";
 import { useEffect } from "react";
 
-import { Search, Bell, Menu, Settings, User, LogOut } from "lucide-react";
+import ReactCountryFlag from "react-country-flag";
+
+import {
+  Search,
+  Bell,
+  Menu,
+  Settings,
+  User,
+  LogOut,
+  ChevronDown,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+
+import { userData } from "../utils/Data";
+import { currencies } from "../types/currency";
+
+import { useCurrency } from "../context/CurrencyContext.jsx"; // 👈 Importa el hook
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isCurrencyOpen, setCurrencyOpen] = useState(false);
+
+  const { selectedCurrency, handleCurrencyChange } = useCurrency(); // 👈 Usa el contexto
+
   const location = useLocation();
 
   const navItems = [
@@ -18,16 +37,31 @@ const Navbar = () => {
     { name: "planning-goals", to: "/planning-goals" },
   ];
 
+  const flags = {
+    USD: "US",
+    EUR: "EU",
+    COP: "CO",
+    GBP: "GB",
+  };
+
   const handleProfileClick = () => {
     setIsProfileOpen(!isProfileOpen);
+  };
+
+  const handleCurrencyClick = () => {
+    setCurrencyOpen(!isCurrencyOpen);
   };
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const closeDropdown = (e) => {
       const target = e.target;
-      if (!target.closest(".profile-menu")) {
+      if (
+        !target.closest(".profile-menu") &&
+        !target.closest(".currency-menu")
+      ) {
         setIsProfileOpen(false);
+        setCurrencyOpen(false);
       }
     };
 
@@ -80,6 +114,47 @@ const Navbar = () => {
               <button className="rounded-lg p-2 hover:bg-[#262b38]">
                 <Bell className="h-5 w-5" />
               </button>
+
+              <div className="currency-menu relative">
+                <button
+                  onClick={handleCurrencyClick}
+                  className="flex items-center space-x-2 rounded-lg p-2 hover:bg-[#262b38]"
+                >
+                  <span className="flex gap-2 items-center justify-center">
+                    {selectedCurrency.code}
+                    <ReactCountryFlag
+                      countryCode={flags[selectedCurrency.code]}
+                      svg
+                      cdnUrl="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/1x1/"
+                      cdnSuffix="svg"
+                      title={flags[selectedCurrency.code]}
+                    />
+                  </span>
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+                {isCurrencyOpen && (
+                  <ul className="absolute right-0 mt-2 w-48 rounded-lg bg-[#262b38] py-2 shadow-xl ring-1 ring-black ring-opacity-5 p-2">
+                    {currencies.map((currency) => (
+                      <li key={currency.code}>
+                        <button
+                          onClick={() => handleCurrencyChange(currency)}
+                          className="flex w-full items-center justify-between px-4 py-2 text-sm text-gray-300 hover:bg-[#1a1f2e] hover:text-white rounded-lg transition-all duration-300"
+                        >
+                          {currency.name}{" "}
+                          <ReactCountryFlag
+                            countryCode={flags[currency.code]}
+                            svg
+                            cdnUrl="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/1x1/"
+                            cdnSuffix="svg"
+                            title={flags[currency.code]}
+                          />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
               {/* Profile dropdown */}
               <div className="profile-menu relative">
                 <button
@@ -87,7 +162,7 @@ const Navbar = () => {
                   className="flex items-center focus:outline-none"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src={userData.photo}
                     alt="Profile"
                     className="h-8 w-8 rounded-full ring-2 ring-transparent transition-all hover:ring-indigo-500"
                   />
