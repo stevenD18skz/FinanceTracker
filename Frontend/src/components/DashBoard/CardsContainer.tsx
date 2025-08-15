@@ -178,7 +178,7 @@ export default function CardsContainer({
             className={`h-2 rounded-full  ${
               currentSlide === index
                 ? "w-4 bg-[--button-primary-active] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
-                : "w-2 bg-[--button-primary] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
+                : "w-2 bg-[--text-subtitle] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
             }`}
             onClick={() => setCurrentSlide(index)}
           />
@@ -188,7 +188,7 @@ export default function CardsContainer({
           className={`h-2 rounded-full  ${
             currentSlide === cardData.length
               ? "w-4 bg-[--button-primary-active] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
-              : "w-2 bg-[--button-primary] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
+              : "w-2 bg-[--text-subtitle] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
           }`}
           onClick={() => setCurrentSlide(cardData.length)}
         />

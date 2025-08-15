@@ -9,13 +9,13 @@ const userData = {
 };
 
 const balanceData = {
-  balance: 3000000,
-  income: 10456000,
-  expense: 80_00_000,
+  balance: 3_000_000,
+  income: 10_456_000,
+  expense: 8_000_000,
   saving: 3_200_000,
-  goalMonthlyIncome: 12000000,
-  goalMonthlyExpense: 50000,
-  goalMonthlySaving: 100000,
+  goalMonthlyIncome: 12_000_000,
+  goalMonthlyExpense: 10_000_000,
+  goalMonthlySaving: 5_000_000,
 };
 
 const transactionsData = [
