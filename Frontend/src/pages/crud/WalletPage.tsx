@@ -81,7 +81,7 @@ const WalletPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1f2e] p-8 text-white">
+    <div className="min-h-screen   p-8 text-white">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold">My Wallets</h1>
@@ -135,7 +135,7 @@ const WalletPage = () => {
                   <div>
                     <span className="text-sm opacity-80">Balance</span>
                     <p className="text-xl font-bold">
-                      {formatCurrency(card.balance)}
+                      {formatCurrency(card.balance.amount)}
                     </p>
                   </div>
                   <div className="text-right">

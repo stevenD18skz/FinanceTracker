@@ -4,13 +4,13 @@
 
 :root {
   /* Colors background */
-  --background-page: #b3b3b3;
+  --background-page: #e2e2e2;
   --section-dashboard: #fff;
 
   --background-card: #eee;
   --background-card-hover: #fff;
 
-  --background-layout: #1a1f2e;
+  --background-layout: #1f1f1f;
 
   /* Textos */
   --text-title: #333333;
