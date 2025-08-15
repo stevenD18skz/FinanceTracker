@@ -4,6 +4,105 @@ import PropTypes from "prop-types";
 import { useCurrency } from "../../context/CurrencyContext";
 import { useState, useEffect } from "react";
 
+const BalanceItem = ({ dataItem }) => {
+  return (
+    <div className="p-[--spacing-big] space-y-[--spacing-medium]">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3
+            style={{
+              fontSize: "1.5rem",
+              color: "var(--text-secondary)",
+            }}
+          >
+            {dataItem.title}
+          </h3>
+          <h4
+            style={{
+              fontSize: "2.5rem",
+              fontWeight: "600",
+              color: "var(--text-primary)",
+            }}
+          >
+            {dataItem.amount}
+          </h4>
+        </div>
+
+        <div
+          className="rounded-xl p-3 "
+          style={{
+            backgroundColor: dataItem.bgColor,
+            transition: `background-color var(--duration-standard) ease-in-out`,
+          }}
+        >
+          {dataItem.icon}
+        </div>
+      </div>
+
+      <div
+        className="w-full rounded-full"
+        style={{
+          backgroundColor: "var(--background-card)",
+          height: "0.5rem",
+        }}
+      >
+        <div
+          className="h-full rounded-full"
+          style={{
+            backgroundColor: dataItem.color,
+            width: `${dataItem.percentageGoal.toFixed(2)}%`,
+          }}
+        ></div>
+      </div>
+
+      <div className="flex items-center justify-between text-md">
+        <div className="flex items-center gap-1">
+          <ArrowUpRight
+            className="h-6 w-6"
+            style={{
+              color: dataItem.color,
+            }}
+          />
+          <span className="font-bold">{dataItem.change}</span>
+          <span
+            style={{
+              color: "var(--text-secondary)",
+            }}
+          >
+            {dataItem.changeText}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <span
+            style={{
+              color: "var(--text-secondary)",
+            }}
+          >
+            goal:
+          </span>
+          <span className="font-bold">{dataItem.goal}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+BalanceItem.propTypes = {
+  dataItem: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    amount: PropTypes.string.isRequired,
+    percentage: PropTypes.number.isRequired,
+    percentageGoal: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired,
+    bgColor: PropTypes.string.isRequired,
+    icon: PropTypes.element.isRequired,
+    change: PropTypes.string.isRequired,
+    changeText: PropTypes.string.isRequired,
+    goal: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 const BalanceContainer = ({ balanceData }) => {
   const { selectedCurrency } = useCurrency(); // 👈 Usa el contexto para obtener la moneda
   const [summaryData, setSummaryData] = useState(null);
@@ -68,6 +167,7 @@ const BalanceContainer = ({ balanceData }) => {
             title: item.title,
             amount: formattedAmount,
             percentage: total ? (item.rawAmount * 100) / total : 0,
+            percentageGoal: item.goal ? (item.rawAmount * 100) / item.goal : 0,
             color: item.color,
             bgColor: "var(--background-card-hover)",
             icon: item.icon,
@@ -100,31 +200,51 @@ const BalanceContainer = ({ balanceData }) => {
 
   if (!summaryData || !totalFormatted) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <svg
-          className="animate-spin h-8 w-8 text-[--blue] mb-4"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v8z"
-          ></path>
-        </svg>
-        <span className="text-[--text-subtitle] text-lg font-medium">
-          Cargando balance...
-        </span>
-      </div>
+      <section className="rounded-xl h-[28.3rem] bg-[--section-dashboard] p-[--spacing-big] space-y-[--spacing-medium] animate-pulse">
+        {/* Título principal */}
+        <div className="h-9 w-1/3 rounded-lg bg-[--background-card]" />
+
+        <div className="grid grid-cols-2 gap-[--spacing-big]">
+          {/* Columna izquierda: 3 BalanceItems */}
+
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={`balance-skeleton-${i}`} className="h-[11rem] w-full">
+              <div className="h-9 w-[30%] mb-1 rounded-lg bg-[--background-card]"></div>
+              <div className="h-9 w-[50%] mb-3 rounded-lg bg-[--background-card]"></div>
+              <div className="h-12 w-full mb-3 rounded-lg bg-[--background-card]"></div>
+              <div className="flex justify-between">
+                <div className="h-4 w-[20%] mb-3 rounded-lg bg-[--background-card]"></div>
+                <div className="h-4 w-[20%] mb-3 rounded-lg bg-[--background-card]"></div>
+              </div>
+            </div>
+          ))}
+
+          {/* Columna derecha: Expenses Analytics */}
+          <div className="space-y-[--spacing-big]">
+            {/* Header: title + número */}
+            <div className="flex justify-between items-center">
+              <div className="h-8 w-28 rounded bg-[--background-card]" />
+              <div className="h-9 w-20 rounded bg-[--background-card]" />
+            </div>
+
+            {/* Barra de progreso */}
+            <div className="h-3 w-full rounded-full bg-[--background-card]" />
+
+            {/* Leyenda con 3 ítems */}
+            <div className="flex justify-between">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex flex-col space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <div className="h-3 w-3 rounded-full bg-[--background-card]" />
+                    <div className="h-4 w-14 rounded bg-[--background-card]" />
+                  </div>
+                  <div className="h-5 w-12 rounded bg-[--background-card]" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 
@@ -135,171 +255,9 @@ const BalanceContainer = ({ balanceData }) => {
       </h2>
 
       <div className="grid grid-cols-2">
-        {summaryData.slice(0, 2).map((item) => (
-          <div
-            key={item.title}
-            className="p-[--spacing-big] space-y-[--spacing-medium]"
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <p
-                  style={{
-                    fontSize: "1.5rem",
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  {item.title}
-                </p>
-                <h2
-                  style={{
-                    fontSize: "2.5rem",
-                    fontWeight: "600",
-                    color: "var(--text-primary)",
-                  }}
-                >
-                  {item.amount}
-                </h2>
-              </div>
-
-              <div
-                className="rounded-xl p-3 "
-                style={{
-                  backgroundColor: item.bgColor,
-                  transition: `background-color var(--duration-standard) ease-in-out`,
-                }}
-              >
-                {item.icon}
-              </div>
-            </div>
-
-            <div
-              className="w-full rounded-full"
-              style={{
-                backgroundColor: "var(--background-card)",
-                height: "0.5rem",
-              }}
-            >
-              <div
-                className="h-full rounded-full"
-                style={{
-                  backgroundColor: item.color,
-                  width: `${item.percentage.toFixed(2)}%`,
-                }}
-              ></div>
-            </div>
-
-            <div className="flex items-center justify-between text-lg">
-              <div className="flex items-center gap-1">
-                <ArrowUpRight
-                  className="h-6 w-6"
-                  style={{
-                    color: item.color,
-                  }}
-                />
-                <span className="font-bold">{item.change}</span>
-                <span
-                  style={{
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  {item.changeText}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <span
-                  style={{
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  goal:
-                </span>
-                <span className="font-bold">{item.change}</span>
-              </div>
-            </div>
-          </div>
+        {summaryData.slice(0, 3).map((item) => (
+          <BalanceItem key={item.title} dataItem={item} />
         ))}
-
-        {/* Tercer item */}
-        <div className="p-[--spacing-big] space-y-[--spacing-medium]">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3
-                style={{
-                  fontSize: "1.5rem",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                {summaryData[2].title}
-              </h3>
-              <h4
-                style={{
-                  fontSize: "2.5rem",
-                  fontWeight: "600",
-                  color: "var(--text-primary)",
-                }}
-              >
-                {summaryData[2].amount}
-              </h4>
-            </div>
-
-            <div
-              className="rounded-xl p-3 "
-              style={{
-                backgroundColor: summaryData[2].bgColor,
-                transition: `background-color var(--duration-standard) ease-in-out`,
-              }}
-            >
-              {summaryData[2].icon}
-            </div>
-          </div>
-
-          <div
-            className="w-full rounded-full"
-            style={{
-              backgroundColor: "var(--background-card)",
-              height: "0.5rem",
-            }}
-          >
-            <div
-              className="h-full rounded-full"
-              style={{
-                backgroundColor: summaryData[2].color,
-                width: `${summaryData[2].percentage.toFixed(2)}%`,
-              }}
-            ></div>
-          </div>
-
-          <div className="flex items-center justify-between text-lg">
-            <div className="flex items-center gap-1">
-              <ArrowUpRight
-                className="h-6 w-6"
-                style={{
-                  color: summaryData[2].color,
-                }}
-              />
-              <span className="font-bold">{summaryData[2].change}</span>
-              <span
-                style={{
-                  color: "var(--text-secondary)",
-                }}
-              >
-                {summaryData[2].changeText}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1">
-              <span
-                style={{
-                  color: "var(--text-secondary)",
-                }}
-              >
-                goal:
-              </span>
-              <span className="font-bold">{summaryData[2].change}</span>
-            </div>
-          </div>
-        </div>
 
         {/* Expenses Analytics */}
         <div className="p-[--spacing-big] space-y-[--spacing-big]">
@@ -323,31 +281,29 @@ const BalanceContainer = ({ balanceData }) => {
             </h4>
           </div>
 
-          <div className="">
-            <div
-              className="relative w-full rounded-full"
-              style={{
-                backgroundColor: "var(--background-card)",
-                height: "0.5rem",
-              }}
-            >
-              {summaryData.map((item, index) => (
-                <div
-                  key={item.title}
-                  className="absolute top-0 h-full rounded-full"
-                  style={{
-                    backgroundColor: item.color,
-                    width: `${item.percentage.toFixed(2)}%`,
-                    left: `${summaryData
-                      .slice(0, index)
-                      .reduce((acc, curr) => acc + curr.percentage, 0)}%`,
-                  }}
-                ></div>
-              ))}
-            </div>
+          <div
+            className="relative w-full rounded-full"
+            style={{
+              backgroundColor: "var(--background-card)",
+              height: "0.5rem",
+            }}
+          >
+            {summaryData.map((item, index) => (
+              <div
+                key={item.title}
+                className="absolute top-0 h-full rounded-full"
+                style={{
+                  backgroundColor: item.color,
+                  width: `${item.percentage.toFixed(2)}%`,
+                  left: `${summaryData
+                    .slice(0, index)
+                    .reduce((acc, curr) => acc + curr.percentage, 0)}%`,
+                }}
+              ></div>
+            ))}
           </div>
 
-          <div className="flex items-center justify-between text-lg">
+          <div className="flex items-center justify-between text-md">
             {summaryData.map((item) => (
               <div key={item.title}>
                 <div className="flex items-center">
@@ -366,7 +322,7 @@ const BalanceContainer = ({ balanceData }) => {
                 </div>
                 <span
                   style={{
-                    fontSize: "1.5rem",
+                    fontSize: "1.2rem",
                     fontWeight: "600",
                     color: "var(--text-primary)",
                   }}

@@ -81,35 +81,45 @@ function formatConverted(
 }
 
 // función principal
+// utils/formatters.ts (o donde estés)
 export async function convertAndFormat(
   balance: Money,
   targetCurrency: string,
   useMockIfFail = true,
+  onlyNumber = false,
 ): Promise<string> {
   const sourceCurrency = balance.currency.toUpperCase();
   const target = targetCurrency.toUpperCase();
 
-  // Map de decimales por moneda (por si alguna tiene 0 decimales)
+  // decimales por moneda (si COP no usa centavos, ponemos 0)
   const fractionDigitsMap: Record<string, number> = {
     USD: 2,
     EUR: 2,
     GBP: 2,
-    COP: 0, // normalmente se usa 2, aunque en práctica COP no suele mostrar centavos
+    COP: 0,
   };
 
-  const fractionDigits = fractionDigitsMap[sourceCurrency] ?? 2;
-  // Convierte a unidad principal (ej: centavos -> dólares)
-  const amountMajor = balance.amount / Math.pow(1, fractionDigits);
+  const sourceFractionDigits = fractionDigitsMap[sourceCurrency] ?? 2;
+  const targetFractionDigits = fractionDigitsMap[target] ?? 2;
 
-  // Si ya están en la misma moneda, solo formateamos
+  // Convierte de unidad menor a unidad mayor:
+  // ej: si sourceFractionDigits = 2 => centavos -> dividir por 100
+  const amountMajor = balance.amount / Math.pow(1, sourceFractionDigits);
+
+  // Si ya es la misma moneda, solo formateamos o devolvemos número
   if (sourceCurrency === target) {
+    if (onlyNumber) {
+      return amountMajor.toFixed(targetFractionDigits);
+    }
     return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: target,
+      maximumFractionDigits: targetFractionDigits,
+      minimumFractionDigits: targetFractionDigits,
     }).format(amountMajor);
   }
 
-  // Intento real: exchangerate.host convert endpoint
+  // Intento real: exchangerate.host convert
   try {
     const url = `https://api.exchangerate.host/convert?from=${encodeURIComponent(
       sourceCurrency,
@@ -120,12 +130,14 @@ export async function convertAndFormat(
     if (!res.ok) throw new Error("rate fetch failed");
     const data = await res.json();
 
-    // la API devuelve "result" con el valor convertido
     if (typeof data.result === "number") {
-      const converted = data.result;
+      const converted = Number(data.result);
+      if (onlyNumber) return converted.toFixed(targetFractionDigits);
       return new Intl.NumberFormat(undefined, {
         style: "currency",
         currency: target,
+        maximumFractionDigits: targetFractionDigits,
+        minimumFractionDigits: targetFractionDigits,
       }).format(converted);
     } else {
       throw new Error("unexpected response shape");
@@ -133,7 +145,7 @@ export async function convertAndFormat(
   } catch (err) {
     if (!useMockIfFail) throw err;
 
-    // FALLBACK: mock con 4 monedas (valores de ejemplo — ajustar cuando quieras)
+    // fallback mock
     const mockRates: Record<string, Record<string, number>> = {
       USD: { USD: 1, EUR: 0.92, GBP: 0.78, COP: 4600 },
       EUR: { USD: 1.08, EUR: 1, GBP: 0.85, COP: 5000 },
@@ -145,23 +157,29 @@ export async function convertAndFormat(
     const rate =
       rateRow && typeof rateRow[target] === "number"
         ? rateRow[target]
-        : // si no tenemos, intentar invertir alguna base USD
-          undefined;
+        : undefined;
 
     if (rate == null) {
-      // último recurso: devolver cantidad original con etiqueta de moneda origen
+      // si no tenemos tasa, devolver original con etiqueta
+      if (onlyNumber) return amountMajor.toFixed(targetFractionDigits);
       return (
         new Intl.NumberFormat(undefined, {
           style: "currency",
           currency: sourceCurrency,
+          maximumFractionDigits: sourceFractionDigits,
+          minimumFractionDigits: sourceFractionDigits,
         }).format(amountMajor) + ` (${sourceCurrency})`
       );
     }
 
     const converted = amountMajor * rate;
+    if (onlyNumber) return converted.toFixed(targetFractionDigits);
+
     return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: target,
+      maximumFractionDigits: targetFractionDigits,
+      minimumFractionDigits: targetFractionDigits,
     }).format(converted);
   }
 }

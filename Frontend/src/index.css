@@ -12,7 +12,6 @@
 
   --background-layout: #1a1f2e;
 
-
   /* Textos */
   --text-title: #333333;
   --text-subtitle: #a59e9e;
@@ -29,8 +28,6 @@
   --indigo: #6366f1; /* indigo-500 */
   --purple: #9333ea; /* purple-500 */
 
-
-
   /* Textos 
   --text-title: 4xl;
   --text-subtitle: 2xl;
@@ -39,9 +36,19 @@
   */
 
   /* Buttons */
+  /*
+  Verde =success, positivo
+  Red   = Failed, negativo
+  Indigo = Acciones
+  Azul = Ahorros
+
+  */
   --button-primary: #4f46e5;
   --button-primary-hover: #655eb8;
   --button-primary-active: #4f45b9;
+
+  --button-disabled: #d1d5db;
+  --button-disabled-text: #9ca3af;
 
   --button-primary-text: #f5f4ff;
   --button-primary-text-hover: #f5f4ff;

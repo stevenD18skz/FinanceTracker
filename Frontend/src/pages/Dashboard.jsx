@@ -52,9 +52,10 @@ const SkeletonDashboard = () => (
       <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
     </div>
     {/* Columna Derecha */}
-      <div className="space-y-[--spacing-big] lg:col-span-2">
+    <div className="space-y-[--spacing-big] lg:col-span-2">
       {/* Skeleton para BalanceContainer */}
       <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+
       <div className="grid grid-cols-2 gap-[--spacing-big]">
         {/* Skeleton para TransactionContainer */}
         <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />

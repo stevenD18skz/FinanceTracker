@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +12,9 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import type { ChartOptions } from "chart.js";
+
+import { useCurrency } from "../../context/CurrencyContext";
+import { convertAndFormat } from "../../utils/formatters";
 
 // Register ChartJS components
 ChartJS.register(
@@ -42,9 +45,142 @@ interface FinancialChartProps {
 const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
   // Transform data for Chart.js
   const labels = Object.keys(data);
-  const incomeData = Object.values(data).map((day) => day.income);
-  const expenseData = Object.values(data).map((day) => day.expense);
-  const savingData = Object.values(data).map((day) => day.saving);
+  const { selectedCurrency } = useCurrency();
+  const [incomeData, setIncomeData] = useState<number[]>([]);
+  const [expenseData, setExpenseData] = useState<number[]>([]);
+  const [savingData, setSavingData] = useState<number[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const allFormated = async () => {
+      if (!data) {
+        setIncomeData([]);
+        return;
+      }
+
+      // Mantener orden usando Object.keys ordenados (day-1 .. day-7 deberían mantener orden de inserción)
+      const keys = Object.keys(data);
+
+      // crear promesas (una por día)
+      const promises = keys.map((k) =>
+        convertAndFormat(
+          { amount: data[k].income, currency: "COP" }, // tus datos están en COP
+          selectedCurrency.code,
+          true,
+          true, // onlyNumber: queremos número sin símbolo
+        ).catch((e) => {
+          console.error("convert error for", k, e);
+          return "0"; // fallback por día
+        }),
+      );
+
+      // esperar todas
+      const results = await Promise.all(promises); // results es string[] (por el onlyNumber)
+      // convertir a numbers (si prefieres strings, omite esta línea)
+      const numbers = results.map((s) => {
+        // manejar coma decimal u otros formatos: parseFloat es suficiente si onlyNumber devuelve "1234.56"
+        const n = parseFloat(String(s).replace(/,/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      });
+
+      if (mounted) setIncomeData(numbers);
+    };
+
+    allFormated();
+
+    return () => {
+      mounted = false;
+    };
+  }, [selectedCurrency, data]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const allFormated = async () => {
+      if (!data) {
+        setExpenseData([]);
+        return;
+      }
+
+      // Mantener orden usando Object.keys ordenados (day-1 .. day-7 deberían mantener orden de inserción)
+      const keys = Object.keys(data);
+
+      // crear promesas (una por día)
+      const promises = keys.map((k) =>
+        convertAndFormat(
+          { amount: data[k].expense, currency: "COP" }, // tus datos están en COP
+          selectedCurrency.code,
+          true,
+          true, // onlyNumber: queremos número sin símbolo
+        ).catch((e) => {
+          console.error("convert error for", k, e);
+          return "0"; // fallback por día
+        }),
+      );
+
+      // esperar todas
+      const results = await Promise.all(promises); // results es string[] (por el onlyNumber)
+      // convertir a numbers (si prefieres strings, omite esta línea)
+      const numbers = results.map((s) => {
+        // manejar coma decimal u otros formatos: parseFloat es suficiente si onlyNumber devuelve "1234.56"
+        const n = parseFloat(String(s).replace(/,/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      });
+
+      if (mounted) setExpenseData(numbers);
+    };
+
+    allFormated();
+
+    return () => {
+      mounted = false;
+    };
+  }, [selectedCurrency, data]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const allFormated = async () => {
+      if (!data) {
+        setSavingData([]);
+        return;
+      }
+
+      // Mantener orden usando Object.keys ordenados (day-1 .. day-7 deberían mantener orden de inserción)
+      const keys = Object.keys(data);
+
+      // crear promesas (una por día)
+      const promises = keys.map((k) =>
+        convertAndFormat(
+          { amount: data[k].saving, currency: "COP" }, // tus datos están en COP
+          selectedCurrency.code,
+          true,
+          true, // onlyNumber: queremos número sin símbolo
+        ).catch((e) => {
+          console.error("convert error for", k, e);
+          return "0"; // fallback por día
+        }),
+      );
+
+      // esperar todas
+      const results = await Promise.all(promises); // results es string[] (por el onlyNumber)
+      // convertir a numbers (si prefieres strings, omite esta línea)
+      const numbers = results.map((s) => {
+        // manejar coma decimal u otros formatos: parseFloat es suficiente si onlyNumber devuelve "1234.56"
+        const n = parseFloat(String(s).replace(/,/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      });
+
+      if (mounted) setSavingData(numbers);
+    };
+
+    allFormated();
+
+    return () => {
+      mounted = false;
+    };
+  }, [selectedCurrency, data]);
 
   const chartData = {
     labels,
@@ -144,8 +280,7 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
     scales: {
       x: {
         grid: {
-          color: "rgba(229, 231, 235, 0.5)", // light gray with transparency
-          drawBorder: false,
+          color: "rgba(229, 231, 235, 0.5)", // light gray with transparency e,
         },
         ticks: {
           color: "#6B7280", // text-gray-500
@@ -169,7 +304,6 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
       y: {
         grid: {
           color: "rgba(229, 231, 235, 0.5)",
-          drawBorder: false,
         },
         ticks: {
           color: "#6B7280",
@@ -206,14 +340,14 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-lg">
-      <h2 className="mb-6 text-xl font-semibold text-gray-800">
+    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+      <h2 className="text-4xl font-bold text-[--text-title]">
         Financial Overview
       </h2>
-      <div className="h-[400px]">
+      <div className="h-[600px]">
         <Line data={chartData} options={options} />
       </div>
-    </div>
+    </section>
   );
 };
 
