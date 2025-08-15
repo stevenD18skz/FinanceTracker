@@ -103,7 +103,7 @@ const Navbar = () => {
   return (
     <header
       ref={rootRef}
-      className="w-full bg-[--background-layout] text-white shadow-sm  "
+      className="w-full bg-[--background-layout] text-white shadow-sm"
     >
       <div className="py-4 space-y-4 sm:px-8 lg:px-12">
         <div className="flex h-16 items-center justify-between">
@@ -175,7 +175,7 @@ const Navbar = () => {
               {currencyOpen && (
                 <ul
                   role="menu"
-                  className="absolute right-0 mt-2 w-56 rounded-lg bg-[#0f1720] py-2 shadow-lg ring-1 ring-black ring-opacity-30 z-40"
+                  className="absolute right-0 mt-2 w-56 rounded-lg bg-[#0f1720] py-2 shadow-lg ring-1 ring-black ring-opacity-30 z-50"
                 >
                   {currencies.map((c) => (
                     <li key={c.code} role="none">
