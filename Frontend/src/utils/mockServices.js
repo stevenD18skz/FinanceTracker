@@ -101,13 +101,13 @@ export const mockFetch = async (url) => {
 
 // Datos adicionales para el gráfico financiero (ya estaba en Dashboard.jsx)
 export const weekFinancesData = {
-  "day-1": { income: 2500000, expense: 1200000, saving: 1300000 },
-  "day-2": { income: 3000000, expense: 1500000, saving: 1500000 },
-  "day-3": { income: 2200000, expense: 1000000, saving: 1200000 },
-  "day-4": { income: 2800000, expense: 1800000, saving: 1000000 },
-  "day-5": { income: 3200000, expense: 2000000, saving: 1200000 },
-  "day-6": { income: 2400000, expense: 1400000, saving: 1000000 },
-  "day-7": { income: 2600000, expense: 1600000, saving: 1000000 },
+  "day-1": { income: 2500_000, expense: 1200_000, saving: 1300_000 },
+  "day-2": { income: 3000_000, expense: 1500_000, saving: 1500_000 },
+  "day-3": { income: 2200_000, expense: 1000_000, saving: 1200_000 },
+  "day-4": { income: 2800_000, expense: 3800_000, saving: 1000_000 },
+  "day-5": { income: 3200_000, expense: 2000_000, saving: 1200_000 },
+  "day-6": { income: 2400_000, expense: 1400_000, saving: 1000_000 },
+  "day-7": { income: 2600_000, expense: 1600_000, saving: 1000_000 },
 };
 
 // Función para obtener datos de ejemplo para testing

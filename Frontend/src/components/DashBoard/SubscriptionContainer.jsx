@@ -1,66 +1,81 @@
 import PropTypes from "prop-types";
 import { Zap } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import "./SubscriptionContainer.css";
+import "./List-scrollbar.css";
 
 // UTILS IMPORT
-import { formatCurrency } from "../../utils/formatters";
 
-// COMPONENTS IMPORT
-import TitleContainer from "../ui/TitleContainer";
+import { useCurrency } from "../../context/CurrencyContext";
+import { useState, useEffect } from "react";
+import { convertAndFormat } from "../../utils/formatters";
+import { Link } from "react-router-dom";
 
 const SubscriptionsItem = ({ subscription }) => {
-  const navigate = useNavigate();
+  const { selectedCurrency } = useCurrency();
+  const [formattedAmount, setFormattedAmount] = useState("");
 
-  const handleNavigation = () => {
-    navigate(`/subscriptions/?view=${subscription.id}`);
-  };
+  useEffect(() => {
+    const format = async () => {
+      const formattedAmount = await convertAndFormat(
+        {
+          amount: subscription.cost,
+          currency: "COP",
+        },
+
+        selectedCurrency.code,
+      );
+
+      setFormattedAmount(formattedAmount);
+    };
+    format();
+  }, [selectedCurrency, subscription.cost]);
 
   return (
     <div
-      className={`flex items-center justify-between rounded-xl p-4 ${
-        subscription.status === "pay" ? "bg-white" : "bg-gray-200"
+      className={`flex items-center justify-between rounded-xl p-3 ${
+        subscription.status === "pay" ? "" : "bg-gray-200"
       }`}
     >
       {/* Sección Izquierda */}
       <div className="flex items-center space-x-4">
-        <div
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-all duration-300 hover:bg-gray-300"
+        <Link
+          to={`/transaction/?view=${subscription.id}`}
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-all duration-[--duration-standard] hover:bg-gray-300"
           aria-hidden="true"
-          onClick={handleNavigation}
         >
-          <Zap className="text-blue-400" />
-        </div>
-        <div
+          <Zap className="text-amber-400" />
+        </Link>
+        <Link
+          to={`/subscription/?view=${subscription.id}`}
           className="flex cursor-pointer flex-col"
-          onClick={handleNavigation}
         >
-          <span className="text-base font-medium text-gray-800 transition-all duration-300 hover:text-indigo-600 hover:underline">
+          <span className="text-base font-medium text-[--text-primary] transition-all duration-300 hover:text-[--button-primary] hover:underline">
             {subscription.name}
           </span>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-[--text-secondary]">
             {subscription.status === "pay"
               ? "Paid the 11th"
               : "Pay before the 11th"}
           </span>
-        </div>
+        </Link>
       </div>
 
       {/* Sección Derecha */}
       <div className="flex items-center gap-4">
         <span
           className={`text-xl font-medium ${
-            subscription.status === "pay" ? "text-green-500" : "text-gray-500"
+            subscription.status === "pay"
+              ? "text-[--green]"
+              : "text-[--button-disabled-text]"
           }`}
         >
-          {formatCurrency(subscription.cost)}
+          {formattedAmount}
         </span>
 
         <button
           className={`text-md w-28 rounded-full px-6 py-2 font-medium transition-all duration-300 ${
             subscription.status === "pay"
-              ? "bg-emerald-600 text-white hover:bg-emerald-700"
-              : "bg-gray-400 text-gray-600"
+              ? "bg-[--button-primary] text-[--button-primary-text] hover:bg-[--button-primary-hover]"
+              : "bg-[--button-disabled] text-[--button-disabled-text]"
           }`}
           disabled={subscription.status !== "pay"}
           aria-label={
@@ -85,12 +100,12 @@ SubscriptionsItem.propTypes = {
 
 const SubscriptionContainer = ({ subscriptionData }) => {
   return (
-    <div className="h-full rounded-xl bg-white p-6">
-      <header className="mb-4 flex items-center justify-between">
-        <TitleContainer text={"Monthly Payment"} />
-      </header>
+    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+      <h2 className="text-4xl font-bold text-[--text-title]">
+        My Subscriptions
+      </h2>
 
-      <div className="subscription-list custom-scrollbar">
+      <div className="item-list custom-scrollbar">
         {subscriptionData.map((subscription) => (
           <SubscriptionsItem
             key={subscription.id}
@@ -98,7 +113,7 @@ const SubscriptionContainer = ({ subscriptionData }) => {
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
