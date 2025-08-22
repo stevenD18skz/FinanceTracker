@@ -38,11 +38,45 @@ const Navbar = () => {
   const profileRef = useRef(null);
 
   const navItems = [
-    { name: "Dashboard", to: "/dashboard", icon: "LayoutDashboard" },
-    { name: "Cards", to: "/wallets", icon: "CreditCard" },
-    { name: "Transactions", to: "/transactions", icon: "ArrowLeftRight" },
-    { name: "Subscriptions", to: "/subscriptions", icon: "Repeat" },
-    { name: "Planning Goals", to: "/planning-goals", icon: "Target" },
+    {
+      name: "Dashboard",
+      to: "/Dashboard",
+      icon: "LayoutDashboard",
+      title: `Welcome back, ${userData.name.split(" ")[0]}!`,
+      subtitle: "Here’s a quick summary of your account — all set to continue.",
+    },
+    {
+      name: "Cards",
+      to: "/wallets",
+      icon: "CreditCard",
+      title: "Your Cards",
+      subtitle:
+        "Manage your debit and credit cards in one place — secure and simple.",
+    },
+    {
+      name: "Transactions",
+      to: "/transactions",
+      icon: "ArrowLeftRight",
+      title: "Transactions History",
+      subtitle:
+        "Track, review, and search all your past and recent transactions.",
+    },
+    {
+      name: "Subscriptions",
+      to: "/subscriptions",
+      icon: "Repeat",
+      title: "Manage Subscriptions",
+      subtitle:
+        "Keep an eye on your recurring payments and never miss a renewal.",
+    },
+    {
+      name: "Planning Goals",
+      to: "/planning-goals",
+      icon: "Target",
+      title: "Planning Goals",
+      subtitle:
+        "Set savings goals, monitor progress, and achieve your financial targets.",
+    },
   ];
 
   const icons = {
@@ -99,6 +133,9 @@ const Navbar = () => {
   }, [currencyOpen, mobileOpen]);
 
   const isActive = (to) => location.pathname === to;
+
+  console.log(location.pathname);
+  console.log(navItems.find((i) => i.to === location.pathname));
 
   return (
     <header
@@ -241,10 +278,10 @@ const Navbar = () => {
 
           <div>
             <h2 className="text-4xl font-semibold leading-tight text-indigo-300">
-              Welcome back, {userData.name.split(" ")[0]}!
+              {navItems.find((i) => i.to === location.pathname)?.title}
             </h2>
             <p className="mt-1 text-xl text-indigo-200">
-              Here’s a quick summary of your account — all set to continue.
+              {navItems.find((i) => i.to === location.pathname)?.subtitle}
             </p>
           </div>
         </div>
