@@ -43,7 +43,7 @@ ErrorState.propTypes = {
 
 // Skeleton Loader mejorado
 const SkeletonDashboard = () => (
-  <div className="grid min-h-screen grid-cols-1 gap-[--spacing-big] bg-[--background-page] p-8 lg:grid-cols-3">
+  <div className="grid min-h-screen grid-cols-1 gap-[--spacing-big] p-8 lg:grid-cols-3">
     {/* Columna Izquierda */}
     <div className="space-y-[--spacing-big] lg:col-span-1">
       {/* Skeleton para CardsContainer */}
@@ -148,7 +148,7 @@ export default function Dashboard() {
   if (!data) return null;
 
   return (
-    <div className="grid grid-cols-1 gap-[--spacing-big] bg-[--background-page] p-[--spacing-big] lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-[--spacing-big]   p-[--spacing-big] lg:grid-cols-3">
       {/* Columna Izquierda */}
       <div className="space-y-[--spacing-big] lg:col-span-1">
         <CardsContainer cardData={data.cards} />

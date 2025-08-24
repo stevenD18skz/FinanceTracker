@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Zap } from "lucide-react";
+import { Zap, PackageOpen, ChevronRight } from "lucide-react";
 import "./List-scrollbar.css";
 
 // UTILS IMPORT
@@ -106,12 +106,29 @@ const SubscriptionContainer = ({ subscriptionData }) => {
       </h2>
 
       <div className="item-list custom-scrollbar">
-        {subscriptionData.map((subscription) => (
-          <SubscriptionsItem
-            key={subscription.id}
-            subscription={subscription}
-          />
-        ))}
+        {subscriptionData.length > 0 ? (
+          subscriptionData.map((subscription) => (
+            <SubscriptionsItem
+              key={subscription.id}
+              subscription={subscription}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center   text-[--text-secondary]   h-[70rem] ">
+            <PackageOpen className="h-24 w-24" />
+            <p className="text-[--text-secondary] text-lg font-semibold">
+              No subscriptions yet
+            </p>
+            <Link
+              to="/subscriptions?create=1"
+              className="flex items-center text-base font-medium text-[--button-primary]
+              transition-all duration-[--duration-standard] hover:underline"
+            >
+              Add your first subscription
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

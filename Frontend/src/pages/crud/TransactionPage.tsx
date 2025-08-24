@@ -124,7 +124,7 @@ const TransactionPage = () => {
   }, [transactionToDelete, fetchTransactions]);
 
   return (
-    <div className="min-h-screen bg-slate-200 p-8">
+    <div className="min-h-screen   p-8">
       {/** Stats Summary */}
       <TransactionStats transactions={allItems} />
 

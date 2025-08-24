@@ -167,7 +167,7 @@ const PlanningGoalsPage = () => {
   }, [goalToDelete, fetchGoals]);
 
   return (
-    <div className="min-h-screen space-y-8 bg-slate-200 p-8">
+    <div className="min-h-screen space-y-8   p-8">
       {/** Stats Summary */}
       <PlanningGoalStats goals={allItems} />
 

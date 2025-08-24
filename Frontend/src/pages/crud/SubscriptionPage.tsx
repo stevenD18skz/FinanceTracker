@@ -133,7 +133,7 @@ const SubscriptionPage = () => {
   }, [subscriptionToDelete, fetchSubscriptions]);
 
   return (
-    <div className="min-h-screen bg-slate-200 p-8">
+    <div className="min-h-screen   p-8">
       {/** Stats Summary */}
 
       <SubscriptionStats
