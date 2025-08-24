@@ -281,9 +281,9 @@ const PlanningGoalsContainer = ({
             />
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center my-auto text-[--text-primary]">
+          <div className="flex flex-col items-center justify-center my-auto text-[--text-secondary]">
             <PackageOpen className="h-24 w-24" />
-            <p className="text-[--text-primary] text-lg font-semibold">
+            <p className="text-[--text-secondary] text-lg font-semibold">
               No goals found for the selected filter.
             </p>
             <Link

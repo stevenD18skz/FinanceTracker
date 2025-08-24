@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import "./List-scrollbar.css";
-import { Zap } from "lucide-react";
+import { Zap, PackageOpen, ChevronRight } from "lucide-react";
+
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -156,9 +157,26 @@ const TransactionContainer = ({ transactionData }) => {
       </h2>
 
       <div className="item-list custom-scrollbar">
-        {filteredSorted.map((transaction) => (
-          <TransactionItem key={transaction.id} transaction={transaction} />
-        ))}
+        {filteredSorted.length > 0 ? (
+          filteredSorted.map((transaction) => (
+            <TransactionItem key={transaction.id} transaction={transaction} />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center   text-[--text-secondary]   h-[70rem] ">
+            <PackageOpen className="h-24 w-24" />
+            <p className="text-[--text-secondary] text-lg font-semibold">
+              No transactions this week
+            </p>
+            <Link
+              to="/planning-goals?create=1"
+              className="flex items-center text-base font-medium text-[--button-primary]
+              transition-all duration-[--duration-standard] hover:underline"
+            >
+              Add your first transaction
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
