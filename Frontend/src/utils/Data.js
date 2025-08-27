@@ -253,6 +253,15 @@ const transactionsData = [
     type: "expense",
     cardId: 2,
   },
+  {
+    id: 27,
+    icon: "Transfer",
+    name: "PayPal - Sent",
+    date: "26 August 2025, 09:30 AM",
+    amount: 9600000,
+    type: "expense",
+    cardId: 2,
+  },
 ];
 
 const subscriptionsData = [

@@ -1,6 +1,5 @@
 import { formatCurrency } from "../../utils/formatters";
-import { ChevronRight, Clock, CreditCard } from "lucide-react";
-import * as React from "react";
+import { ChevronRight, Clock, CreditCard, Edit, Trash2 } from "lucide-react";
 
 export default function TransactionItem({
   icon,
@@ -75,8 +74,12 @@ export default function TransactionItem({
         <ChevronRight className="text-muted-foreground h-5 w-5 transform opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
       </div>
 
-      <button onClick={onUpdate}>c</button>
-      <button onClick={onDelete}>v</button>
+      <button onClick={onUpdate}>
+        <Edit className="h-5 w-5 text-muted-foreground" />
+      </button>
+      <button onClick={onDelete}>
+        <Trash2 className="h-5 w-5 text-muted-foreground" />
+      </button>
 
       {/* Hover effect overlay */}
       <div className="via-accent/5 pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

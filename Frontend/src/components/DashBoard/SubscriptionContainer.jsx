@@ -38,14 +38,14 @@ const SubscriptionsItem = ({ subscription }) => {
       {/* Sección Izquierda */}
       <div className="flex items-center space-x-4">
         <Link
-          to={`/transaction/?view=${subscription.id}`}
+          to={`/transaction/${subscription.id}`}
           className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-all duration-[--duration-standard] hover:bg-gray-300"
           aria-hidden="true"
         >
           <Zap className="text-amber-400" />
         </Link>
         <Link
-          to={`/subscription/?view=${subscription.id}`}
+          to={`/subscription/${subscription.id}`}
           className="flex cursor-pointer flex-col"
         >
           <span className="text-base font-medium text-[--text-primary] transition-all duration-300 hover:text-[--button-primary] hover:underline">
@@ -120,7 +120,7 @@ const SubscriptionContainer = ({ subscriptionData }) => {
               No subscriptions yet
             </p>
             <Link
-              to="/subscriptions?create=1"
+              to="/subscriptions/new"
               className="flex items-center text-base font-medium text-[--button-primary]
               transition-all duration-[--duration-standard] hover:underline"
             >

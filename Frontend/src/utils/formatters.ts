@@ -121,6 +121,7 @@ export async function convertAndFormat(
 
   // Intento real: exchangerate.host convert
   try {
+    throw new Error("without access key");
     const url = `https://api.exchangerate.host/convert?from=${encodeURIComponent(
       sourceCurrency,
     )}&to=${encodeURIComponent(target)}&amount=${encodeURIComponent(
