@@ -154,7 +154,7 @@ export default function CardsContainer({
           ))}
 
           <Link
-            to={`/wallets?create=1`}
+            to={`/wallets/new`}
             className=" 
             min-w-full group flex flex-shrink-0 items-center justify-center rounded-3xl
             border-2 border-dashed bg-[--button-secondary] border-[--button-secondary-text]

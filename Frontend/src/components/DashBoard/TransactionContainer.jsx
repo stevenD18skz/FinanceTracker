@@ -33,14 +33,14 @@ const TransactionItem = ({ transaction }) => {
     <div className="flex items-center justify-between rounded-xl p-3 transition-all duration-[--duration-standard] hover:bg-slate-200">
       <div className="flex items-center space-x-4">
         <Link
-          to={`/transaction/?view=${transaction.id}`}
+          to={`/transaction/${transaction.id}`}
           className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-gray-100 transition-all duration-[--duration-standard] hover:bg-gray-300"
           aria-hidden="true"
         >
           <Zap className="text-blue-600" />
         </Link>
         <Link
-          to={`/transaction/?view=${transaction.id}`}
+          to={`/transaction/${transaction.id}`}
           className="flex cursor-pointer flex-col"
         >
           <span className="text-base font-medium text-[--text-primary] transition-all duration-[--duration-standard] hover:text-[--button-primary] hover:underline">
@@ -168,7 +168,7 @@ const TransactionContainer = ({ transactionData }) => {
               No transactions this week
             </p>
             <Link
-              to="/planning-goals?create=1"
+              to="/transactions/new"
               className="flex items-center text-base font-medium text-[--button-primary]
               transition-all duration-[--duration-standard] hover:underline"
             >

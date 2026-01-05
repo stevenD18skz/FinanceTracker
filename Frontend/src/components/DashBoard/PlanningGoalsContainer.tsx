@@ -187,7 +187,7 @@ const GoalItem = ({ goal, isMenuOpen, toggleMenu }: GoalItemProps) => {
                 </li>
                 <li>
                   <Link
-                    to={`/goals/${goal.id}/add-amount`}
+                    to={`/goals/${goal.id}/addAmount`}
                     className="group flex items-center justify-between rounded-lg px-4 py-2 text-sm text-[--text-primary] transition-all duration-[--duration-slow] hover:bg-[--background-card-hover] hover:text-[--button-primary-hover]  hover:underline"
                   >
                     Add Amount
@@ -263,7 +263,7 @@ const PlanningGoalsContainer = ({
       <div className="flex items-center justify-between">
         <h2 className="text-4xl font-bold text-[--text-title]">My Goals</h2>
         <Link
-          to="/planning-goals"
+          to="/goals"
           className="text-base font-semibold text-[--button-primary] transition-all duration-[--duration-standard] hover:underline"
         >
           View All
@@ -287,7 +287,7 @@ const PlanningGoalsContainer = ({
               No goals found for the selected filter.
             </p>
             <Link
-              to="/planning-goals?create=1"
+              to="/goals/new"
               className="flex items-center text-base font-medium text-[--button-primary]
               transition-all duration-[--duration-standard] hover:underline"
             >

@@ -62,7 +62,7 @@ function App() {
               element={<PrivateRoute element={<SubscriptionPage />} />}
             />
             <Route
-              path="planning-goals"
+              path="goals"
               element={<PrivateRoute element={<PlanningGoalsPage />} />}
             />
 
