@@ -54,9 +54,8 @@ const TransactionItem = ({ transaction }) => {
 
       <div className="flex items-center space-x-2">
         <span
-          className={`text-xl font-medium ${
-            transaction.type === "income" ? "text-[--green]" : "text-[--red]"
-          }`}
+          className={`text-xl font-medium ${transaction.type === "income" ? "text-[--green]" : "text-[--red]"
+            }`}
         >
           {transaction.type === "income" ? "+" : "-"}
           {formattedAmount}
@@ -151,7 +150,7 @@ const TransactionContainer = ({ transactionData }) => {
   const filteredSorted = filterFromThisWeekMondaySorted(transactionData);
 
   return (
-    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+    <section className="rounded-xl bg-[var(--background-section)] p-[--spacing-big] space-y-[--spacing-medium]">
       <h2 className="text-4xl font-bold text-[--text-title]">
         Weekly Transactions
       </h2>

@@ -31,9 +31,8 @@ const SubscriptionsItem = ({ subscription }) => {
 
   return (
     <div
-      className={`flex items-center justify-between rounded-xl p-3 ${
-        subscription.status === "pay" ? "" : "bg-gray-200"
-      }`}
+      className={`flex items-center justify-between rounded-xl p-3 ${subscription.status === "pay" ? "" : "bg-gray-200"
+        }`}
     >
       {/* Sección Izquierda */}
       <div className="flex items-center space-x-4">
@@ -62,21 +61,19 @@ const SubscriptionsItem = ({ subscription }) => {
       {/* Sección Derecha */}
       <div className="flex items-center gap-4">
         <span
-          className={`text-xl font-medium ${
-            subscription.status === "pay"
+          className={`text-xl font-medium ${subscription.status === "pay"
               ? "text-[--green]"
               : "text-[--button-disabled-text]"
-          }`}
+            }`}
         >
           {formattedAmount}
         </span>
 
         <button
-          className={`text-md w-28 rounded-full px-6 py-2 font-medium transition-all duration-300 ${
-            subscription.status === "pay"
+          className={`text-md w-28 rounded-full px-6 py-2 font-medium transition-all duration-300 ${subscription.status === "pay"
               ? "bg-[--button-primary] text-[--button-primary-text] hover:bg-[--button-primary-hover]"
               : "bg-[--button-disabled] text-[--button-disabled-text]"
-          }`}
+            }`}
           disabled={subscription.status !== "pay"}
           aria-label={
             subscription.status === "pay" ? "Make payment" : "Payment completed"
@@ -100,7 +97,7 @@ SubscriptionsItem.propTypes = {
 
 const SubscriptionContainer = ({ subscriptionData }) => {
   return (
-    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+    <section className="rounded-xl bg-[var(--background-section)] p-[--spacing-big] space-y-[--spacing-medium]">
       <h2 className="text-4xl font-bold text-[--text-title]">
         My Subscriptions
       </h2>

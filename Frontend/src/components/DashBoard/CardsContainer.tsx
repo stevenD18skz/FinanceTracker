@@ -120,7 +120,7 @@ export default function CardsContainer({
   };
 
   return (
-    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+    <section className="rounded-xl bg-[var(--background-section)] p-[--spacing-big] space-y-[--spacing-medium]">
       <div className="flex items-center justify-between">
         <button
           onClick={prevSlide}
@@ -175,21 +175,19 @@ export default function CardsContainer({
           <button
             key={card.id}
             aria-label={`Slide ${index + 1}`}
-            className={`h-2 rounded-full  ${
-              currentSlide === index
+            className={`h-2 rounded-full  ${currentSlide === index
                 ? "w-4 bg-[--button-primary-active] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
                 : "w-2 bg-[--text-subtitle] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
-            }`}
+              }`}
             onClick={() => setCurrentSlide(index)}
           />
         ))}
         <button
           aria-label={`Slide ${cardData.length + 1}`}
-          className={`h-2 rounded-full  ${
-            currentSlide === cardData.length
+          className={`h-2 rounded-full  ${currentSlide === cardData.length
               ? "w-4 bg-[--button-primary-active] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
               : "w-2 bg-[--text-subtitle] transition-all duration-[--duration-standard] hover:bg-[--button-primary-hover]"
-          }`}
+            }`}
           onClick={() => setCurrentSlide(cardData.length)}
         />
       </div>

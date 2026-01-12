@@ -2,65 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Colors background */
-  --background-page: #e2e2e2;
-  --section-dashboard: #fff;
-
-  --background-card: #eee;
-  --background-card-hover: #fff;
-
-  --background-layout: #1f1f1f;
-
+:root {  
   /* Textos */
   --text-title: #333333;
   --text-subtitle: #a59e9e;
+
   --text-primary: #191919;
   --text-secondary: #595a5b;
+  --text-tertiary: #9ca3af;
 
-  --red: #ef4444; /* red-500 */
-  --orange: #f59e0b; /* amber-500 / orange */
-  --yellow: #fbbf24; /* yellow-400 (usarlo con cuidado) */
+
+  /* Colors */
   --green: #10b981; /* green-500 */
-  --green-strong: #064a34; /* green-600 (para 100%) */
+  --red: #f43f5e; /* red-500 */
+  --yellow: #f59e0b; /* yellow-400 */
 
-  --blue: #3b82f6; /* blue-500 */
-  --indigo: #6366f1; /* indigo-500 */
-  --purple: #9333ea; /* purple-500 */
 
-  /* Textos 
-  --text-title: 4xl;
-  --text-subtitle: 2xl;
-  --text-primary: lg;
-  --text-secondary: base;
-  */
+  /* Colors background */
+  --background-page: #e2e2e2;
+  --background-section: #fff;
+  --background-card: #eee;
+  --background-card-hover: #fff;
+  --background-layout: #1f1f1f;
 
-  /* Buttons */
-  /*
-  Verde =success, positivo
-  Red   = Failed, negativo
-  Indigo = Acciones
-  Azul = Ahorros
 
-  */
-  --button-primary: #4f46e5;
+  /* buttons */
+  --button-primary: #8c84dc;
   --button-primary-hover: #655eb8;
   --button-primary-active: #4f45b9;
+  --button-primary-text: #E1E0EA;
+
+
 
   --button-disabled: #d1d5db;
   --button-disabled-text: #9ca3af;
 
-  --button-primary-text: #f5f4ff;
-  --button-primary-text-hover: #f5f4ff;
-  --button-primary-text-active: #eae6ff;
 
-  --button-secondary: #f7faff;
-  --button-secondary-hover: #eef6ff;
-  --button-secondary-active: #e1eeff;
 
-  --button-secondary-text: #0b2545;
-  --button-secondary-text-hover: #063718;
-  --button-secondary-text-active: #04172a;
+  --button-accept: #20d86d;
+  --button-accept-hover: #10bb57;
+  --button-accept-active: #0c873f;
+  --button-accept-text: #0B2545;
+
+
+
+  --button-cancel: #eb1796;
+  --button-cancel-hover: #d60c85;
+  --button-cancel-active: #99005c;
+  --button-cancel-text: #0B2545;
+
+
 
   /* Espaciados */
   --spacing-big: 1rem;

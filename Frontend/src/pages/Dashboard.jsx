@@ -47,25 +47,25 @@ const SkeletonDashboard = () => (
     {/* Columna Izquierda */}
     <div className="space-y-[--spacing-big] lg:col-span-1">
       {/* Skeleton para CardsContainer */}
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--background-section]" />
       {/* Skeleton para PlanningGoalsContainer */}
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--background-section]" />
     </div>
     {/* Columna Derecha */}
     <div className="space-y-[--spacing-big] lg:col-span-2">
       {/* Skeleton para BalanceContainer */}
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--background-section]" />
 
       <div className="grid grid-cols-2 gap-[--spacing-big]">
         {/* Skeleton para TransactionContainer */}
-        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--background-section]" />
         {/* Skeleton para SubscriptionContainer */}
-        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+        <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--background-section]" />
       </div>
     </div>
     {/* Skeleton para FinancialChart */}
     <div className="col-span-3">
-      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--section-dashboard]" />
+      <div className="h-[25rem] w-full animate-pulse rounded-xl bg-[--background-section]" />
     </div>
   </div>
 );

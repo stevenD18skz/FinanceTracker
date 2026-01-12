@@ -160,9 +160,8 @@ const GoalItem = ({ goal, isMenuOpen, toggleMenu }: GoalItemProps) => {
 
           {showMenu && (
             <div
-              className={`absolute right-0 mt-2 w-48 rounded-xl p-1 bg-[--background-card] shadow-lg ring-1 ring-black ring-opacity-5 text-[--text-primary ${
-                isMenuOpen ? "animate-fadeInScale" : "animate-fadeOutScale"
-              }`}
+              className={`absolute right-0 mt-2 w-48 rounded-xl p-1 bg-[--background-card] shadow-lg ring-1 ring-black ring-opacity-5 text-[--text-primary ${isMenuOpen ? "animate-fadeInScale" : "animate-fadeOutScale"
+                }`}
             >
               <ul className="py-1">
                 <li>
@@ -225,9 +224,8 @@ const GoalItem = ({ goal, isMenuOpen, toggleMenu }: GoalItemProps) => {
       </div>
 
       <div
-        className={`flex items-center justify-between text-base ${
-          isCompleted ? "text-[--green-strong]" : "text-[--text-primary]"
-        }`}
+        className={`flex items-center justify-between text-base ${isCompleted ? "text-[--green-strong]" : "text-[--text-primary]"
+          }`}
       >
         <span className="">
           {isCompleted
@@ -259,7 +257,7 @@ const PlanningGoalsContainer = ({
   };
 
   return (
-    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+    <section className="rounded-xl bg-[var(--background-section)] p-[--spacing-big] space-y-[--spacing-medium]">
       <div className="flex items-center justify-between">
         <h2 className="text-4xl font-bold text-[--text-title]">My Goals</h2>
         <Link

@@ -200,7 +200,7 @@ const BalanceContainer = ({ balanceData }) => {
 
   if (!summaryData || !totalFormatted) {
     return (
-      <section className="rounded-xl h-[28.3rem] bg-[--section-dashboard] p-[--spacing-big] space-y-[--spacing-medium] animate-pulse">
+      <section className="rounded-xl h-[28.3rem] bg-[--background-section] p-[--spacing-big] space-y-[--spacing-medium] animate-pulse">
         {/* Título principal */}
         <div className="h-9 w-1/3 rounded-lg bg-[--background-card]" />
 
@@ -249,7 +249,7 @@ const BalanceContainer = ({ balanceData }) => {
   }
 
   return (
-    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+    <section className="rounded-xl bg-[var(--background-section)] p-[--spacing-big] space-y-[--spacing-medium]">
       <h2 className="text-4xl font-bold text-[--text-title]">
         Summary Balance
       </h2>

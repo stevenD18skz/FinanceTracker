@@ -340,7 +340,7 @@ const FinancialChart: React.FC<FinancialChartProps> = ({ data }) => {
   };
 
   return (
-    <section className="rounded-xl bg-[var(--section-dashboard)] p-[--spacing-big] space-y-[--spacing-medium]">
+    <section className="rounded-xl bg-[var(--background-section)] p-[--spacing-big] space-y-[--spacing-medium]">
       <h2 className="text-4xl font-bold text-[--text-title]">
         Financial Overview
       </h2>

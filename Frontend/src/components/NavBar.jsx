@@ -271,7 +271,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 bg-rose-500">
           <div className="flex h-16 w-16 items-center justify-center rounded-lg  text-[--indigo] shadow-inner">
             <Sparkles className="h-12 w-12" />
           </div>
